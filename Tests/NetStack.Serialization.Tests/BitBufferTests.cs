@@ -16,7 +16,7 @@ namespace NetStack.Serialization
             buffer.AddBool(true);
             buffer.AddBool(true);
             buffer.AddBool(true);
-
+            //buffer.Finish();
             Assert.Equal(1, buffer.Length);
         }
 
@@ -44,7 +44,7 @@ namespace NetStack.Serialization
             buffer.AddByte(byte.MaxValue);
             buffer.AddByte(byte.MaxValue);
             buffer.AddByte(byte.MaxValue);
-            Assert.Equal(4, buffer.Length);
+            Assert.Equal(3, buffer.Length);
         }
 
         [Fact]
@@ -54,7 +54,7 @@ namespace NetStack.Serialization
             buffer.AddByte(byte.MinValue);
             buffer.AddByte(byte.MinValue);
             buffer.AddByte(byte.MinValue);
-            Assert.Equal(4, buffer.Length);
+            Assert.Equal(3, buffer.Length);
         }     
 
         [Fact]
@@ -69,7 +69,7 @@ namespace NetStack.Serialization
             buffer.AddByte(byte.MinValue);
             buffer.AddByte(byte.MinValue);
             buffer.AddByte(byte.MinValue);                        
-            Assert.Equal(9, buffer.Length);
+            Assert.Equal(8, buffer.Length);
         }         
 
         [Fact]
@@ -83,8 +83,9 @@ namespace NetStack.Serialization
             buffer.AddByte(byte.MaxValue/2);
             buffer.AddByte(byte.MaxValue/2);
             buffer.AddByte(byte.MaxValue/2);
-            buffer.AddByte(byte.MaxValue/2);                      
-            Assert.Equal(9, buffer.Length);
+            buffer.AddByte(byte.MaxValue/2);             
+            //buffer.Finish();         
+            Assert.Equal(8, buffer.Length);
         }   
 
 
@@ -95,8 +96,9 @@ namespace NetStack.Serialization
             buffer.AddShort(short.MinValue);
             buffer.AddShort(short.MinValue);
             buffer.AddShort(short.MinValue);
-            buffer.AddShort(short.MinValue);                      
-            Assert.Equal(8, buffer.Length);
+            buffer.AddShort(short.MinValue);    
+            //buffer.Finish();                  
+            Assert.Equal(12, buffer.Length);
         }                     
 
         [Fact]
@@ -104,7 +106,7 @@ namespace NetStack.Serialization
         {
             var buffer = new BitBuffer();
             buffer.AddUInt(uint.MaxValue);
-            Assert.Equal(6, buffer.Length);
+            Assert.Equal(5, buffer.Length);
         }
 
         [Fact]
@@ -112,7 +114,7 @@ namespace NetStack.Serialization
         {
             var buffer = new BitBuffer();
             buffer.AddUInt(uint.MinValue);
-            Assert.Equal(2, buffer.Length);
+            Assert.Equal(1, buffer.Length);
         }
 
         [Fact]
