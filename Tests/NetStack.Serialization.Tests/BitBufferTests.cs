@@ -123,8 +123,24 @@ namespace NetStack.Serialization
             var buffer = new BitBuffer();
             buffer.AddBool(true);
             buffer.Finish();
-            // buffer.ResetReadPos();
-            // Assert.True(buffer.ReadBool());
+            var allocated = new byte[ushort.MaxValue];
+            buffer.ToArray(allocated);
+            var reader = new BitBuffer(allocated.Length);
+            reader.FromArray(allocated, allocated.Length);
+            Assert.True(reader.ReadBool());
         }
+
+        [Fact]
+        public void LongReadWrite()
+        {
+            var buffer = new BitBuffer();
+            buffer.AddLong(long.MaxValue);
+            buffer.Finish();
+            var allocated = new byte[ushort.MaxValue];
+            buffer.ToArray(allocated);
+            var reader = new BitBuffer(allocated.Length);
+            reader.FromArray(allocated, allocated.Length);
+            Assert.Equal(long.MaxValue, reader.ReadLong());
+        }        
     }
 }
