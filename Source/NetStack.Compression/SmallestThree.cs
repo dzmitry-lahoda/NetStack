@@ -46,7 +46,7 @@ namespace NetStack.Compression {
 	public static class SmallestThree {
 		private const float floatPrecision = 10000f;
 
-		public static CompressedQuaternion Compress(Quaternion quaternion) {
+		public static CompressedQuaternion Compress(in Quaternion quaternion) {
 			CompressedQuaternion data = default(CompressedQuaternion);
 			byte m = 0;
 			float maxValue = float.MinValue;
@@ -165,7 +165,7 @@ namespace NetStack.Compression {
 			return data;
 		}
 
-		public static Quaternion Decompress(CompressedQuaternion data) {
+		public static Quaternion Decompress(in CompressedQuaternion data) {
 			byte m = data.m;
 
 			if (m >= 4 && m <= 7) {

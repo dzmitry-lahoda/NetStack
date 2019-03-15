@@ -1,72 +1,15 @@
-﻿/*
- *  Copyright (c) 2018 Stanislav Denisov
- *
- *  Permission is hereby granted, free of charge, to any person obtaining a copy
- *  of this software and associated documentation files (the "Software"), to deal
- *  in the Software without restriction, including without limitation the rights
- *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- *  copies of the Software, and to permit persons to whom the Software is
- *  furnished to do so, subject to the following conditions:
- *
- *  The above copyright notice and this permission notice shall be included in all
- *  copies or substantial portions of the Software.
- *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- *  SOFTWARE.
- */
-
-using System;
+﻿using System;
 using System.Runtime.CompilerServices;
 
 #if !(ENABLE_MONO || ENABLE_IL2CPP)
-	using System.Numerics;
+using System.Numerics;
 #else
 	using UnityEngine;
 #endif
 
-namespace NetStack.Compression {
-	public struct CompressedVector2 {
-		public uint x;
-		public uint y;
-
-		public CompressedVector2(uint x, uint y) {
-			this.x = x;
-			this.y = y;
-		}
-	}
-
-	public struct CompressedVector3 {
-		public uint x;
-		public uint y;
-		public uint z;
-
-		public CompressedVector3(uint x, uint y, uint z) {
-			this.x = x;
-			this.y = y;
-			this.z = z;
-		}
-	}
-
-	public struct CompressedVector4 {
-		public uint x;
-		public uint y;
-		public uint z;
-		public uint w;
-
-		public CompressedVector4(uint x, uint y, uint z, uint w) {
-			this.x = x;
-			this.y = y;
-			this.z = z;
-			this.w = w;
-		}
-	}
-
-	public static class DeBruijn {
+namespace NetStack.Compression
+{
+    public static class DeBruijn {
 		public static readonly int[] Lookup = new int[32] {
 			0, 9, 1, 10, 13, 21, 2, 29, 11, 14, 16, 18, 22, 25, 3, 30,
 			8, 12, 20, 28, 15, 17, 24, 7, 19, 27, 23, 6, 26, 5, 4, 31
@@ -125,7 +68,7 @@ namespace NetStack.Compression {
 			return adjusted;
 		}
 
-		public static CompressedVector2 Compress(Vector2 vector2, BoundedRange[] boundedRange) {
+		public static CompressedVector2 Compress(in Vector2 vector2, BoundedRange[] boundedRange) {
 			CompressedVector2 data = default(CompressedVector2);
 
 			#if ENABLE_MONO || ENABLE_IL2CPP
@@ -139,7 +82,7 @@ namespace NetStack.Compression {
 			return data;
 		}
 
-		public static CompressedVector3 Compress(Vector3 vector3, BoundedRange[] boundedRange) {
+		public static CompressedVector3 Compress(in Vector3 vector3, BoundedRange[] boundedRange) {
 			CompressedVector3 data = default(CompressedVector3);
 
 			#if ENABLE_MONO || ENABLE_IL2CPP
@@ -155,7 +98,7 @@ namespace NetStack.Compression {
 			return data;
 		}
 
-		public static CompressedVector4 Compress(Vector4 vector4, BoundedRange[] boundedRange) {
+		public static CompressedVector4 Compress(in Vector4 vector4, BoundedRange[] boundedRange) {
 			CompressedVector4 data = default(CompressedVector4);
 
 			#if ENABLE_MONO || ENABLE_IL2CPP
