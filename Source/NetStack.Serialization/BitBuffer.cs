@@ -35,6 +35,7 @@ namespace NetStack.Serialization
         private int scratchUsedBits;
 
        // TODO: Replace with .NET Standard BitOps
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int FindHighestBitPosition(byte data) {
             int shiftCount = 0;
 

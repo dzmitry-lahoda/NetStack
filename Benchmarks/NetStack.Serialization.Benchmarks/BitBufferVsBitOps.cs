@@ -46,7 +46,7 @@ namespace benchmarks
         {
             int x = 0;
             for (int j = 0; j < 1_000; j++)
-                x = BitBuffer.FindHighestBitPosition(0b1111_1111);
+                x = BitBuffer.FindHighestBitPosition(0b0000_1111);
         }
 
         [Benchmark]
@@ -54,7 +54,7 @@ namespace benchmarks
         {
             int x = 0;
             for (int j = 0; j < 1_000; j++)
-                x = 8 - BitOps.LeadingZeroCount(0b1111_1111);
+                x = 8 - BitOps.LeadingZeroCount(0b0000_1111);
         }
     }
 }
