@@ -34,6 +34,61 @@ namespace NetStack.Serialization
         private int chunkIndex;
         private int scratchUsedBits;
 
+       // TODO: Replace with .NET Standard BitOps
+        public static int FindHighestBitPosition(byte data) {
+            int shiftCount = 0;
+
+            while (data > 0) {
+                data >>= 1;
+                shiftCount++;
+            }
+
+            return shiftCount;
+        }
+
+        public static int BitsRequired(int min, int max) {
+            return (min == max) ? 1 : BitOps.Log2((uint)(max - min)) + 1;
+        }
+
+        public static int BitsRequired(uint min, uint max) {
+            return (min == max) ? 1 : BitOps.Log2(max - min) + 1;
+        }
+
+        public static int BitsRequired(string value, int length)
+        {
+            var bitLength = 10;
+
+            uint codePage = 0; // Ascii
+            for (int i = 0; i < length; i++) {
+                var val = value[i];
+                if (val > 127) {
+                    codePage = 1; // Latin1
+                    if (val > 255) {
+                        codePage = 2; // LatinExtended 
+                        if (val > 511) {
+                            codePage = 3; // UTF-16
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            if (codePage == 0)
+                bitLength += length * 7;
+            else if (codePage == 1)
+                bitLength += length * 8;
+            else if (codePage == 2)
+                bitLength += length * 9;
+            else if (codePage == 3)
+                for (int i = 0; i < length; i++) {
+                    if (value[i] > 127)
+                        bitLength += 17;
+                    else
+                        bitLength += 8;
+                }
+
+            return bitLength;
+        }
 
         public BitBuffer(int capacity = defaultCapacity)
         {
@@ -240,7 +295,7 @@ namespace NetStack.Serialization
                 chunks[i] = chunk;
             }
 
-            int positionInByte = Utils.FindHighestBitPosition(data[length - 1]);
+            int positionInByte = FindHighestBitPosition(data[length - 1]);
 
             bitsWriten = ((length - 1) * 8) + (positionInByte - 1);
             bitsRead = 0;
@@ -302,7 +357,7 @@ namespace NetStack.Serialization
                 chunks[i] = chunk;
             }
 
-            int positionInByte = Utils.FindHighestBitPosition(data[length - 1]);
+            int positionInByte = FindHighestBitPosition(data[length - 1]);
 
             bitsWriten = ((length - 1) * 8) + (positionInByte - 1);
             bitsRead = 0;
@@ -534,7 +589,7 @@ namespace NetStack.Serialization
             Debug.Assert(min < max, "minus is not lower than max");
             Debug.Assert(value >= min, "value is lower than minimal");
             Debug.Assert(value <= max, "value is higher than maximal");
-            int bits = Utils.BitsRequired(min, max);
+            int bits = BitsRequired(min, max);
             Add(bits, (uint)(value - min));
 
             return this;
@@ -563,7 +618,7 @@ namespace NetStack.Serialization
         {
             Debug.Assert(min < max, "minus is not lower than max");
 
-            int bits = Utils.BitsRequired(min, max);
+            int bits = BitsRequired(min, max);
             Debug.Assert(bits < totalNumBits, "reading too many bits for requested range");
 
             return (int)(Read(bits) + min);
@@ -592,7 +647,7 @@ namespace NetStack.Serialization
         {
             Debug.Assert(min < max, "minus is not lower than max");
 
-            int bits = Utils.BitsRequired(min, max);
+            int bits = BitsRequired(min, max);
             Debug.Assert(bits < totalNumBits, "reading too many bits for requested range");
 
             return (int)(Peek(bits) + min);
@@ -630,7 +685,7 @@ namespace NetStack.Serialization
             Debug.Assert(min < max, "minus is not lower than max");
             Debug.Assert(value >= min, "value is lower than minimal");
             Debug.Assert(value <= max, "value is higher than maximal");
-            int bits = Utils.BitsRequired(min, max);
+            int bits = BitsRequired(min, max);
             Add(bits, (value - min));
 
             return this;
@@ -666,7 +721,7 @@ namespace NetStack.Serialization
         {
             Debug.Assert(min < max, "minus is not lower than max");
 
-            int bits = Utils.BitsRequired(min, max);
+            int bits = BitsRequired(min, max);
             Debug.Assert(bits < totalNumBits, "reading too many bits for requested range");
 
             return (Read(bits) + min);
@@ -694,7 +749,7 @@ namespace NetStack.Serialization
         {
             Debug.Assert(min < max, "minus is not lower than max");
 
-            int bits = Utils.BitsRequired(min, max);
+            int bits = BitsRequired(min, max);
             Debug.Assert(bits < totalNumBits, "reading too many bits for requested range");
 
             return (Peek(bits) + min);
@@ -760,10 +815,10 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(256)]
-        public BitBuffer AddFloat(float value)
+        public BitBuffer AddFloat(in float value)
         {
-            var union = new Utils.FloatUintUnion { single = value };
-            Add(32, union.uint32);
+            uint union = Unsafe.As<float, uint>(ref Unsafe.AsRef<float>(in value));
+            Add(32, union);
 
             return this;
         }
@@ -774,7 +829,7 @@ namespace NetStack.Serialization
             float range = max - min;
             float invPrecision = 1.0f / precision;
             float maxVal = range * invPrecision;
-            int numBits = Utils.Log2((uint)(maxVal + 0.5f)) + 1;
+            int numBits = BitOps.Log2((uint)(maxVal + 0.5f)) + 1;
             float adjusted = (value - min) * invPrecision;
 
             Add(numBits, (uint)(adjusted + 0.5f));
@@ -801,8 +856,8 @@ namespace NetStack.Serialization
         [MethodImpl(256)]
         public float ReadFloat()
         {
-            var union = new Utils.FloatUintUnion { uint32 = Read(32) };
-            return union.single;
+            var value = Read(32);
+            return Unsafe.As<uint, float>(ref value);
         }
 
         [MethodImpl(256)]
@@ -811,7 +866,7 @@ namespace NetStack.Serialization
             float range = max - min;
             float invPrecision = 1.0f / precision;
             float maxVal = range * invPrecision;
-            int numBits = Utils.Log2((uint)(maxVal + 0.5f)) + 1;
+            int numBits = BitOps.Log2((uint)(maxVal + 0.5f)) + 1;
 
             return Read(numBits) * precision + min;
         }
@@ -832,7 +887,7 @@ namespace NetStack.Serialization
             float range = max - min;
             float invPrecision = 1.0f / precision;
             float maxVal = range * invPrecision;
-            int numBits = Utils.Log2((uint)(maxVal + 0.5f)) + 1;
+            int numBits = BitOps.Log2((uint)(maxVal + 0.5f)) + 1;
 
             return Peek(numBits) * precision + min;
         }
@@ -850,8 +905,8 @@ namespace NetStack.Serialization
         [MethodImpl(256)]
         public float PeekFloat()
         {
-            var union = new Utils.FloatUintUnion { uint32 = Peek(32) };
-            return union.single;
+            var value = Peek(32);
+            return Unsafe.As<uint, float>(ref value);
         }
 
         [MethodImpl(256)]
@@ -865,7 +920,7 @@ namespace NetStack.Serialization
 
             if (length * 17 + 10 > (totalNumBits - bitsWriten)) // possible overflow
             {
-                if (Utils.GetStringBitSize(value, length) > (totalNumBits - bitsWriten))
+                if (BitsRequired(value, length) > (totalNumBits - bitsWriten))
                     throw new ArgumentOutOfRangeException("String would not fit in bitstream.");
             }
 

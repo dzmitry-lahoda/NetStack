@@ -2,8 +2,26 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
+  <PropertyGroup>
+    <Authors>Alexander Shoulson, Glenn Fiedler, Stanislav Denisov, Maxim Munnig Schmidt, lahoda.pro</Authors>    
+    <Description>Serialize into bits.</Description>
+    <PackageId>Unofficial.NetStack.Serialization</PackageId>
+    <AssemblyName>NetStack.Serialization</AssemblyName>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageTags>ZigZag;VLQ;compression;ecoding;binary;networking;games;bits;packing;Span;Unsafe</PackageTags>
+    <PackageDescription>    
+    </PackageDescription>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/dzmitry-lahoda/NetStack</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/dzmitry-lahoda/NetStack</RepositoryUrl>  
+    <Version>0.1</Version>   
+    <ReleaseNotes>
+   
+    </ReleaseNotes>
+  </PropertyGroup>
 
-<!-- TODO: add nuget with Alexander Shoulson, Glenn Fiedler, Stanislav Denisov, and Heyworks-->
+<!-- TODO: add nuget with -->
 
   <ItemGroup>
     <PackageReference Include="System.Memory" Version="4.5.1" />

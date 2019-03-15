@@ -1,4 +1,5 @@
 using System;
+using System.Numerics;
 using Xunit;
 
 namespace NetStack.Serialization
@@ -55,7 +56,7 @@ namespace NetStack.Serialization
             buffer.AddByte(byte.MinValue);
             buffer.AddByte(byte.MinValue);
             Assert.Equal(3, buffer.Length);
-        }     
+        }
 
         [Fact]
         public void ByteMin8()
@@ -68,25 +69,25 @@ namespace NetStack.Serialization
             buffer.AddByte(byte.MinValue);
             buffer.AddByte(byte.MinValue);
             buffer.AddByte(byte.MinValue);
-            buffer.AddByte(byte.MinValue);                        
+            buffer.AddByte(byte.MinValue);
             Assert.Equal(8, buffer.Length);
-        }         
+        }
 
         [Fact]
         public void ByteHalf()
         {
             var buffer = new BitBuffer();
-            buffer.AddByte(byte.MaxValue/2);
-            buffer.AddByte(byte.MaxValue/2);
-            buffer.AddByte(byte.MaxValue/2);
-            buffer.AddByte(byte.MaxValue/2);
-            buffer.AddByte(byte.MaxValue/2);
-            buffer.AddByte(byte.MaxValue/2);
-            buffer.AddByte(byte.MaxValue/2);
-            buffer.AddByte(byte.MaxValue/2);             
+            buffer.AddByte(byte.MaxValue / 2);
+            buffer.AddByte(byte.MaxValue / 2);
+            buffer.AddByte(byte.MaxValue / 2);
+            buffer.AddByte(byte.MaxValue / 2);
+            buffer.AddByte(byte.MaxValue / 2);
+            buffer.AddByte(byte.MaxValue / 2);
+            buffer.AddByte(byte.MaxValue / 2);
+            buffer.AddByte(byte.MaxValue / 2);
             //buffer.Finish();         
             Assert.Equal(8, buffer.Length);
-        }   
+        }
 
 
         [Fact]
@@ -96,10 +97,10 @@ namespace NetStack.Serialization
             buffer.AddShort(short.MinValue);
             buffer.AddShort(short.MinValue);
             buffer.AddShort(short.MinValue);
-            buffer.AddShort(short.MinValue);    
+            buffer.AddShort(short.MinValue);
             //buffer.Finish();                  
             Assert.Equal(12, buffer.Length);
-        }                     
+        }
 
         [Fact]
         public void UIntMax()
@@ -115,6 +116,19 @@ namespace NetStack.Serialization
             var buffer = new BitBuffer();
             buffer.AddUInt(uint.MinValue);
             Assert.Equal(1, buffer.Length);
+        }
+
+        [Fact]
+        public void FloatReadWrite()
+        {
+            var buffer = new BitBuffer();
+            buffer.AddFloat(123.456f);
+            buffer.Finish();
+            var allocated = new byte[ushort.MaxValue];
+            buffer.ToArray(allocated);
+            var reader = new BitBuffer(allocated.Length);
+            reader.FromArray(allocated, allocated.Length);
+            Assert.Equal(123.456f, reader.ReadFloat());
         }
 
         [Fact]
@@ -141,6 +155,42 @@ namespace NetStack.Serialization
             var reader = new BitBuffer(allocated.Length);
             reader.FromArray(allocated, allocated.Length);
             Assert.Equal(long.MaxValue, reader.ReadLong());
-        }        
+        }
+
+        [Fact]
+        public void IntMinMaxRequired()
+        {
+            var buffer = new BitBuffer();
+            buffer.AddInt(12345, 0, 123456);
+            buffer.Finish();
+            var allocated = new byte[ushort.MaxValue];
+            buffer.ToArray(allocated);
+            var reader = new BitBuffer(allocated.Length);
+            reader.FromArray(allocated, allocated.Length);
+            Assert.Equal(12345, reader.ReadInt(0, 123456));
+        }
+
+        [Fact]
+        public void FloatMinMaxRequired()
+        {
+            var buffer = new BitBuffer();
+            buffer.AddFloat(1234.5f, 0, 12345.6f, 0.01f);
+            buffer.Finish();
+            var allocated = new byte[ushort.MaxValue];
+            buffer.ToArray(allocated);
+            var reader = new BitBuffer(allocated.Length);
+            reader.FromArray(allocated, allocated.Length);
+            Assert.Equal(1234.5f, reader.ReadFloat(0, 12345.6f, 0.01f));
+        }   
+
+        // TODO: bench replacement and use
+        [Fact]
+        public void Replacement()
+        {
+            Assert.Equal(BitBuffer.FindHighestBitPosition(0b0000_1111),8 - BitOps.LeadingZeroCount(0b0000_1111));
+            Assert.Equal(BitBuffer.FindHighestBitPosition(0b0000_0111),8 - BitOps.LeadingZeroCount(0b0000_0111));
+            Assert.Equal(BitBuffer.FindHighestBitPosition(0b0000_0000),8 - BitOps.LeadingZeroCount(0b0000_0000));
+            Assert.Equal(BitBuffer.FindHighestBitPosition(0b1111_1111),8 - BitOps.LeadingZeroCount(0b1111_1111));
+        }     
     }
 }

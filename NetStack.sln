@@ -17,6 +17,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetStack.Compression.Tests"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetStack.Serialization.Extensions", "Source\NetStack.Serialization.Extensions\NetStack.Serialization.Extensions.csproj", "{3744F0BF-AFFA-42C1-8601-12AF4400163D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Benchmarks", "Benchmarks", "{C43E7088-091A-4429-AE84-437010339ADB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetStack.Serialization.Benchmarks", "Benchmarks\NetStack.Serialization.Benchmarks\NetStack.Serialization.Benchmarks.csproj", "{E266CE35-3EA9-44B0-9F5B-5D56CC34D112}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -90,6 +94,18 @@ Global
 		{3744F0BF-AFFA-42C1-8601-12AF4400163D}.Release|x64.Build.0 = Release|Any CPU
 		{3744F0BF-AFFA-42C1-8601-12AF4400163D}.Release|x86.ActiveCfg = Release|Any CPU
 		{3744F0BF-AFFA-42C1-8601-12AF4400163D}.Release|x86.Build.0 = Release|Any CPU
+		{E266CE35-3EA9-44B0-9F5B-5D56CC34D112}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E266CE35-3EA9-44B0-9F5B-5D56CC34D112}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E266CE35-3EA9-44B0-9F5B-5D56CC34D112}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E266CE35-3EA9-44B0-9F5B-5D56CC34D112}.Debug|x64.Build.0 = Debug|Any CPU
+		{E266CE35-3EA9-44B0-9F5B-5D56CC34D112}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E266CE35-3EA9-44B0-9F5B-5D56CC34D112}.Debug|x86.Build.0 = Debug|Any CPU
+		{E266CE35-3EA9-44B0-9F5B-5D56CC34D112}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E266CE35-3EA9-44B0-9F5B-5D56CC34D112}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E266CE35-3EA9-44B0-9F5B-5D56CC34D112}.Release|x64.ActiveCfg = Release|Any CPU
+		{E266CE35-3EA9-44B0-9F5B-5D56CC34D112}.Release|x64.Build.0 = Release|Any CPU
+		{E266CE35-3EA9-44B0-9F5B-5D56CC34D112}.Release|x86.ActiveCfg = Release|Any CPU
+		{E266CE35-3EA9-44B0-9F5B-5D56CC34D112}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{0FC212E3-5CEC-43B9-9DFC-96BE00A442D6} = {8A7AE70C-2E4D-4028-AC89-9BF9427A283C}
@@ -97,5 +113,6 @@ Global
 		{6270AAA3-1021-49EB-8972-A45A07E9539C} = {4F4501DE-FD0A-490C-AB56-874B7979BBB1}
 		{61206AFF-D804-48EF-8845-25F58630547B} = {4F4501DE-FD0A-490C-AB56-874B7979BBB1}
 		{3744F0BF-AFFA-42C1-8601-12AF4400163D} = {8A7AE70C-2E4D-4028-AC89-9BF9427A283C}
+		{E266CE35-3EA9-44B0-9F5B-5D56CC34D112} = {C43E7088-091A-4429-AE84-437010339ADB}
 	EndGlobalSection
 EndGlobal
