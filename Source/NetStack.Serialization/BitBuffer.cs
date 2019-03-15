@@ -34,19 +34,6 @@ namespace NetStack.Serialization
         private int chunkIndex;
         private int scratchUsedBits;
 
-       // TODO: Replace with .NET Standard BitOps
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static int FindHighestBitPosition(byte data) {
-            int shiftCount = 0;
-
-            while (data > 0) {
-                data >>= 1;
-                shiftCount++;
-            }
-
-            return shiftCount;
-        }
-
         public static int BitsRequired(int min, int max) {
             return (min == max) ? 1 : BitOps.Log2((uint)(max - min)) + 1;
         }
@@ -296,7 +283,7 @@ namespace NetStack.Serialization
                 chunks[i] = chunk;
             }
 
-            int positionInByte = FindHighestBitPosition(data[length - 1]);
+            int positionInByte = 8 - BitOps.LeadingZeroCount(data[length - 1]);
 
             bitsWriten = ((length - 1) * 8) + (positionInByte - 1);
             bitsRead = 0;
@@ -358,7 +345,7 @@ namespace NetStack.Serialization
                 chunks[i] = chunk;
             }
 
-            int positionInByte = FindHighestBitPosition(data[length - 1]);
+            int positionInByte = 8 - BitOps.LeadingZeroCount(data[length - 1]);
 
             bitsWriten = ((length - 1) * 8) + (positionInByte - 1);
             bitsRead = 0;

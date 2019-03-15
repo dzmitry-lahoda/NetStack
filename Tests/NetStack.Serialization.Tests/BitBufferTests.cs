@@ -182,15 +182,5 @@ namespace NetStack.Serialization
             reader.FromArray(allocated, allocated.Length);
             Assert.Equal(1234.5f, reader.ReadFloat(0, 12345.6f, 0.01f));
         }   
-
-        // TODO: bench replacement and use
-        [Fact]
-        public void Replacement()
-        {
-            Assert.Equal(BitBuffer.FindHighestBitPosition(0b0000_1111),8 - BitOps.LeadingZeroCount(0b0000_1111));
-            Assert.Equal(BitBuffer.FindHighestBitPosition(0b0000_0111),8 - BitOps.LeadingZeroCount(0b0000_0111));
-            Assert.Equal(BitBuffer.FindHighestBitPosition(0b0000_0000),8 - BitOps.LeadingZeroCount(0b0000_0000));
-            Assert.Equal(BitBuffer.FindHighestBitPosition(0b1111_1111),8 - BitOps.LeadingZeroCount(0b1111_1111));
-        }     
     }
 }
