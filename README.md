@@ -4,14 +4,15 @@
 
 [![PayPal](https://drive.google.com/uc?id=1OQrtNBVJehNVxgPf6T6yX1wIysz1ElLR)](https://www.paypal.me/nxrighthere) [![Bountysource](https://drive.google.com/uc?id=19QRobscL8Ir2RL489IbVjcw3fULfWS_Q)](https://salt.bountysource.com/checkout/amount?team=nxrighthere) [![Coinbase](https://drive.google.com/uc?id=1LckuF-IAod6xmO9yF-jhTjq1m-4f7cgF)](https://commerce.coinbase.com/checkout/03e11816-b6fc-4e14-b974-29a1d0886697)
 
-Lightweight toolset for creating concurrent networking systems for multiplayer games.
+Code for creating concurrent networking systems for multiplayer games.
 
-NetStack is self-contained and has no dependencies.
+NetStack is dependant on `.NET Standard 2.0`, `System.Memory`,  `System.Runtime.CompilerServices.Unsafe`, and oriented towards usage with `C# 7.3+` (Unity 2018.3+). 
 
-Modules:
+NetStack does NOT depends on `System.IO.Pipelines` and `System.Threading.Channels`.
+  
 
-- Buffers
-  - Thread-safe [array pool](https://adamsitnik.com/Array-Pool/)
+# Modules:
+
 - Compression
   - [Half precision](https://en.wikipedia.org/wiki/Half-precision_floating-point_format) algorithm
   - [Bounded range](https://gafferongames.com/post/snapshot_compression/#optimizing-position) algorithm
@@ -25,45 +26,19 @@ Modules:
     - [ZigZag](https://developers.google.com/protocol-buffers/docs/encoding#signed-integers) encoding
     - [Variable-length](https://rosettacode.org/wiki/Variable-length_quantity) encoding
 - Threading
-  - Array queue
-    - Single-producer single-consumer first-in-first-out non-blocking queue
-  - Concurrent buffer
-    - Multi-producer multi-consumer first-in-first-out non-blocking queue
-  - Concurrent pool
-    - Self-stabilizing semi-lockless circular buffer
+  - ArrayQueue is Single-producer single-consumer first-in-first-out non-blocking queue
+  - ConcurrentBuffer is Multi-producer multi-consumer first-in-first-out non-blocking queue
+  - ConcurrentPool is Self-stabilizing semi-lockless circular buffer
 
-NetStack utilized in various prototypes ([1](https://vimeo.com/292969981), [2](https://forum.unity.com/threads/showcase-enet-unity-ecs-5000-real-time-player-simulation.605656/)) of the high-performance networking systems.
+NetStack utilized in:
+- [1](https://vimeo.com/292969981)
+- [2](https://forum.unity.com/threads/showcase-enet-unity-ecs-5000-real-time-player-simulation.605656/) 
 
-Building
---------
-By default, all scripts are compiled for .NET Standard 2.0.
+# Building
 
-Define `NETSTACK_INLINING` to enable aggressive inlining for performance critical functionality.
+All scripts are compiled for `.NET Standard 2.0` and cross compiled by `Unity 2018.3+`.
 
-Define `NETSTACK_SPAN` to enable support for Span.
-
-Define `NETSTACK_BUFFERS_LOG` to enable buffers logging.
-
-Usage
---------
-##### Thread-safe buffers pool:
-```c#
-// Create a new array pool with a maximum size of 1024 bytes per array, 50 arrays per bucket
-ArrayPool<byte> buffers = ArrayPool<byte>.Create(1024, 50);
-
-// Rent buffer from the pool with a minimum size of 64 bytes, the returned buffer might be larger
-byte[] buffer = buffers.Rent(64);
-
-// Do some stuff
-byte data = 0;
-
-for (int i = 0; i < buffer.Length; i++) {
-	buffer[i] = data++;
-}
-
-// Return buffer back to the pool
-buffers.Return(buffer);
-```
+# Usage
 
 ##### Concurrent objects pool:
 ```c#

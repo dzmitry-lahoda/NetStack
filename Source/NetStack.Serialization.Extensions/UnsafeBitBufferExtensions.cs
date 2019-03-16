@@ -12,19 +12,25 @@ using UnityEngine;
 namespace NetStack.Serialization
 {
     /// <summary>
-    /// Unmanaged read and write.
-    /// Please be aware that padding (empty spaces in data alignment) are also written.
-    /// Please be aware that small numbers if aligned not properly will end up sometimes in large space because became large numbers.
+    /// Unmanaged unsafe read and write of explicit layouted structures for fast prototyping.
     /// </summary>
-    public static class BitBufferExtensions
+    /// <remarks>
+    /// Please be aware that:
+    /// - padding (empty spaces in data alignment) are also written.
+    /// - small numbers if aligned not properly will end up sometimes in large space because became large numbers
+    /// - does not works if remote and local of different endianess.
+    /// - sequential layout (with different padding) may not work. 
+    /// - auto layout will not work.
+    /// </remarks>
+    public static class UnsafeBitBufferExtensions
     {
         /// <summary>
-        /// Writes struct.
+        /// Unmanaged unsafe write of explicit layouted structure into buffer.
         /// </summary>
         /// <typeparam name="T">Any struct with no references to managed heap.</typeparam>
-        /// <param name="readonlyValue">The readonly value.</param>
+        /// <param name="value">The value.</param>
         [MethodImpl(256)]
-        public static BitBuffer AddBlock<T>(this BitBuffer self, in T value)
+        public static BitBuffer AddUnsafe<T>(this BitBuffer self, in T value)
             where T : unmanaged
         {
             var size = Unsafe.SizeOf<T>();
@@ -82,11 +88,11 @@ namespace NetStack.Serialization
         }
 
         /// <summary>
-        /// Reads one element from stream.
+        /// Unmanaged unsafe read of explicit layouted structure from buffer.
         /// </summary>
         /// <typeparam name="T">Element with predefined size.</typeparam>
         /// <returns>The value.</returns>
-        public static T ReadBlock<T>(this BitBuffer self)
+        public static T ReadUnsafe<T>(this BitBuffer self)
            where T : unmanaged
         {
             var size = Unsafe.SizeOf<T>();

@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Source\NetStack.Serialization\NetStack.Serialization.csproj" />
+    <ProjectReference Include="..\..\Source\NetStack.Serialization.Extensions\NetStack.Serialization.Extensions.csproj" />
   </ItemGroup>
 
 </Project>

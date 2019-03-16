@@ -12,9 +12,7 @@ using UnityEngine;
 namespace NetStack.Serialization
 {
     /// <summary>
-    /// Bit level compression by ranged values. Quaternion compression, string UTF-16 support.
-    /// You have to finalize the stream. Fill the buffer with Add commands and if you are done you have to call the Finish.
-    /// ToArray or ToSpan it will automatically invoke the Finish.
+    /// Bit level compression by ranged values. String  UTF-16 support.
     /// </summary>
     public class BitBuffer
     {
@@ -34,14 +32,12 @@ namespace NetStack.Serialization
         private int chunkIndex;
         private int scratchUsedBits;
 
-        public static int BitsRequired(int min, int max) {
-            return (min == max) ? 1 : BitOps.Log2((uint)(max - min)) + 1;
-        }
-
-        public static int BitsRequired(uint min, uint max) {
-            return (min == max) ? 1 : BitOps.Log2(max - min) + 1;
-        }
-
+        public static int BitsRequired(int min, int max) =>
+            (min == max) ? 1 : BitOps.Log2((uint)(max - min)) + 1;
+        
+        public static int BitsRequired(uint min, uint max) =>
+            (min == max) ? 1 : BitOps.Log2(max - min) + 1;
+        
         public static int BitsRequired(string value, int length)
         {
             var bitLength = 10;
@@ -209,6 +205,9 @@ namespace NetStack.Serialization
             return output;
         }
 
+        /// <summary>
+        /// Call after all <see cref="Add"/> commands.
+        /// </summary>
         [MethodImpl(256)]
         public void Finish()
         {
@@ -222,6 +221,11 @@ namespace NetStack.Serialization
             }
         }
 
+        /// <summary>
+        /// Calls <see cref="Finish"/> and copies all internal data into array.
+        /// </summary>
+        /// <param name="data">The output buffer.</param>
+        /// <returns>Count of bytes written.</returns>
         public int ToArray(byte[] data)
         {
             Add(1, 1);
@@ -289,6 +293,11 @@ namespace NetStack.Serialization
             bitsRead = 0;
         }
 
+        /// <summary>
+        /// Calls <see cref="Finish"/> and copies all internal data into span.
+        /// </summary>
+        /// <param name="data">The output buffer.</param>
+        /// <returns>Count of bytes written.</returns>
         public int ToSpan(ref Span<byte> data) {
             Add(1, 1);
 
@@ -366,11 +375,8 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(256)]
-        public bool PeekBool()
-        {
-            return Peek(1) > 0;
-        }
-
+        public bool PeekBool() => Peek(1) > 0;
+        
         [MethodImpl(256)]
         public BitBuffer AddByte(byte value)
         {

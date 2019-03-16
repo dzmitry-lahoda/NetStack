@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 
 namespace System.Numerics
 {
-    internal static partial class BitOps
+    public static partial class BitOps
     {
         #region ExtractBit
 

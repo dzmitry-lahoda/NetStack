@@ -13,31 +13,12 @@ using NetStack.Compression;
 namespace NetStack.Serialization
 {
     /// <summary>
-    /// Float ranged compression.
+    /// Vector and quaternion compression.
     /// </summary>
-    public static class BitBufferExtensions
+    public static class NumericsBitBufferExtensions
     {
         private const float SmallestThreeUnpack = 0.70710678118654752440084436210485f + 0.0000001f; // addition to rounding to fit in -0....1023 instead of 0...1024
         private const float SmallestThreePack = 1f / SmallestThreeUnpack;
-
-        [MethodImpl(256)]
-        public static BitBuffer AddHalfFloat(this BitBuffer self, float value, bool useHalfPrecision = true)
-        {
-            self.Add(16, HalfPrecision.Compress(value));
-            return self;
-        }
-
-        [MethodImpl(256)]
-        public static float ReadHalfFloat(this BitBuffer self)
-        {
-            return HalfPrecision.Decompress((ushort)self.Read(16));
-        }
-
-        [MethodImpl(256)]
-        public static float PeekHalfFloat(this BitBuffer self)
-        {
-            return HalfPrecision.Decompress((ushort)self.Peek(16));
-        }
 
         [MethodImpl(256)]
         public static BitBuffer AddQuaternion(this BitBuffer self, Quaternion quaternion, int bitsPerComponent = 12)

@@ -23,7 +23,7 @@ namespace NetStack.Serialization
         {
             var buffer = new BitBuffer();
             var expected = new SimpleStruct { a = 1.2f, b = 123, c = byte.MaxValue, d = ushort.MaxValue };
-            buffer.AddBlock(in expected);
+            buffer.AddUnsafe(in expected);
             Assert.True(buffer.Length < Unsafe.SizeOf<SimpleStruct>());
         }
 
@@ -32,13 +32,13 @@ namespace NetStack.Serialization
         {
             var buffer = new BitBuffer();
             var expected = new SimpleStruct { a = 1.2f, b = 123, c = byte.MaxValue, d = ushort.MaxValue };
-            buffer.AddBlock(expected);
+            buffer.AddUnsafe(expected);
             buffer.Finish();
             var allocated = new byte[ushort.MaxValue];
             buffer.ToArray(allocated);
             var reader = new BitBuffer(allocated.Length);
             reader.FromArray(allocated, allocated.Length);
-            Assert.Equal(expected, reader.ReadBlock<SimpleStruct>());
+            Assert.Equal(expected, reader.ReadUnsafe<SimpleStruct>());
         }          
     }
 }

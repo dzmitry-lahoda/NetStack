@@ -1,5 +1,5 @@
 using System;
-
+using System.Numerics;
 using BenchmarkDotNet;
 using BenchmarkDotNet.Attributes;
 using NetStack.Serialization;
@@ -10,16 +10,14 @@ namespace benchmarks
     public class UtilsVsBitOps
     {
         [Benchmark]
-        public void BitBuffer0b0000_0000()
+        public void BitOpsLog2()
         {
 
         }
 
         [Benchmark]
-        public void BitOps0b0000_0000()
+        public void MyLog2()
         {
-
         }
-
     }
 }
