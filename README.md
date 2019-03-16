@@ -11,7 +11,7 @@ NetStack is dependant on `.NET Standard 2.0`, `System.Memory`,  `System.Runtime.
 NetStack does NOT depends on `System.IO.Pipelines` and `System.Threading.Channels`.
   
 
-# Modules:
+# Modules
 
 - Compression
   - [Half precision](https://en.wikipedia.org/wiki/Half-precision_floating-point_format) algorithm
@@ -30,9 +30,7 @@ NetStack does NOT depends on `System.IO.Pipelines` and `System.Threading.Channel
   - ConcurrentBuffer is Multi-producer multi-consumer first-in-first-out non-blocking queue
   - ConcurrentPool is Self-stabilizing semi-lockless circular buffer
 
-NetStack utilized in:
-- [1](https://vimeo.com/292969981)
-- [2](https://forum.unity.com/threads/showcase-enet-unity-ecs-5000-real-time-player-simulation.605656/) 
+NetStack utilized [1](https://vimeo.com/292969981) and [2](https://forum.unity.com/threads/showcase-enet-unity-ecs-5000-real-time-player-simulation.605656/) 
 
 # Building
 

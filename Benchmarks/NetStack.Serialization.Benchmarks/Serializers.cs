@@ -21,5 +21,10 @@ namespace NetStack.Serialization
         public void ProtoBufferSerialization()
         {
         }
+        
+        [Benchmark]
+        public void MessagePackSerialization()
+        {
+        }        
     }
 }
