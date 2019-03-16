@@ -11,6 +11,7 @@ using UnityEngine;
 
 namespace NetStack.Serialization
 {
+    // TODO: Split into BitBuffer.Core for maintenance
     /// <summary>
     /// Bit level compression by ranged values. String  UTF-16 support.
     /// </summary>

@@ -8,14 +8,14 @@
     <PackageId>Unofficial.NetStack.Serialization</PackageId>
     <AssemblyName>NetStack.Serialization</AssemblyName>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <PackageTags>ZigZag;VLQ;compression;ecoding;binary;networking;games;bits;packing;Span;Unsafe</PackageTags>
+    <PackageTags>ZigZag;VLQ;compression;encoding;binary;networking;games;bits;packing;Span;Unsafe</PackageTags>
     <PackageDescription>    
     </PackageDescription>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/dzmitry-lahoda/NetStack</PackageProjectUrl>
     <RepositoryUrl>https://github.com/dzmitry-lahoda/NetStack</RepositoryUrl>  
-    <Version>0.2</Version>   
+    <Version>0.2.1</Version>   
     <ReleaseNotes> 
     </ReleaseNotes>
   </PropertyGroup>
