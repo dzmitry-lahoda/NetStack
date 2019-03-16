@@ -2,7 +2,7 @@
 using BenchmarkDotNet;
 using BenchmarkDotNet.Running;
 
-namespace benchmarks
+namespace NetStack.Serialization
 {
     class Program
     {

@@ -17,46 +17,52 @@ namespace NetStack.Serialization
     public class BitBuffer
     {
         private const int defaultCapacity = 375; // 375 * 4 = 1500 bytes default MTU. don't have to grow.
-        private const int stringLengthMax = 255;
+        private const int defaultStringLengthMax = byte.MaxValue;
         private const int stringLengthBits = 8;
         private const int bitsASCII = 7;
         private const int bitsLATIN1 = 8;
         private const int bitsLATINEXT = 9;
         private const int bitsUTF16 = 16;
         private int bitsRead;
-        private int bitsWriten;
+        private int bitsWritten;
         private uint[] chunks;
         private ulong scratch;
         private int totalNumBits;
         private int totalNumChunks;
         private int chunkIndex;
         private int scratchUsedBits;
+        private int stringLengthMax;
+        private StringBuilder builder;
 
         public static int BitsRequired(int min, int max) =>
             (min == max) ? 1 : BitOps.Log2((uint)(max - min)) + 1;
-        
+
         public static int BitsRequired(uint min, uint max) =>
             (min == max) ? 1 : BitOps.Log2(max - min) + 1;
-        
+
         public static int BitsRequired(string value, int length)
         {
             var bitLength = 10;
 
             uint codePage = 0; // Ascii
-            for (int i = 0; i < length; i++) {
+            for (int i = 0; i < length; i++)
+            {
                 var val = value[i];
-                if (val > 127) {
+                if (val > 127)
+                {
                     codePage = 1; // Latin1
-                    if (val > 255) {
+                    if (val > 255)
+                    {
                         codePage = 2; // LatinExtended 
-                        if (val > 511) {
+                        if (val > 511)
+                        {
                             codePage = 3; // UTF-16
                             break;
                         }
                     }
                 }
             }
-            
+
             if (codePage == 0)
                 bitLength += length * 7;
             else if (codePage == 1)
@@ -64,7 +70,8 @@ namespace NetStack.Serialization
             else if (codePage == 2)
                 bitLength += length * 9;
             else if (codePage == 3)
-                for (int i = 0; i < length; i++) {
+                for (int i = 0; i < length; i++)
+                {
                     if (value[i] > 127)
                         bitLength += 17;
                     else
@@ -74,60 +81,41 @@ namespace NetStack.Serialization
             return bitLength;
         }
 
-        public BitBuffer(int capacity = defaultCapacity)
+        public BitBuffer(int capacity = defaultCapacity, int stringLengthMax = defaultStringLengthMax)
         {
             bitsRead = 0;
-            bitsWriten = 0;
+            bitsWritten = 0;
             chunks = new uint[capacity];
             totalNumChunks = capacity;// / 4;
             totalNumBits = capacity * 32;
             chunkIndex = 0;
             scratch = 0;
             scratchUsedBits = 0;
+            this.stringLengthMax = stringLengthMax;
+            builder = new StringBuilder(stringLengthMax);
+
         }
 
-        public int Length
-        {
-            get
-            {
-                return ((bitsWriten - 1) >> 3) + 1;
-            }
-        }
+        /// <summary>
+        /// Count of written bytes.
+        /// </summary>
+        public int Length => ((bitsWritten - 1) >> 3) + 1;
 
-        public int LengthInBits
-        {
-            get
-            {
-                return bitsWriten;
-            }
-        }
+        public int LengthInBits => bitsWritten;
 
-        public bool IsFinished
-        {
-            get
-            {
-                return bitsWriten == bitsRead;
-            }
-        }
+        public bool IsFinished => bitsWritten == bitsRead;
 
-        public int BitsAvailable
-        {
-            get
-            {
-                return totalNumBits - bitsWriten;
-            }
-        }
+        public int BitsRead => bitsRead;
 
-        public bool WouldOverflow(int bits)
-        {
-            return bitsRead + bits > totalNumBits;
-        }
+        public int BitsAvailable => totalNumBits - bitsWritten;
+
+        public bool WouldOverflow(int bits) => bitsRead + bits > totalNumBits;
 
         [MethodImpl(256)]
         public void Clear()
         {
             bitsRead = 0;
-            bitsWriten = 0;
+            bitsWritten = 0;
 
             chunkIndex = 0;
             scratch = 0;
@@ -135,18 +123,27 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(256)]
-        public void ResetReadPos()
+        public void ResetReadPosition()
         {
             Finish();
             bitsRead = 0;
         }
 
+        // TODO: change API to be more safe on bit buffer operations (protect from misuse)
+        [MethodImpl(256)]
+        public void SetReadPosition(int bitsRead)
+        {
+            Debug.Assert(bitsRead >= 0, "Pushing negative bits");
+            Debug.Assert(bitsRead <= totalNumBits, "Pushing too many bits");
+            this.bitsRead = bitsRead;
+        }
+
         [MethodImpl(256)]
         public void Add(int numBits, uint value)
         {
-            Debug.Assert(numBits > 0, "Pushing negative bits");
+            Debug.Assert(numBits > 0, "Pushing negative or zero bits");
             Debug.Assert(numBits <= 32, "Pushing too many bits");
-            Debug.Assert(bitsWriten + numBits <= totalNumBits, "Pushing failed, buffer is full.");
+            Debug.Assert(bitsWritten + numBits <= totalNumBits, "Pushing failed, buffer is full.");
             Debug.Assert(value <= (uint)((1ul << numBits) - 1), "value too big, won't fit in requested number of bits."); // 
 
             value &= (uint)((1ul << numBits) - 1);
@@ -164,7 +161,7 @@ namespace NetStack.Serialization
                 chunkIndex++;
             }
 
-            bitsWriten += numBits;
+            bitsWritten += numBits;
         }
 
         [MethodImpl(256)]
@@ -232,7 +229,7 @@ namespace NetStack.Serialization
 
             Finish();
 
-            int numChunks = (bitsWriten >> 5) + 1;
+            int numChunks = (bitsWritten >> 5) + 1;
             int length = data.Length;
 
             for (int i = 0; i < numChunks; i++)
@@ -289,7 +286,7 @@ namespace NetStack.Serialization
 
             int positionInByte = 8 - BitOps.LeadingZeroCount(data[length - 1]);
 
-            bitsWriten = ((length - 1) * 8) + (positionInByte - 1);
+            bitsWritten = ((length - 1) * 8) + (positionInByte - 1);
             bitsRead = 0;
         }
 
@@ -298,15 +295,17 @@ namespace NetStack.Serialization
         /// </summary>
         /// <param name="data">The output buffer.</param>
         /// <returns>Count of bytes written.</returns>
-        public int ToSpan(ref Span<byte> data) {
+        public int ToSpan(ref Span<byte> data)
+        {
             Add(1, 1);
 
             Finish();
 
-            int numChunks = (bitsWriten >> 5) + 1;
+            int numChunks = (bitsWritten >> 5) + 1;
             int length = data.Length;
 
-            for (int i = 0; i < numChunks; i++) {
+            for (int i = 0; i < numChunks; i++)
+            {
                 int dataIdx = i * 4;
                 uint chunk = chunks[i];
 
@@ -326,16 +325,19 @@ namespace NetStack.Serialization
             return Length;
         }
 
-        public void FromSpan(ref ReadOnlySpan<byte> data, int length) {
+        public void FromSpan(ref ReadOnlySpan<byte> data, int length)
+        {
             int numChunks = (length / 4) + 1;
 
-            if (chunks.Length < numChunks) {
+            if (chunks.Length < numChunks)
+            {
                 chunks = new uint[numChunks];
                 totalNumChunks = numChunks;// / 4;
                 totalNumBits = numChunks * 32;
             }
 
-            for (int i = 0; i < numChunks; i++) {
+            for (int i = 0; i < numChunks; i++)
+            {
                 int dataIdx = i * 4;
                 uint chunk = 0;
 
@@ -356,7 +358,7 @@ namespace NetStack.Serialization
 
             int positionInByte = 8 - BitOps.LeadingZeroCount(data[length - 1]);
 
-            bitsWriten = ((length - 1) * 8) + (positionInByte - 1);
+            bitsWritten = ((length - 1) * 8) + (positionInByte - 1);
             bitsRead = 0;
         }
 
@@ -376,7 +378,7 @@ namespace NetStack.Serialization
 
         [MethodImpl(256)]
         public bool PeekBool() => Peek(1) > 0;
-        
+
         [MethodImpl(256)]
         public BitBuffer AddByte(byte value)
         {
@@ -408,40 +410,24 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(256)]
-        public byte ReadByte(int numBits)
-        {
-            return (byte)ReadUInt(numBits);
-        }
+        public byte ReadByte(int numBits) => (byte)ReadUInt(numBits);
 
         [MethodImpl(256)]
-        public byte ReadByte(byte min, byte max)
-        {
-            return (byte)ReadUInt(min, max);
-        }
+        public byte ReadByte(byte min, byte max) => (byte)ReadUInt(min, max);
 
         [MethodImpl(256)]
-        public byte PeekByte()
-        {
-            return (byte)Peek(8);
-        }
+        public byte PeekByte() => (byte)Peek(8);
 
         [MethodImpl(256)]
-        public byte PeekByte(int numBits)
-        {
-            return (byte)PeekUInt(numBits);
-        }
+        public byte PeekByte(int numBits) => (byte)PeekUInt(numBits);
 
         [MethodImpl(256)]
-        public byte PeekByte(byte min, byte max)
-        {
-            return (byte)PeekUInt(min, max);
-        }
+        public byte PeekByte(byte min, byte max) => (byte)PeekUInt(min, max);
 
         [MethodImpl(256)]
         public BitBuffer AddShort(short value)
         {
             AddInt(value);
-
             return this;
         }
 
@@ -462,34 +448,19 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(256)]
-        public short ReadShort()
-        {
-            return (short)ReadInt();
-        }
+        public short ReadShort() => (short)ReadInt();
 
         [MethodImpl(256)]
-        public short ReadShort(int numBits)
-        {
-            return (short)ReadInt(numBits);
-        }
+        public short ReadShort(int numBits) => (short)ReadInt(numBits);
 
         [MethodImpl(256)]
-        public short ReadShort(short min, short max)
-        {
-            return (short)ReadInt(min, max);
-        }
+        public short ReadShort(short min, short max) => (short)ReadInt(min, max);
 
         [MethodImpl(256)]
-        public short PeekShort()
-        {
-            return (short)PeekInt();
-        }
+        public short PeekShort() => (short)PeekInt();
 
         [MethodImpl(256)]
-        public short PeekShort(int numBits)
-        {
-            return (short)PeekInt(numBits);
-        }
+        public short PeekShort(int numBits) => (short)PeekInt(numBits);
 
         [MethodImpl(256)]
         public short PeekShort(short min, short max)
@@ -705,10 +676,7 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(256)]
-        public uint ReadUInt(int numBits)
-        {
-            return Read(numBits);
-        }
+        public uint ReadUInt(int numBits) => Read(numBits);
 
         [MethodImpl(256)]
         public uint ReadUInt(uint min, uint max)
@@ -733,10 +701,7 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(256)]
-        public uint PeekUInt(int numBits)
-        {
-            return Peek(numBits);
-        }
+        public uint PeekUInt(int numBits) => Peek(numBits);
 
         [MethodImpl(256)]
         public uint PeekUInt(uint min, uint max)
@@ -907,14 +872,15 @@ namespace NetStack.Serialization
         public BitBuffer AddString(string value)
         {
             Debug.Assert(value != null, "String is null");
+            Debug.Assert(value.Length <= stringLengthMax, "String is larger than accepted");
 
             int length = value.Length;
             if (length > stringLengthMax)
                 length = stringLengthMax;
 
-            if (length * 17 + 10 > (totalNumBits - bitsWriten)) // possible overflow
+            if (length * 17 + 10 > (totalNumBits - bitsWritten)) // possible overflow
             {
-                if (BitsRequired(value, length) > (totalNumBits - bitsWriten))
+                if (BitsRequired(value, length) > (totalNumBits - bitsWritten))
                     throw new ArgumentOutOfRangeException("String would not fit in bitstream.");
             }
 
@@ -972,8 +938,6 @@ namespace NetStack.Serialization
 
             return this;
         }
-
-        private StringBuilder builder = new StringBuilder(stringLengthMax);
 
         [MethodImpl(256)]
         public string ReadString()

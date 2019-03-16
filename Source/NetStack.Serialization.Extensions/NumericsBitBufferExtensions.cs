@@ -161,14 +161,13 @@ namespace NetStack.Serialization
             }
         }
 
-        // [MethodImpl(256)]
-        // public static Quaternion PeekQuaternion(this BitBuffer self, int bitsPerValue = 12)
-        // {
-        //     var curReadpos = bitsRead;
-        //     var value = self.ReadQuaternion(bitsPerValue);
-
-        //     bitsRead = curReadpos;
-        //     return value;
-        // }        
+        [MethodImpl(256)]
+        public static Quaternion PeekQuaternion(this BitBuffer self, int bitsPerValue = 12)
+        {
+            var curReadpos = self.BitsRead;
+            var value = self.ReadQuaternion(bitsPerValue);
+            self.SetReadPosition(curReadpos);          
+            return value;
+        }        
     }
 }
