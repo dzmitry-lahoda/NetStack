@@ -4,18 +4,18 @@
   </PropertyGroup>
   <PropertyGroup>
     <Authors>Alexander Shoulson, Glenn Fiedler, Stanislav Denisov, Maxim Munnig Schmidt, lahoda.pro</Authors>    
-    <Description>Serialize into compressed bits.</Description>
+    <Description>Fast serialize into compressed bits.</Description>
     <PackageId>Unofficial.NetStack.Serialization</PackageId>
     <AssemblyName>NetStack.Serialization</AssemblyName>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <PackageTags>ZigZag;VLQ;compression;encoding;binary;networking;games;bits;packing;Span;Unsafe</PackageTags>
+    <PackageTags>ZigZag;VLQ;compression;encoding;binary;networking;games;bits;packing;Span;Unsafe;performance;realtime</PackageTags>
     <PackageDescription>    
     </PackageDescription>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/dzmitry-lahoda/NetStack</PackageProjectUrl>
     <RepositoryUrl>https://github.com/dzmitry-lahoda/NetStack</RepositoryUrl>  
-    <Version>0.2.1</Version>   
+    <Version>0.2.2</Version>   
     <ReleaseNotes> 
     </ReleaseNotes>
   </PropertyGroup>
