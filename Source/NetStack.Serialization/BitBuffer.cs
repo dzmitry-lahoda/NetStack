@@ -135,12 +135,21 @@ namespace NetStack.Serialization
         /// <returns>Count of bytes written.</returns>
         public int ToArray(byte[] data)
         {
+            int length = data.Length;
+            ToArray(data, 0, length);
+            return Length;
+        }
+
+        public void ToArray(byte[] data, int position, int length)
+        {
+            Debug.Assert(length > 0);
+            Debug.Assert(position >= 0);
+
             Add(1, 1);
 
             Finish();
 
             int numChunks = (bitsWritten >> 5) + 1;
-            int length = data.Length;
 
             for (int i = 0; i < numChunks; i++)
             {
@@ -148,24 +157,31 @@ namespace NetStack.Serialization
                 uint chunk = chunks[i];
 
                 if (dataIdx < length)
-                    data[dataIdx] = (byte)(chunk);
+                    data[position + dataIdx] = (byte)(chunk);
 
                 if (dataIdx + 1 < length)
-                    data[dataIdx + 1] = (byte)(chunk >> 8);
+                    data[position + dataIdx + 1] = (byte)(chunk >> 8);
 
                 if (dataIdx + 2 < length)
-                    data[dataIdx + 2] = (byte)(chunk >> 16);
+                    data[position + dataIdx + 2] = (byte)(chunk >> 16);
 
                 if (dataIdx + 3 < length)
-                    data[dataIdx + 3] = (byte)(chunk >> 24);
+                    data[position + dataIdx + 3] = (byte)(chunk >> 24);
             }
-
-            return Length;
         }
 
-        public void FromArray(byte[] data, int length)
+        public void FromArray(byte[] data)
         {
-            int numChunks = (length / 4) + 1;
+            int length = data.Length;
+            FromArray(data, 0, length);
+        }
+
+        public void FromArray(byte[] data, int position, int length)
+        {
+            Debug.Assert(length > 0);
+            Debug.Assert(position >= 0);
+
+            int numChunks = ((length - position) / 4) + 1;
 
             if (chunks.Length < numChunks)
             {
@@ -180,21 +196,21 @@ namespace NetStack.Serialization
                 uint chunk = 0;
 
                 if (dataIdx < length)
-                    chunk = (uint)data[dataIdx];
+                    chunk = (uint)data[position + dataIdx];
 
                 if (dataIdx + 1 < length)
-                    chunk = chunk | (uint)data[dataIdx + 1] << 8;
+                    chunk = chunk | (uint)data[position + dataIdx + 1] << 8;
 
                 if (dataIdx + 2 < length)
-                    chunk = chunk | (uint)data[dataIdx + 2] << 16;
+                    chunk = chunk | (uint)data[position + dataIdx + 2] << 16;
 
                 if (dataIdx + 3 < length)
-                    chunk = chunk | (uint)data[dataIdx + 3] << 24;
+                    chunk = chunk | (uint)data[position + dataIdx + 3] << 24;
 
                 chunks[i] = chunk;
             }
 
-            int positionInByte = 8 - BitOperations.LeadingZeroCount(data[length - 1]);
+            int positionInByte = 8 - BitOperations.LeadingZeroCount(data[position + length - 1]);
 
             bitsWritten = ((length - 1) * 8) + (positionInByte - 1);
             bitsRead = 0;
@@ -637,11 +653,10 @@ namespace NetStack.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public BitBuffer AddFloat(in float value)
         {
-            uint union = Unsafe.As<float, uint>(ref Unsafe.AsRef<float>(in value));
-            Add(32, union);
-
+            uint reinterpreted = Unsafe.As<float, uint>(ref Unsafe.AsRef<float>(in value));
+            Add(32, reinterpreted);
             return this;
-        }
+        }              
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public BitBuffer AddFloat(float value, float min, float max, float precision)
@@ -651,9 +666,7 @@ namespace NetStack.Serialization
             float maxVal = range * invPrecision;
             int numBits = BitOperations.Log2((uint)(maxVal + 0.5f)) + 1;
             float adjusted = (value - min) * invPrecision;
-
             Add(numBits, (uint)(adjusted + 0.5f));
-
             return this;
         }
 
@@ -728,6 +741,28 @@ namespace NetStack.Serialization
             var value = Peek(32);
             return Unsafe.As<uint, float>(ref value);
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public BitBuffer AddDouble(in double value)
+        {
+            ulong reinterpreted = Unsafe.As<double, ulong>(ref Unsafe.AsRef<double>(in value));
+            AddULong(reinterpreted);
+            return this;
+        }        
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public double ReadDouble()
+        {
+            var value = ReadULong();
+            return Unsafe.As<ulong, double>(ref value);
+        }       
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public double PeekDouble()
+        {
+            var value = PeekULong();
+            return Unsafe.As<ulong, double>(ref value);
+        }          
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public BitBuffer AddByteArray(byte[] value)
