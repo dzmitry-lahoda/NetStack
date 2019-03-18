@@ -182,5 +182,48 @@ namespace NetStack.Serialization
             reader.FromArray(allocated, allocated.Length);
             Assert.Equal(1234.5f, reader.ReadFloat(0, 12345.6f, 0.01f));
         }   
+
+        [Fact]
+        public void AnsiStringWriteRead()
+        {
+            var buffer = new BitBuffer();
+            buffer.AddString("123456789");
+            buffer.Finish();
+            var allocated = new byte[ushort.MaxValue];
+            buffer.ToArray(allocated);
+            var reader = new BitBuffer(allocated.Length);
+            reader.FromArray(allocated, allocated.Length);
+            Assert.Equal("123456789", reader.ReadString());
+        }         
+
+        [Fact]
+        public void ByteArrayWriteRead()
+        {
+            var buffer = new BitBuffer();
+            var input = new byte[]{1,2,3,4,5};
+            buffer.AddByteArray(input);
+            buffer.Finish();
+            var allocated = new byte[ushort.MaxValue];
+            buffer.ToArray(allocated);
+            var reader = new BitBuffer(allocated.Length);
+            reader.FromArray(allocated, allocated.Length);
+            var output = new byte[5];
+            reader.ReadByteArray(ref output);
+            Assert.Equal(input, output);
+        }      
+
+        [Fact]
+        public void ByteArrayMaxWriteRead()
+        {
+            var buffer = new BitBuffer();
+            var input = new byte[buffer.ByteArrLengthMax];
+            buffer.AddByteArray(input);
+            buffer.Finish();
+            var allocated = new byte[ushort.MaxValue];
+            buffer.ToArray(allocated);
+            var reader = new BitBuffer(allocated.Length);
+            reader.FromArray(allocated, allocated.Length);
+            Assert.Equal(buffer.ByteArrLengthMax, reader.PeekByteArrayLength());
+        }                  
     }
 }

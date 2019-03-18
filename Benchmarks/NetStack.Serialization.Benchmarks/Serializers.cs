@@ -16,7 +16,7 @@ namespace NetStack.Serialization
 
         }
 
-        // TODO: because frequently used in GRPC and other slow stuff to get if should migrate
+        // TODO: because frequently used in GRPC/MessagePack/raw bytes into buffer via Unsafe/via ObjectLayoutInspector and other slow stuff to get if should migrate
         [Benchmark]
         public void ProtoBufferSerialization()
         {

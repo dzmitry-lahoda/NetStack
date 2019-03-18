@@ -15,15 +15,28 @@ namespace NetStack.Serialization
     /// <summary>
     /// Bit level compression by ranged values. String  UTF-16 support.
     /// </summary>
+    // TODO: add custom visualizer here (like array one)
     public class BitBuffer
     {
         private const int defaultCapacity = 375; // 375 * 4 = 1500 bytes default MTU. don't have to grow.
-        private const int defaultStringLengthMax = byte.MaxValue;
-        private const int stringLengthBits = 8;
+        private const int defaultStringLengthBits = 8;
+        
+        private const int defaultByteArrLengthBits = 9;
+
         private const int bitsASCII = 7;
         private const int bitsLATIN1 = 8;
         private const int bitsLATINEXT = 9;
         private const int bitsUTF16 = 16;
+
+        private int byteArrLengthMax;
+
+        public int ByteArrLengthMax => byteArrLengthMax;
+        
+        private int byteArrLengthBits;
+
+        private int stringLengthBits;        
+        private int stringLengthMax;
+
         private int bitsRead;
         private int bitsWritten;
         private uint[] chunks;
@@ -32,7 +45,7 @@ namespace NetStack.Serialization
         private int totalNumChunks;
         private int chunkIndex;
         private int scratchUsedBits;
-        private int stringLengthMax;
+
         private StringBuilder builder;
 
         public static int BitsRequired(int min, int max) =>
@@ -82,7 +95,13 @@ namespace NetStack.Serialization
             return bitLength;
         }
 
-        public BitBuffer(int capacity = defaultCapacity, int stringLengthMax = defaultStringLengthMax)
+        /// <summary>
+        /// Creates new instance with its own bufffer.
+        /// </summary>
+        /// <param name="capacity">Count of 4 byte integers used as internal buffer.</param>
+        /// <param name="stringLengthBits">Bits used to store length of strings.</param>
+        /// <param name="byteArrLengthBits">Bits used to store length of byte arrays.</param>
+        public BitBuffer(int capacity = defaultCapacity, int stringLengthBits = defaultStringLengthBits, int byteArrLengthBits = defaultByteArrLengthBits)
         {
             bitsRead = 0;
             bitsWritten = 0;
@@ -92,9 +111,11 @@ namespace NetStack.Serialization
             chunkIndex = 0;
             scratch = 0;
             scratchUsedBits = 0;
-            this.stringLengthMax = stringLengthMax;
+            this.byteArrLengthBits = byteArrLengthBits;
+            byteArrLengthMax = (1 << byteArrLengthBits) - 1;
+            this.stringLengthBits = stringLengthBits;
+            stringLengthMax =  (1 << stringLengthBits) - 1;
             builder = new StringBuilder(stringLengthMax);
-
         }
 
         /// <summary>
@@ -873,7 +894,7 @@ namespace NetStack.Serialization
         public BitBuffer AddString(string value)
         {
             Debug.Assert(value != null, "String is null");
-            Debug.Assert(value.Length <= stringLengthMax, "String is larger than accepted");
+            Debug.Assert(value.Length <= stringLengthMax, "String too long, raise the stringLengthMax value or split the string.");
 
             int length = value.Length;
             if (length > stringLengthMax)
@@ -976,6 +997,63 @@ namespace NetStack.Serialization
             return builder.ToString();
         }
 
+        [MethodImpl(256)]
+        public BitBuffer AddByteArray(byte[] value)
+        {
+            AddByteArray(value, 0, value.Length);
+
+            return this;
+        }
+
+        [MethodImpl(256)]
+        public BitBuffer AddByteArray(byte[] value, int length)
+        {
+            AddByteArray(value, 0, length);
+            return this;
+        }
+
+        [MethodImpl(256)]
+        public BitBuffer AddByteArray(byte[] value, int offset, int length)
+        {
+            Debug.Assert(value != null, "Supplied bytearray is null");
+            Debug.Assert(length <= byteArrLengthMax, "Byte array too big, raise the byteArrLengthMax value or split the array.");
+
+            if (length > byteArrLengthMax)
+                length = byteArrLengthMax;
+
+            Debug.Assert(length + 9 <= (totalNumBits - bitsWritten), "Byte array too big for buffer.");
+
+            Add(byteArrLengthBits, (uint)length);
+
+            for (int index = offset; index < length; index++)
+            {
+                AddByte(value[index]);
+            }
+
+            return this;
+        }
+
+        [MethodImpl(256)]
+        public void ReadByteArray(ref byte[] outValue) => ReadByteArray(ref outValue, 0);        
+
+        [MethodImpl(256)]
+        public void ReadByteArray(ref byte[] outValue, int offset)
+        {
+            Debug.Assert(outValue != null, "Supplied bytearray is null");
+
+            var length = Read(byteArrLengthBits);
+
+            Debug.Assert(length <= outValue.Length + offset, "The supplied byte array is too small for requested read");
+
+            for (int index = offset; index < length; index++)
+            {
+                outValue[index] = ReadByte();
+            }
+        }
+
+        [MethodImpl(256)]
+        public int PeekByteArrayLength() => (int)Peek(byteArrLengthBits);
+
         public override string ToString()
         {
             builder.Length = 0;
@@ -985,7 +1063,7 @@ namespace NetStack.Serialization
                 builder.Append(Convert.ToString(chunks[i], 2).PadLeft(32, '0'));
             }
 
-            StringBuilder spaced = new StringBuilder();
+            var spaced = new StringBuilder();
 
             for (int i = 0; i < builder.Length; i++)
             {
