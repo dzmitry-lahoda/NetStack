@@ -4,140 +4,8 @@ using Xunit;
 
 namespace NetStack.Serialization
 {
-    public class BitBufferTests
+    partial class BitBufferTests
     {
-        [Fact]
-        public void BoolIsBit7()
-        {
-            var buffer = new BitBuffer();
-            buffer.AddBool(true);
-            buffer.AddBool(true);
-            buffer.AddBool(true);
-            buffer.AddBool(true);
-            buffer.AddBool(true);
-            buffer.AddBool(true);
-            buffer.AddBool(true);
-            Assert.Equal(1, buffer.Length);
-        }
-
-        [Fact]
-        public void BoolIsBit9()
-        {
-            var buffer = new BitBuffer();
-            buffer.AddBool(true);
-            buffer.AddBool(true);
-            buffer.AddBool(true);
-            buffer.AddBool(true);
-            buffer.AddBool(true);
-            buffer.AddBool(true);
-            buffer.AddBool(true);
-            buffer.AddBool(true);
-
-            buffer.AddBool(true);
-            Assert.Equal(2, buffer.Length);
-        }
-
-        [Fact]
-        public void ByteMax3()
-        {
-            var buffer = new BitBuffer();
-            buffer.AddByte(byte.MaxValue);
-            buffer.AddByte(byte.MaxValue);
-            buffer.AddByte(byte.MaxValue);
-            Assert.Equal(3, buffer.Length);
-        }
-
-        [Fact]
-        public void ByteMin3()
-        {
-            var buffer = new BitBuffer();
-            buffer.AddByte(byte.MinValue);
-            buffer.AddByte(byte.MinValue);
-            buffer.AddByte(byte.MinValue);
-            Assert.Equal(3, buffer.Length);
-        }
-
-        [Fact]
-        public void ByteMin8()
-        {
-            var buffer = new BitBuffer();
-            buffer.AddByte(byte.MinValue);
-            buffer.AddByte(byte.MinValue);
-            buffer.AddByte(byte.MinValue);
-            buffer.AddByte(byte.MinValue);
-            buffer.AddByte(byte.MinValue);
-            buffer.AddByte(byte.MinValue);
-            buffer.AddByte(byte.MinValue);
-            buffer.AddByte(byte.MinValue);
-            Assert.Equal(8, buffer.Length);
-        }
-
-        [Fact]
-        public void ByteHalf()
-        {
-            var buffer = new BitBuffer();
-            buffer.AddByte(byte.MaxValue / 2);
-            buffer.AddByte(byte.MaxValue / 2);
-            buffer.AddByte(byte.MaxValue / 2);
-            buffer.AddByte(byte.MaxValue / 2);
-            buffer.AddByte(byte.MaxValue / 2);
-            buffer.AddByte(byte.MaxValue / 2);
-            buffer.AddByte(byte.MaxValue / 2);
-            buffer.AddByte(byte.MaxValue / 2);
-            Assert.Equal(8, buffer.Length);
-        }
-
-        [Fact]
-        public void ByteShortMin4()
-        {
-            var buffer = new BitBuffer();
-            buffer.AddShort(short.MinValue);
-            buffer.AddShort(short.MinValue);
-            buffer.AddShort(short.MinValue);
-            buffer.AddShort(short.MinValue);
-            Assert.Equal(12, buffer.Length);
-        }
-
-        [Fact]
-        public void ByteShort0()
-        {
-            var buffer = new BitBuffer();
-            buffer.AddShort(0);
-            buffer.AddShort(0);
-            buffer.AddShort(0);
-            buffer.AddShort(0);
-            Assert.Equal(4, buffer.Length);
-        }
-
-        [Fact]
-        public void SByte0()
-        {
-            var buffer = new BitBuffer();
-            buffer.AddSByte(0);
-            buffer.AddSByte(0);
-            buffer.AddSByte(0);
-            buffer.AddSByte(0);
-            Assert.Equal(4, buffer.Length);
-        }        
-
-        [Fact]
-        public void ByteShortMax4()
-        {
-            var buffer1 = new BitBuffer();
-            buffer1.AddShort(short.MaxValue);
-            buffer1.AddShort(short.MaxValue);
-            buffer1.AddShort(short.MaxValue);
-            buffer1.AddShort(short.MaxValue);
-            Assert.Equal(12, buffer1.Length);
-
-            var buffer2 = new BitBuffer();
-            buffer2.AddShort(short.MaxValue, short.MinValue, short.MaxValue);
-            buffer2.AddShort(short.MaxValue, short.MinValue, short.MaxValue);
-            buffer2.AddShort(short.MaxValue, short.MinValue, short.MaxValue);
-            buffer2.AddShort(short.MaxValue, short.MinValue, short.MaxValue);
-            Assert.Equal(8, buffer2.Length);
-        }
-
         [Fact]
         public void UShortReadWrite()
         {
@@ -194,22 +62,6 @@ namespace NetStack.Serialization
             short half = short.MaxValue / 2;
             Assert.Equal(half, reader.ReadShort());
             Assert.Equal(short.MaxValue, reader.ReadShort());
-        }
-
-        [Fact]
-        public void UIntMax()
-        {
-            var buffer = new BitBuffer();
-            buffer.AddUInt(uint.MaxValue);
-            Assert.Equal(5, buffer.Length);
-        }
-
-        [Fact]
-        public void UIntMin()
-        {
-            var buffer = new BitBuffer();
-            buffer.AddUInt(uint.MinValue);
-            Assert.Equal(1, buffer.Length);
         }
 
         [Fact]
@@ -307,7 +159,7 @@ namespace NetStack.Serialization
             Assert.Equal(int.MinValue, reader.ReadInt());
             Assert.Equal(0, reader.ReadInt());
             Assert.Equal(int.MaxValue, reader.ReadInt());
-        }
+        }     
 
         [Fact]
         public void IntMinMaxRequired()
