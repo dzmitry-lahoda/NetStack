@@ -340,6 +340,46 @@ namespace NetStack.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public byte PeekByte(byte min, byte max) => (byte)PeekUInt(min, max);
 
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public BitBuffer AddSByte(sbyte value)
+        {
+            AddInt(value, 8);
+            return this;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public BitBuffer AddSByte(sbyte value, int numBits)
+        {
+            AddInt(value, numBits);
+            return this;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public BitBuffer AddSByte(sbyte value, sbyte min, sbyte max)
+        {
+            AddInt(value, min, max);
+            return this;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public sbyte ReadSByte() => (sbyte)ReadInt(8);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public sbyte ReadSByte(int numBits) => (sbyte)ReadInt(numBits);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public sbyte ReadSByte(sbyte min, sbyte max) => (sbyte)ReadInt(min, max);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public sbyte PeekSByte() => (sbyte)Peek(8);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public sbyte PeekSByte(int numBits) => (sbyte)PeekInt(numBits);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public sbyte PeekSByte(sbyte min, sbyte max) => (sbyte)PeekInt(min, max);
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public BitBuffer AddShort(short value)
         {
@@ -378,6 +418,7 @@ namespace NetStack.Serialization
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public short PeekShort(short min, short max) => (short)PeekInt(min, max);
+
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public BitBuffer AddUShort(ushort value)
@@ -505,11 +546,11 @@ namespace NetStack.Serialization
         {
             do
             {
-                var buffer = value & 0x7Fu;
+                var buffer = value & 0b0111_1111u;
                 value >>= 7;
 
                 if (value > 0)
-                    buffer |= 0x80u;
+                    buffer |= 0b1000_0000u;
 
                 Add(8, buffer);
             }
@@ -548,10 +589,10 @@ namespace NetStack.Serialization
             {
                 buffer = Read(8);
 
-                value |= (buffer & 0x7Fu) << shift;
+                value |= (buffer & 0b0111_1111u) << shift;
                 shift += 7;
             }
-            while ((buffer & 0x80u) > 0);
+            while ((buffer & 0b1000_0000u) > 0);
 
             return value;
         }
@@ -656,7 +697,7 @@ namespace NetStack.Serialization
             uint reinterpreted = Unsafe.As<float, uint>(ref Unsafe.AsRef<float>(in value));
             Add(32, reinterpreted);
             return this;
-        }              
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public BitBuffer AddFloat(float value, float min, float max, float precision)
@@ -748,21 +789,21 @@ namespace NetStack.Serialization
             ulong reinterpreted = Unsafe.As<double, ulong>(ref Unsafe.AsRef<double>(in value));
             AddULong(reinterpreted);
             return this;
-        }        
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public double ReadDouble()
         {
             var value = ReadULong();
             return Unsafe.As<ulong, double>(ref value);
-        }       
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public double PeekDouble()
         {
             var value = PeekULong();
             return Unsafe.As<ulong, double>(ref value);
-        }          
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public BitBuffer AddByteArray(byte[] value)
@@ -782,7 +823,7 @@ namespace NetStack.Serialization
         public BitBuffer AddByteArray(byte[] value, int offset, int length)
         {
             Debug.Assert(value != null, "Supplied bytearray is null");
-            Debug.Assert(length <= byteArrLengthMax, "Byte array too big, raise the byteArrLengthMax value or split the array.");
+            Debug.Assert(length <= byteArrLengthMax, $"Byte array too big, raise the {nameof(byteArrLengthBits)} value or split the array.");
 
             if (length > byteArrLengthMax)
                 length = byteArrLengthMax;

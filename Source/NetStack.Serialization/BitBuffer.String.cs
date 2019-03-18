@@ -69,7 +69,7 @@ namespace NetStack.Serialization
         public BitBuffer AddString(string value)
         {
             Debug.Assert(value != null, "String is null");
-            Debug.Assert(value.Length <= stringLengthMax, "String too long, raise the stringLengthMax value or split the string.");
+            Debug.Assert(value.Length <= stringLengthMax, $"String too long, raise the {nameof(stringLengthBits)} value or split the string.");
 
             int length = value.Length;
             if (length > stringLengthMax)
