@@ -16,17 +16,13 @@ namespace NetStack.Serialization
     /// Bit level compression by ranged values. String  UTF-16 support.
     /// </summary>
     // TODO: add custom visualizer here (like array one)
-    public class BitBuffer
+    public partial class BitBuffer
     {
         private const int defaultCapacity = 375; // 375 * 4 = 1500 bytes default MTU. don't have to grow.
-        private const int defaultStringLengthBits = 8;
 
         private const int defaultByteArrLengthBits = 9;
-
-        private const int bitsASCII = 7;
-        private const int bitsLATIN1 = 8;
-        private const int bitsLATINEXT = 9;
-        private const int bitsUTF16 = 16;
+        
+         private const int defaultStringLengthBits = 8;
 
         private int byteArrLengthMax;
 
@@ -34,66 +30,11 @@ namespace NetStack.Serialization
 
         private int byteArrLengthBits;
 
-        private int stringLengthBits;
-        private int stringLengthMax;
-
-        private int bitsRead;
-        private int bitsWritten;
-        private uint[] chunks;
-        private ulong scratch;
-        private int totalNumBits;
-        private int totalNumChunks;
-        private int chunkIndex;
-        private int scratchUsedBits;
-
-        private StringBuilder builder;
-
         public static int BitsRequired(int min, int max) =>
             (min == max) ? 1 : BitOps.Log2((uint)(max - min)) + 1;
 
         public static int BitsRequired(uint min, uint max) =>
             (min == max) ? 1 : BitOps.Log2(max - min) + 1;
-
-        public static int BitsRequired(string value, int length)
-        {
-            var bitLength = 10;
-
-            uint codePage = 0; // Ascii
-            for (int i = 0; i < length; i++)
-            {
-                var val = value[i];
-                if (val > 127)
-                {
-                    codePage = 1; // Latin1
-                    if (val > 255)
-                    {
-                        codePage = 2; // LatinExtended 
-                        if (val > 511)
-                        {
-                            codePage = 3; // UTF-16
-                            break;
-                        }
-                    }
-                }
-            }
-
-            if (codePage == 0)
-                bitLength += length * 7;
-            else if (codePage == 1)
-                bitLength += length * 8;
-            else if (codePage == 2)
-                bitLength += length * 9;
-            else if (codePage == 3)
-                for (int i = 0; i < length; i++)
-                {
-                    if (value[i] > 127)
-                        bitLength += 17;
-                    else
-                        bitLength += 8;
-                }
-
-            return bitLength;
-        }
 
         /// <summary>
         /// Creates new instance with its own bufffer.
@@ -133,7 +74,7 @@ namespace NetStack.Serialization
 
         public bool WouldOverflow(int bits) => bitsRead + bits > totalNumBits;
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Clear()
         {
             bitsRead = 0;
@@ -144,7 +85,7 @@ namespace NetStack.Serialization
             scratchUsedBits = 0;
         }
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void ResetReadPosition()
         {
             Finish();
@@ -152,7 +93,7 @@ namespace NetStack.Serialization
         }
 
         // TODO: change API to be more safe on bit buffer operations (protect from misuse)
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetReadPosition(int bitsRead)
         {
             Debug.Assert(bitsRead >= 0, "Pushing negative bits");
@@ -160,74 +101,18 @@ namespace NetStack.Serialization
             this.bitsRead = bitsRead;
         }
 
-        [MethodImpl(256)]
-        public void Add(int numBits, uint value)
-        {
-            Debug.Assert(numBits > 0, "Pushing negative or zero bits");
-            Debug.Assert(numBits <= 32, "Pushing too many bits");
-            Debug.Assert(bitsWritten + numBits <= totalNumBits, "Pushing failed, buffer is full.");
-            Debug.Assert(value <= (uint)((1ul << numBits) - 1), "value too big, won't fit in requested number of bits."); // 
-
-            value &= (uint)((1ul << numBits) - 1);
-
-            scratch |= ((ulong)value) << scratchUsedBits;
-
-            scratchUsedBits += numBits;
-
-            if (scratchUsedBits >= 32)
-            {
-                Debug.Assert(chunkIndex < totalNumChunks, "Pushing failed, buffer is full.");
-                chunks[chunkIndex] = (uint)(scratch);
-                scratch >>= 32;
-                scratchUsedBits -= 32;
-                chunkIndex++;
-            }
-
-            bitsWritten += numBits;
-        }
-
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public uint Read(int numBits)
         {
             uint result = Peek(numBits);
-
             bitsRead += numBits;
-
             return result;
-        }
-
-        [MethodImpl(256)]
-        public uint Peek(int numBits)
-        {
-            Debug.Assert(numBits > 0, "reading negative bits");
-            Debug.Assert(numBits <= 32, "reading too many bits");
-            Debug.Assert(bitsRead + numBits <= totalNumBits, "reading more bits than in buffer");
-
-            Debug.Assert(scratchUsedBits >= 0 && scratchUsedBits <= 64, "Too many bits used in scratch, Overflow?");
-
-            if (scratchUsedBits < numBits)
-            {
-                Debug.Assert(chunkIndex < totalNumChunks, "reading more than buffer size");
-
-                scratch |= ((ulong)(chunks[chunkIndex])) << scratchUsedBits;
-                scratchUsedBits += 32;
-                chunkIndex++;
-            }
-
-            Debug.Assert(scratchUsedBits >= numBits, "Too many bits requested from scratch");
-
-            uint output = (uint)(scratch & ((((ulong)1) << numBits) - 1));
-
-            scratch >>= numBits;
-            scratchUsedBits -= numBits;
-
-            return output;
         }
 
         /// <summary>
         /// Call after all <see cref="Add"/> commands.
         /// </summary>
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Finish()
         {
             if (scratchUsedBits != 0)
@@ -384,193 +269,153 @@ namespace NetStack.Serialization
             bitsRead = 0;
         }
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public BitBuffer AddBool(bool value)
         {
             Add(1, value ? 1U : 0U);
-
             return this;
         }
 
-        [MethodImpl(256)]
-        public bool ReadBool()
-        {
-            return Read(1) > 0;
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool ReadBool() => Read(1) > 0;
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool PeekBool() => Peek(1) > 0;
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public BitBuffer AddByte(byte value)
         {
             Add(8, value);
-
             return this;
         }
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public BitBuffer AddByte(byte value, int numBits)
         {
             AddUInt(value, numBits);
-
             return this;
         }
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public BitBuffer AddByte(byte value, byte min, byte max)
         {
             AddUInt(value, min, max);
-
             return this;
         }
 
-        [MethodImpl(256)]
-        public byte ReadByte()
-        {
-            return (byte)Read(8);
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public byte ReadByte() => (byte)Read(8);
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public byte ReadByte(int numBits) => (byte)ReadUInt(numBits);
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public byte ReadByte(byte min, byte max) => (byte)ReadUInt(min, max);
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public byte PeekByte() => (byte)Peek(8);
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public byte PeekByte(int numBits) => (byte)PeekUInt(numBits);
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public byte PeekByte(byte min, byte max) => (byte)PeekUInt(min, max);
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public BitBuffer AddShort(short value)
         {
             AddInt(value);
             return this;
         }
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public BitBuffer AddShort(short value, int numBits)
         {
             AddInt(value, numBits);
-
             return this;
         }
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public BitBuffer AddShort(short value, short min, short max)
         {
             AddInt(value, min, max);
-
             return this;
         }
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public short ReadShort() => (short)ReadInt();
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public short ReadShort(int numBits) => (short)ReadInt(numBits);
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public short ReadShort(short min, short max) => (short)ReadInt(min, max);
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public short PeekShort() => (short)PeekInt();
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public short PeekShort(int numBits) => (short)PeekInt(numBits);
 
-        [MethodImpl(256)]
-        public short PeekShort(short min, short max)
-        {
-            return (short)PeekInt(min, max);
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public short PeekShort(short min, short max) => (short)PeekInt(min, max);
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public BitBuffer AddUShort(ushort value)
         {
             AddUInt(value);
-
             return this;
         }
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public BitBuffer AddUShort(ushort value, int numBits)
         {
             AddUInt(value, numBits);
-
             return this;
         }
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public BitBuffer AddUShort(ushort value, ushort min, ushort max)
         {
             AddUInt(value, min, max);
-
             return this;
         }
 
-        [MethodImpl(256)]
-        public ushort ReadUShort()
-        {
-            return (ushort)ReadUInt();
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public ushort ReadUShort() => (ushort)ReadUInt();
 
-        [MethodImpl(256)]
-        public ushort ReadUShort(int numBits)
-        {
-            return (ushort)ReadUInt(numBits);
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public ushort ReadUShort(int numBits) => (ushort)ReadUInt(numBits);
 
-        [MethodImpl(256)]
-        public ushort ReadUShort(ushort min, ushort max)
-        {
-            return (ushort)ReadUInt(min, max);
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public ushort ReadUShort(ushort min, ushort max) => (ushort)ReadUInt(min, max);
 
-        [MethodImpl(256)]
-        public ushort PeekUShort()
-        {
-            return (ushort)PeekUInt();
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public ushort PeekUShort() => (ushort)PeekUInt();
 
-        [MethodImpl(256)]
-        public ushort PeekUShort(int numBits)
-        {
-            return (ushort)PeekUInt(numBits);
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public ushort PeekUShort(int numBits) => (ushort)PeekUInt(numBits);
 
-        [MethodImpl(256)]
-        public ushort PeekUShort(ushort min, ushort max)
-        {
-            return (ushort)PeekUInt(min, max);
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public ushort PeekUShort(ushort min, ushort max) => (ushort)PeekUInt(min, max);
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public BitBuffer AddInt(int value)
         {
             uint zigzag = (uint)((value << 1) ^ (value >> 31));
-
             AddUInt(zigzag);
-
             return this;
         }
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public BitBuffer AddInt(int value, int numBits)
         {
             uint zigzag = (uint)((value << 1) ^ (value >> 31));
-
             Add(numBits, zigzag);
-
             return this;
         }
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public BitBuffer AddInt(int value, int min, int max)
         {
             Debug.Assert(min < max, "minus is not lower than max");
@@ -582,25 +427,23 @@ namespace NetStack.Serialization
             return this;
         }
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int ReadInt()
         {
             uint value = ReadUInt();
             int zagzig = (int)((value >> 1) ^ (-(int)(value & 1)));
-
             return zagzig;
         }
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int ReadInt(int numBits)
         {
             uint value = Read(numBits);
             int zagzig = (int)((value >> 1) ^ (-(int)(value & 1)));
-
             return zagzig;
         }
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int ReadInt(int min, int max)
         {
             Debug.Assert(min < max, "minus is not lower than max");
@@ -611,25 +454,23 @@ namespace NetStack.Serialization
             return (int)(Read(bits) + min);
         }
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int PeekInt()
         {
             uint value = PeekUInt();
             int zagzig = (int)((value >> 1) ^ (-(int)(value & 1)));
-
             return zagzig;
         }
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int PeekInt(int numBits)
         {
             uint value = Peek(numBits);
             int zagzig = (int)((value >> 1) ^ (-(int)(value & 1)));
-
             return zagzig;
         }
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int PeekInt(int min, int max)
         {
             Debug.Assert(min < max, "minus is not lower than max");
@@ -640,7 +481,7 @@ namespace NetStack.Serialization
             return (int)(Peek(bits) + min);
         }
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public BitBuffer AddUInt(uint value)
         {
             do
@@ -658,15 +499,14 @@ namespace NetStack.Serialization
             return this;
         }
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public BitBuffer AddUInt(uint value, int numBits)
         {
             Add(numBits, value);
-
             return this;
         }
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public BitBuffer AddUInt(uint value, uint min, uint max)
         {
             Debug.Assert(min < max, "minus is not lower than max");
@@ -678,7 +518,7 @@ namespace NetStack.Serialization
             return this;
         }
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public uint ReadUInt()
         {
             uint buffer = 0x0u;
@@ -697,10 +537,10 @@ namespace NetStack.Serialization
             return value;
         }
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public uint ReadUInt(int numBits) => Read(numBits);
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public uint ReadUInt(uint min, uint max)
         {
             Debug.Assert(min < max, "minus is not lower than max");
@@ -711,7 +551,7 @@ namespace NetStack.Serialization
             return (Read(bits) + min);
         }
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public uint PeekUInt()
         {
             int tempPosition = bitsRead;
@@ -722,10 +562,10 @@ namespace NetStack.Serialization
             return value;
         }
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public uint PeekUInt(int numBits) => Peek(numBits);
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public uint PeekUInt(uint min, uint max)
         {
             Debug.Assert(min < max, "minus is not lower than max");
@@ -736,7 +576,7 @@ namespace NetStack.Serialization
             return (Peek(bits) + min);
         }
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public BitBuffer AddLong(long value)
         {
             AddInt((int)(value & uint.MaxValue));
@@ -745,7 +585,7 @@ namespace NetStack.Serialization
             return this;
         }
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public long ReadLong()
         {
             int low = ReadInt();
@@ -755,7 +595,7 @@ namespace NetStack.Serialization
             return value << 32 | (uint)low;
         }
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public long PeekLong()
         {
             int tempPosition = bitsRead;
@@ -766,36 +606,32 @@ namespace NetStack.Serialization
             return value;
         }
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public BitBuffer AddULong(ulong value)
         {
             AddUInt((uint)(value & uint.MaxValue));
             AddUInt((uint)(value >> 32));
-
             return this;
         }
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public ulong ReadULong()
         {
             uint low = ReadUInt();
             uint high = ReadUInt();
-
             return (ulong)high << 32 | low;
         }
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public ulong PeekULong()
         {
             int tempPosition = bitsRead;
             ulong value = ReadULong();
-
             bitsRead = tempPosition;
-
             return value;
         }
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public BitBuffer AddFloat(in float value)
         {
             uint union = Unsafe.As<float, uint>(ref Unsafe.AsRef<float>(in value));
@@ -804,7 +640,7 @@ namespace NetStack.Serialization
             return this;
         }
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public BitBuffer AddFloat(float value, float min, float max, float precision)
         {
             float range = max - min;
@@ -818,7 +654,7 @@ namespace NetStack.Serialization
             return this;
         }
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public BitBuffer AddFloat(float value, float min, float max, int numBits)
         {
             var maxvalue = (1 << numBits) - 1;
@@ -834,14 +670,14 @@ namespace NetStack.Serialization
             return this;
         }
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float ReadFloat()
         {
             var value = Read(32);
             return Unsafe.As<uint, float>(ref value);
         }
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float ReadFloat(float min, float max, float precision)
         {
             float range = max - min;
@@ -852,7 +688,7 @@ namespace NetStack.Serialization
             return Read(numBits) * precision + min;
         }
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float ReadFloat(float min, float max, int numBits)
         {
             var maxvalue = (1 << numBits) - 1;
@@ -862,7 +698,7 @@ namespace NetStack.Serialization
             return Read(numBits) * precision + min;
         }
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float PeekFloat(float min, float max, float precision)
         {
             float range = max - min;
@@ -873,7 +709,7 @@ namespace NetStack.Serialization
             return Peek(numBits) * precision + min;
         }
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float PeekFloat(float min, float max, int numBits)
         {
             var maxvalue = (1 << numBits) - 1;
@@ -883,150 +719,28 @@ namespace NetStack.Serialization
             return Peek(numBits) * precision + min;
         }
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float PeekFloat()
         {
             var value = Peek(32);
             return Unsafe.As<uint, float>(ref value);
         }
 
-        [MethodImpl(256)]
-        public BitBuffer AddString(string value)
-        {
-            Debug.Assert(value != null, "String is null");
-            Debug.Assert(value.Length <= stringLengthMax, "String too long, raise the stringLengthMax value or split the string.");
-
-            int length = value.Length;
-            if (length > stringLengthMax)
-                length = stringLengthMax;
-
-            if (length * 17 + 10 > (totalNumBits - bitsWritten)) // possible overflow
-            {
-                if (BitsRequired(value, length) > (totalNumBits - bitsWritten))
-                    throw new ArgumentOutOfRangeException("String would not fit in bitstream.");
-            }
-
-            uint codePage = 0; // Ascii
-            for (int i = 0; i < length; i++)
-            {
-                var val = value[i];
-                if (val > 127)
-                {
-                    codePage = 1; // Latin1
-                    if (val > 255)
-                    {
-                        codePage = 2; // LatinExtended 
-                        if (val > 511)
-                        {
-                            codePage = 3; // UTF-16
-                            break;
-                        }
-                    }
-                }
-            }
-
-            Add(2, codePage);
-            Add(stringLengthBits, (uint)length);
-
-            switch (codePage)
-            {
-                case 0:
-                    for (int i = 0; i < length; i++)
-                    {
-                        Add(bitsASCII, value[i]);
-                    }
-                    break;
-                case 1:
-                    for (int i = 0; i < length; i++)
-                    {
-                        Add(bitsLATIN1, value[i]);
-                    }
-                    break;
-                case 2:
-                    for (int i = 0; i < length; i++)
-                    {
-                        Add(bitsLATINEXT, value[i]);
-                    }
-                    break;
-                default:
-                    for (int i = 0; i < length; i++)
-                    {
-                        if (value[i] > 127)
-                        {
-                            Add(1, 1);
-                            Add(bitsUTF16, value[i]);
-                        }
-                        else
-                        {
-                            Add(1, 0);
-                            Add(bitsASCII, value[i]);
-                        }
-                    }
-                    break;
-            }
-
-            return this;
-        }
-
-        [MethodImpl(256)]
-        public string ReadString()
-        {
-            builder.Length = 0;
-
-            uint codePage = Read(2);
-            uint length = Read(stringLengthBits);
-
-            switch (codePage)
-            {
-                case 0:
-                    for (int i = 0; i < length; i++)
-                    {
-                        builder.Append((char)Read(bitsASCII));
-                    }
-                    break;
-                case 1:
-                    for (int i = 0; i < length; i++)
-                    {
-                        builder.Append((char)Read(bitsLATIN1));
-                    }
-                    break;
-                case 2:
-                    for (int i = 0; i < length; i++)
-                    {
-                        builder.Append((char)Read(bitsLATINEXT));
-                    }
-                    break;
-                default:
-                    for (int i = 0; i < length; i++)
-                    {
-                        var needs16 = Read(1);
-                        if (needs16 == 1)
-                            builder.Append((char)Read(bitsUTF16));
-                        else
-                            builder.Append((char)Read(bitsASCII));
-                    }
-                    break;
-            }
-
-            return builder.ToString();
-        }
-
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public BitBuffer AddByteArray(byte[] value)
         {
             AddByteArray(value, 0, value.Length);
-
             return this;
         }
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public BitBuffer AddByteArray(byte[] value, int length)
         {
             AddByteArray(value, 0, length);
             return this;
         }
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public BitBuffer AddByteArray(byte[] value, int offset, int length)
         {
             Debug.Assert(value != null, "Supplied bytearray is null");
@@ -1047,13 +761,13 @@ namespace NetStack.Serialization
             return this;
         }
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void ReadByteArray(ref byte[] outValue) => ReadByteArray(ref outValue, out var length, 0);
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void ReadByteArray(ref byte[] outValue, out int length) => ReadByteArray(ref outValue, out length, 0);
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void ReadByteArray(ref byte[] outValue, out int length, int offset)
         {
             Debug.Assert(outValue != null, "Supplied bytearray is null");
@@ -1068,7 +782,7 @@ namespace NetStack.Serialization
             }
         }
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int PeekByteArrayLength() => (int)Peek(byteArrLengthBits);
 
         public override string ToString()

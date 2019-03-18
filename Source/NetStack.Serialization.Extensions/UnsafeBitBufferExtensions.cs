@@ -29,7 +29,7 @@ namespace NetStack.Serialization
         /// </summary>
         /// <typeparam name="T">Any struct with no references to managed heap.</typeparam>
         /// <param name="value">The value.</param>
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BitBuffer AddUnsafe<T>(this BitBuffer self, in T value)
             where T : unmanaged
         {

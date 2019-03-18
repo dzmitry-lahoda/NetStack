@@ -17,18 +17,18 @@ namespace NetStack.Serialization
     /// </summary>
     public static class HalfFloatBitBufferExtensions
     {
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BitBuffer AddHalfFloat(this BitBuffer self, float value)
         {
             self.Add(16, HalfPrecision.Compress(value));
             return self;
         }
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float ReadHalfFloat(this BitBuffer self) =>
             HalfPrecision.Decompress((ushort)self.Read(16));        
 
-        [MethodImpl(256)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float PeekHalfFloat(this BitBuffer self) =>
             HalfPrecision.Decompress((ushort)self.Peek(16));
     }

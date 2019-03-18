@@ -23,7 +23,7 @@ namespace NetStack.Compression
         }
 
 #if NETSTACK_INLINING
-			[MethodImpl(256)]
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         public static ushort Compress(float value)
         {

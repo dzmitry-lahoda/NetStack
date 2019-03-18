@@ -26,7 +26,7 @@ namespace NetStack.Compression
 		}
 
 		#if NETSTACK_INLINING
-			[MethodImpl(256)]
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		#endif
 		public uint Compress(float value) {
 			if (value < minValue)
@@ -38,7 +38,7 @@ namespace NetStack.Compression
 		}
 
 		#if NETSTACK_INLINING
-			[MethodImpl(256)]
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		#endif
 		public float Decompress(uint data) {
 			float adjusted = ((float)data * precision) + minValue;
