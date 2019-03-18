@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 
 namespace System.Numerics
 {
-    partial class BitOps
+    partial class BitOperations
     {
         // C# no-alloc optimization that directly wraps the data section of the dll (similar to string constants)
         // https://github.com/dotnet/roslyn/pull/24621

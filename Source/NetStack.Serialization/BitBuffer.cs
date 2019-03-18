@@ -9,6 +9,9 @@ using System.Numerics;
 using UnityEngine;
 #endif
 
+// Until migration to .NET Standard 2.1
+using BitOperations = System.Numerics.BitOperations;
+
 namespace NetStack.Serialization
 {
     // TODO: Split into BitBuffer.Core for maintenance
@@ -21,8 +24,8 @@ namespace NetStack.Serialization
         private const int defaultCapacity = 375; // 375 * 4 = 1500 bytes default MTU. don't have to grow.
 
         private const int defaultByteArrLengthBits = 9;
-        
-         private const int defaultStringLengthBits = 8;
+
+        private const int defaultStringLengthBits = 8;
 
         private int byteArrLengthMax;
 
@@ -31,10 +34,10 @@ namespace NetStack.Serialization
         private int byteArrLengthBits;
 
         public static int BitsRequired(int min, int max) =>
-            (min == max) ? 1 : BitOps.Log2((uint)(max - min)) + 1;
+            (min == max) ? 1 : BitOperations.Log2((uint)(max - min)) + 1;
 
         public static int BitsRequired(uint min, uint max) =>
-            (min == max) ? 1 : BitOps.Log2(max - min) + 1;
+            (min == max) ? 1 : BitOperations.Log2(max - min) + 1;
 
         /// <summary>
         /// Creates new instance with its own bufffer.
@@ -191,7 +194,7 @@ namespace NetStack.Serialization
                 chunks[i] = chunk;
             }
 
-            int positionInByte = 8 - BitOps.LeadingZeroCount(data[length - 1]);
+            int positionInByte = 8 - BitOperations.LeadingZeroCount(data[length - 1]);
 
             bitsWritten = ((length - 1) * 8) + (positionInByte - 1);
             bitsRead = 0;
@@ -263,7 +266,7 @@ namespace NetStack.Serialization
                 chunks[i] = chunk;
             }
 
-            int positionInByte = 8 - BitOps.LeadingZeroCount(data[length - 1]);
+            int positionInByte = 8 - BitOperations.LeadingZeroCount(data[length - 1]);
 
             bitsWritten = ((length - 1) * 8) + (positionInByte - 1);
             bitsRead = 0;
@@ -646,7 +649,7 @@ namespace NetStack.Serialization
             float range = max - min;
             float invPrecision = 1.0f / precision;
             float maxVal = range * invPrecision;
-            int numBits = BitOps.Log2((uint)(maxVal + 0.5f)) + 1;
+            int numBits = BitOperations.Log2((uint)(maxVal + 0.5f)) + 1;
             float adjusted = (value - min) * invPrecision;
 
             Add(numBits, (uint)(adjusted + 0.5f));
@@ -683,7 +686,7 @@ namespace NetStack.Serialization
             float range = max - min;
             float invPrecision = 1.0f / precision;
             float maxVal = range * invPrecision;
-            int numBits = BitOps.Log2((uint)(maxVal + 0.5f)) + 1;
+            int numBits = BitOperations.Log2((uint)(maxVal + 0.5f)) + 1;
 
             return Read(numBits) * precision + min;
         }
@@ -704,7 +707,7 @@ namespace NetStack.Serialization
             float range = max - min;
             float invPrecision = 1.0f / precision;
             float maxVal = range * invPrecision;
-            int numBits = BitOps.Log2((uint)(maxVal + 0.5f)) + 1;
+            int numBits = BitOperations.Log2((uint)(maxVal + 0.5f)) + 1;
 
             return Peek(numBits) * precision + min;
         }

@@ -7,6 +7,9 @@ using System.Numerics;
 	using UnityEngine;
 #endif
 
+// Until migration to .NET Standard 2.1
+using BitOperations = System.Numerics.BitOperations;
+
 namespace NetStack.Compression
 {
 	public class BoundedRange {
@@ -21,7 +24,7 @@ namespace NetStack.Compression
 			this.maxValue = maxValue;
 			this.precision = precision;
 
-			requiredBits = BitOps.Log2((uint)((maxValue - minValue) * (1.0f / precision) + 0.5f)) + 1;
+			requiredBits = BitOperations.Log2((uint)((maxValue - minValue) * (1.0f / precision) + 0.5f)) + 1;
 			mask = (uint)((1L << requiredBits) - 1);
 		}
 

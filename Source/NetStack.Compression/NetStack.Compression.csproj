@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-      <Compile Include="..\NetStack.Serialization\System\Numerics\BitOps.Core.cs" />
-      <Compile Include="..\NetStack.Serialization\System\Numerics\BitOps.cs" />
+      <Compile Include="..\NetStack.Serialization\System\Numerics\BitOperations.Core.cs" />
+      <Compile Include="..\NetStack.Serialization\System\Numerics\BitOperations.cs" />
   </ItemGroup>
 </Project>
