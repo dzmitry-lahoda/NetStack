@@ -20,7 +20,7 @@ namespace NetStack.Serialization
     {
         private const int defaultCapacity = 375; // 375 * 4 = 1500 bytes default MTU. don't have to grow.
         private const int defaultStringLengthBits = 8;
-        
+
         private const int defaultByteArrLengthBits = 9;
 
         private const int bitsASCII = 7;
@@ -31,10 +31,10 @@ namespace NetStack.Serialization
         private int byteArrLengthMax;
 
         public int ByteArrLengthMax => byteArrLengthMax;
-        
+
         private int byteArrLengthBits;
 
-        private int stringLengthBits;        
+        private int stringLengthBits;
         private int stringLengthMax;
 
         private int bitsRead;
@@ -114,7 +114,7 @@ namespace NetStack.Serialization
             this.byteArrLengthBits = byteArrLengthBits;
             byteArrLengthMax = (1 << byteArrLengthBits) - 1;
             this.stringLengthBits = stringLengthBits;
-            stringLengthMax =  (1 << stringLengthBits) - 1;
+            stringLengthMax = (1 << stringLengthBits) - 1;
             builder = new StringBuilder(stringLengthMax);
         }
 
@@ -928,35 +928,42 @@ namespace NetStack.Serialization
             Add(2, codePage);
             Add(stringLengthBits, (uint)length);
 
-            if (codePage == 0)
-                for (int i = 0; i < length; i++)
-                {
-                    Add(bitsASCII, value[i]);
-                }
-            else if (codePage == 1)
-                for (int i = 0; i < length; i++)
-                {
-                    Add(bitsLATIN1, value[i]);
-                }
-            else if (codePage == 2)
-                for (int i = 0; i < length; i++)
-                {
-                    Add(bitsLATINEXT, value[i]);
-                }
-            else if (codePage == 3)
-                for (int i = 0; i < length; i++)
-                {
-                    if (value[i] > 127)
+            switch (codePage)
+            {
+                case 0:
+                    for (int i = 0; i < length; i++)
                     {
-                        Add(1, 1);
-                        Add(bitsUTF16, value[i]);
-                    }
-                    else
-                    {
-                        Add(1, 0);
                         Add(bitsASCII, value[i]);
                     }
-                }
+                    break;
+                case 1:
+                    for (int i = 0; i < length; i++)
+                    {
+                        Add(bitsLATIN1, value[i]);
+                    }
+                    break;
+                case 2:
+                    for (int i = 0; i < length; i++)
+                    {
+                        Add(bitsLATINEXT, value[i]);
+                    }
+                    break;
+                default:
+                    for (int i = 0; i < length; i++)
+                    {
+                        if (value[i] > 127)
+                        {
+                            Add(1, 1);
+                            Add(bitsUTF16, value[i]);
+                        }
+                        else
+                        {
+                            Add(1, 0);
+                            Add(bitsASCII, value[i]);
+                        }
+                    }
+                    break;
+            }
 
             return this;
         }
@@ -969,30 +976,37 @@ namespace NetStack.Serialization
             uint codePage = Read(2);
             uint length = Read(stringLengthBits);
 
-            if (codePage == 0)
-                for (int i = 0; i < length; i++)
-                {
-                    builder.Append((char)Read(bitsASCII));
-                }
-            else if (codePage == 1)
-                for (int i = 0; i < length; i++)
-                {
-                    builder.Append((char)Read(bitsLATIN1));
-                }
-            else if (codePage == 2)
-                for (int i = 0; i < length; i++)
-                {
-                    builder.Append((char)Read(bitsLATINEXT));
-                }
-            else if (codePage == 3)
-                for (int i = 0; i < length; i++)
-                {
-                    var needs16 = Read(1);
-                    if (needs16 == 1)
-                        builder.Append((char)Read(bitsUTF16));
-                    else
+            switch (codePage)
+            {
+                case 0:
+                    for (int i = 0; i < length; i++)
+                    {
                         builder.Append((char)Read(bitsASCII));
-                }
+                    }
+                    break;
+                case 1:
+                    for (int i = 0; i < length; i++)
+                    {
+                        builder.Append((char)Read(bitsLATIN1));
+                    }
+                    break;
+                case 2:
+                    for (int i = 0; i < length; i++)
+                    {
+                        builder.Append((char)Read(bitsLATINEXT));
+                    }
+                    break;
+                default:
+                    for (int i = 0; i < length; i++)
+                    {
+                        var needs16 = Read(1);
+                        if (needs16 == 1)
+                            builder.Append((char)Read(bitsUTF16));
+                        else
+                            builder.Append((char)Read(bitsASCII));
+                    }
+                    break;
+            }
 
             return builder.ToString();
         }
@@ -1034,14 +1048,17 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(256)]
-        public void ReadByteArray(ref byte[] outValue) => ReadByteArray(ref outValue, 0);        
+        public void ReadByteArray(ref byte[] outValue) => ReadByteArray(ref outValue, out var length, 0);
 
         [MethodImpl(256)]
-        public void ReadByteArray(ref byte[] outValue, int offset)
+        public void ReadByteArray(ref byte[] outValue, out int length) => ReadByteArray(ref outValue, out length, 0);
+
+        [MethodImpl(256)]
+        public void ReadByteArray(ref byte[] outValue, out int length, int offset)
         {
             Debug.Assert(outValue != null, "Supplied bytearray is null");
 
-            var length = Read(byteArrLengthBits);
+            length = (int)Read(byteArrLengthBits);
 
             Debug.Assert(length <= outValue.Length + offset, "The supplied byte array is too small for requested read");
 

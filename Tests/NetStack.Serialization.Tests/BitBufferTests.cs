@@ -197,6 +197,19 @@ namespace NetStack.Serialization
         }         
 
         [Fact]
+        public void StringWriteRead()
+        {
+            var buffer = new BitBuffer();
+            buffer.AddString("lahoda.prо/минск");
+            buffer.Finish();
+            var allocated = new byte[ushort.MaxValue];
+            buffer.ToArray(allocated);
+            var reader = new BitBuffer(allocated.Length);
+            reader.FromArray(allocated, allocated.Length);
+            Assert.Equal("lahoda.prо/минск", reader.ReadString());
+        }          
+
+        [Fact]
         public void ByteArrayWriteRead()
         {
             var buffer = new BitBuffer();
@@ -208,7 +221,7 @@ namespace NetStack.Serialization
             var reader = new BitBuffer(allocated.Length);
             reader.FromArray(allocated, allocated.Length);
             var output = new byte[5];
-            reader.ReadByteArray(ref output);
+            reader.ReadByteArray(ref output, out var length);
             Assert.Equal(input, output);
         }      
 
