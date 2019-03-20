@@ -177,6 +177,7 @@ namespace NetStack.Serialization
             buffer.AddInt(int.MaxValue);
             Assert.Equal(20, buffer.Length);
         }
+
         [Fact]
         public void IntZeroMaxValue4()
         {
@@ -189,14 +190,22 @@ namespace NetStack.Serialization
         }
 
         [Fact]
-        public void ShortMax4()
+        public void ShortMax4Divided()
         {
             var buffer = new BitBuffer();
-            buffer.AddShort(short.MaxValue);
-            buffer.AddShort(short.MaxValue);
-            buffer.AddShort(short.MaxValue);
-            buffer.AddShort(short.MaxValue);
-            Assert.Equal(12, buffer.Length);
+            for (var i=0; i< 8;i++)
+                buffer.AddShort(short.MaxValue/3);
+                                  
+            Assert.Equal(24, buffer.Length);
+        }
+
+        [Fact]
+        public void IntOfShortMax4Divided()
+        {
+            var buffer = new BitBuffer();
+            for (var i=0; i< 8;i++)
+                buffer.AddInt(short.MaxValue/3);
+            Assert.Equal(24, buffer.Length);
         }
 
         [Fact]

@@ -21,7 +21,13 @@ namespace NetStack.Serialization
     // TODO: add custom visualizer here (like array one)
     public partial class BitBuffer
     {
-        private const int defaultCapacity = 375; // 375 * 4 = 1500 bytes default MTU. don't have to grow.
+        /// <summary>
+        /// 375 * 4 = 1500 bytes default MTU. Don't have to grow.
+        /// Real MTU is less than 548 bytes.
+        /// </summary>
+        /// <seealso href="https://en.wikipedia.org/wiki/Maximum_transmission_unit"/>
+        /// <seealso href="https://tools.ietf.org/html/rfc5389/"/>
+        public const int DefaultCapacityUInt = 375;
 
         private const int defaultByteArrLengthBits = 9;
 
@@ -40,18 +46,39 @@ namespace NetStack.Serialization
             (min == max) ? 1 : BitOperations.Log2(max - min) + 1;
 
         /// <summary>
-        /// Creates new instance with its own bufffer.
+        /// Creates new instance with its own buffer. Create once and reuse to avoid GC.
         /// </summary>
         /// <param name="capacity">Count of 4 byte integers used as internal buffer.</param>
         /// <param name="stringLengthBits">Bits used to store length of strings.</param>
         /// <param name="byteArrLengthBits">Bits used to store length of byte arrays.</param>
-        public BitBuffer(int capacity = defaultCapacity, int stringLengthBits = defaultStringLengthBits, int byteArrLengthBits = defaultByteArrLengthBits)
+        public BitBuffer(int capacity = DefaultCapacityUInt, int stringLengthBits = defaultStringLengthBits, int byteArrLengthBits = defaultByteArrLengthBits) 
+        : this(new uint[capacity],  stringLengthBits  , byteArrLengthBits  )
         {
+        }
+
+        /// <summary>
+        /// Creates new instance with its own buffer. 
+        /// </summary>
+        /// <param name="buffer">Custom buffer.</param>
+        /// <param name="stringLengthBits">Bits used to store length of strings.</param>
+        /// <param name="byteArrLengthBits">Bits used to store length of byte arrays.</param>
+         public BitBuffer(uint[] buffer, int stringLengthBits = defaultStringLengthBits, int byteArrLengthBits = defaultByteArrLengthBits)
+         {
+            // not performance critical path so fine to check and throw
+            if (buffer == null || buffer.Length == 0)
+                throw new ArgumentException("Buffer should be non null or empty", nameof(buffer));
+
+            if (stringLengthBits <= 0)
+                throw new ArgumentException("Should be positive", nameof(stringLengthBits));
+
+            if (byteArrLengthBits <= 0)
+                throw new ArgumentException("Should be positive", nameof(byteArrLengthBits));
+
+            chunks = buffer;
             bitsRead = 0;
             bitsWritten = 0;
-            chunks = new uint[capacity];
-            totalNumChunks = capacity;// / 4;
-            totalNumBits = capacity * 32;
+            totalNumChunks = buffer.Length;
+            totalNumBits = buffer.Length * Unsafe.SizeOf<uint>() * 8;
             chunkIndex = 0;
             scratch = 0;
             scratchUsedBits = 0;
@@ -60,7 +87,7 @@ namespace NetStack.Serialization
             this.stringLengthBits = stringLengthBits;
             stringLengthMax = (1 << stringLengthBits) - 1;
             builder = new StringBuilder(stringLengthMax);
-        }
+         }
 
         /// <summary>
         /// Count of written bytes.
@@ -557,7 +584,7 @@ namespace NetStack.Serialization
             while (value > 0);
 
             return this;
-        }
+        }     
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public BitBuffer AddUInt(uint value, int numBits)
