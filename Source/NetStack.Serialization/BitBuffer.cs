@@ -16,7 +16,7 @@ namespace NetStack.Serialization
 {
     // TODO: Split into BitBuffer.Core for maintenance
     /// <summary>
-    /// Bit level compression by ranged values. String  UTF-16 support.
+    /// Bit level compression by ranged values.
     /// </summary>
     // TODO: add custom visualizer here (like array one)
     public partial class BitBuffer
@@ -205,6 +205,7 @@ namespace NetStack.Serialization
 
         public void FromArray(byte[] data, int position, int length)
         {
+            // may throw here as not hot path
             Debug.Assert(length > 0);
             Debug.Assert(position >= 0);
 
@@ -250,6 +251,8 @@ namespace NetStack.Serialization
         /// <returns>Count of bytes written.</returns>
         public int ToSpan(ref Span<byte> data)
         {
+            // may throw here as not hot path, check span length
+
             Add(1, 1);
 
             Finish();
@@ -280,6 +283,7 @@ namespace NetStack.Serialization
 
         public void FromSpan(ref ReadOnlySpan<byte> data, int length)
         {
+            // may throw here as not hot path, check span length
             int numChunks = (length / 4) + 1;
 
             if (chunks.Length < numChunks)
