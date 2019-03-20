@@ -14,16 +14,14 @@ using BitOperations = System.Numerics.BitOperations;
 
 namespace NetStack.Serialization
 {
-    // TODO: Split into BitBuffer.Core for maintenance
     /// <summary>
     /// Bit level compression by ranged values.
     /// </summary>
-    // TODO: add custom visualizer here (like array one)
     public partial class BitBuffer
     {
         /// <summary>
         /// 375 * 4 = 1500 bytes default MTU. Don't have to grow.
-        /// Real MTU is less than 548 bytes.
+        /// Real MTU is less than 548 bytes in IP4.
         /// </summary>
         /// <seealso href="https://en.wikipedia.org/wiki/Maximum_transmission_unit"/>
         /// <seealso href="https://tools.ietf.org/html/rfc5389/"/>
@@ -47,6 +45,7 @@ namespace NetStack.Serialization
 
         /// <summary>
         /// Creates new instance with its own buffer. Create once and reuse to avoid GC.
+        /// Call <see cref="FromArray"/> to reinitialize with copy of data.
         /// </summary>
         /// <param name="capacity">Count of 4 byte integers used as internal buffer.</param>
         /// <param name="stringLengthBits">Bits used to store length of strings.</param>
@@ -153,177 +152,13 @@ namespace NetStack.Serialization
                 scratchUsedBits -= 32;
                 chunkIndex++;
             }
-        }
-
-        /// <summary>
-        /// Calls <see cref="Finish"/> and copies all internal data into array.
-        /// </summary>
-        /// <param name="data">The output buffer.</param>
-        /// <returns>Count of bytes written.</returns>
-        public int ToArray(byte[] data)
-        {
-            int length = data.Length;
-            ToArray(data, 0, length);
-            return Length;
-        }
-
-        public void ToArray(byte[] data, int position, int length)
-        {
-            Debug.Assert(length > 0);
-            Debug.Assert(position >= 0);
-
-            Add(1, 1);
-
-            Finish();
-
-            int numChunks = (bitsWritten >> 5) + 1;
-
-            for (int i = 0; i < numChunks; i++)
-            {
-                int dataIdx = i * 4;
-                uint chunk = chunks[i];
-
-                if (dataIdx < length)
-                    data[position + dataIdx] = (byte)(chunk);
-
-                if (dataIdx + 1 < length)
-                    data[position + dataIdx + 1] = (byte)(chunk >> 8);
-
-                if (dataIdx + 2 < length)
-                    data[position + dataIdx + 2] = (byte)(chunk >> 16);
-
-                if (dataIdx + 3 < length)
-                    data[position + dataIdx + 3] = (byte)(chunk >> 24);
-            }
-        }
-
-        public void FromArray(byte[] data)
-        {
-            int length = data.Length;
-            FromArray(data, 0, length);
-        }
-
-        public void FromArray(byte[] data, int position, int length)
-        {
-            // may throw here as not hot path
-            Debug.Assert(length > 0);
-            Debug.Assert(position >= 0);
-
-            int numChunks = ((length - position) / 4) + 1;
-
-            if (chunks.Length < numChunks)
-            {
-                chunks = new uint[numChunks];
-                totalNumChunks = numChunks;// / 4;
-                totalNumBits = numChunks * 32;
-            }
-
-            for (int i = 0; i < numChunks; i++)
-            {
-                int dataIdx = i * 4;
-                uint chunk = 0;
-
-                if (dataIdx < length)
-                    chunk = (uint)data[position + dataIdx];
-
-                if (dataIdx + 1 < length)
-                    chunk = chunk | (uint)data[position + dataIdx + 1] << 8;
-
-                if (dataIdx + 2 < length)
-                    chunk = chunk | (uint)data[position + dataIdx + 2] << 16;
-
-                if (dataIdx + 3 < length)
-                    chunk = chunk | (uint)data[position + dataIdx + 3] << 24;
-
-                chunks[i] = chunk;
-            }
-
-            int positionInByte = 8 - BitOperations.LeadingZeroCount(data[position + length - 1]);
-
-            bitsWritten = ((length - 1) * 8) + (positionInByte - 1);
-            bitsRead = 0;
-        }
-
-        /// <summary>
-        /// Calls <see cref="Finish"/> and copies all internal data into span.
-        /// </summary>
-        /// <param name="data">The output buffer.</param>
-        /// <returns>Count of bytes written.</returns>
-        public int ToSpan(ref Span<byte> data)
-        {
-            // may throw here as not hot path, check span length
-
-            Add(1, 1);
-
-            Finish();
-
-            int numChunks = (bitsWritten >> 5) + 1;
-            int length = data.Length;
-
-            for (int i = 0; i < numChunks; i++)
-            {
-                int dataIdx = i * 4;
-                uint chunk = chunks[i];
-
-                if (dataIdx < length)
-                    data[dataIdx] = (byte)(chunk);
-
-                if (dataIdx + 1 < length)
-                    data[dataIdx + 1] = (byte)(chunk >> 8);
-
-                if (dataIdx + 2 < length)
-                    data[dataIdx + 2] = (byte)(chunk >> 16);
-
-                if (dataIdx + 3 < length)
-                    data[dataIdx + 3] = (byte)(chunk >> 24);
-            }
-
-            return Length;
-        }
-
-        public void FromSpan(ref ReadOnlySpan<byte> data, int length)
-        {
-            // may throw here as not hot path, check span length
-            int numChunks = (length / 4) + 1;
-
-            if (chunks.Length < numChunks)
-            {
-                chunks = new uint[numChunks];
-                totalNumChunks = numChunks;// / 4;
-                totalNumBits = numChunks * 32;
-            }
-
-            for (int i = 0; i < numChunks; i++)
-            {
-                int dataIdx = i * 4;
-                uint chunk = 0;
-
-                if (dataIdx < length)
-                    chunk = (uint)data[dataIdx];
-
-                if (dataIdx + 1 < length)
-                    chunk = chunk | (uint)data[dataIdx + 1] << 8;
-
-                if (dataIdx + 2 < length)
-                    chunk = chunk | (uint)data[dataIdx + 2] << 16;
-
-                if (dataIdx + 3 < length)
-                    chunk = chunk | (uint)data[dataIdx + 3] << 24;
-
-                chunks[i] = chunk;
-            }
-
-            int positionInByte = 8 - BitOperations.LeadingZeroCount(data[length - 1]);
-
-            bitsWritten = ((length - 1) * 8) + (positionInByte - 1);
-            bitsRead = 0;
-        }
+        } 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public BitBuffer AddBool(bool value)
         {
             Add(1, value ? 1U : 0U);
-            return this;
+            return this; // TODO: consider drop of fluent interface because of perfromance with no return
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -450,7 +285,6 @@ namespace NetStack.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public short PeekShort(short min, short max) => (short)PeekInt(min, max);
 
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public BitBuffer AddUShort(ushort value)
         {
@@ -491,22 +325,6 @@ namespace NetStack.Serialization
         public ushort PeekUShort(ushort min, ushort max) => (ushort)PeekUInt(min, max);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public BitBuffer AddInt(int value)
-        {
-            uint zigzag = (uint)((value << 1) ^ (value >> 31));
-            AddUInt(zigzag);
-            return this;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public BitBuffer AddInt(int value, int numBits)
-        {
-            uint zigzag = (uint)((value << 1) ^ (value >> 31));
-            Add(numBits, zigzag);
-            return this;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public BitBuffer AddInt(int value, int min, int max)
         {
             Debug.Assert(min < max, "minus is not lower than max");
@@ -516,22 +334,6 @@ namespace NetStack.Serialization
             Add(bits, (uint)(value - min));
 
             return this;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public int ReadInt()
-        {
-            uint value = ReadUInt();
-            int zagzig = (int)((value >> 1) ^ (-(int)(value & 1)));
-            return zagzig;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public int ReadInt(int numBits)
-        {
-            uint value = Read(numBits);
-            int zagzig = (int)((value >> 1) ^ (-(int)(value & 1)));
-            return zagzig;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -546,22 +348,6 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public int PeekInt()
-        {
-            uint value = PeekUInt();
-            int zagzig = (int)((value >> 1) ^ (-(int)(value & 1)));
-            return zagzig;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public int PeekInt(int numBits)
-        {
-            uint value = Peek(numBits);
-            int zagzig = (int)((value >> 1) ^ (-(int)(value & 1)));
-            return zagzig;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int PeekInt(int min, int max)
         {
             Debug.Assert(min < max, "minus is not lower than max");
@@ -570,25 +356,7 @@ namespace NetStack.Serialization
             Debug.Assert(bits < totalNumBits, "reading too many bits for requested range");
 
             return (int)(Peek(bits) + min);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public BitBuffer AddUInt(uint value)
-        {
-            do
-            {
-                var buffer = value & 0b0111_1111u;
-                value >>= 7;
-
-                if (value > 0)
-                    buffer |= 0b1000_0000u;
-
-                Add(8, buffer);
-            }
-            while (value > 0);
-
-            return this;
-        }     
+        }   
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public BitBuffer AddUInt(uint value, int numBits)
@@ -607,25 +375,6 @@ namespace NetStack.Serialization
             Add(bits, (value - min));
 
             return this;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public uint ReadUInt()
-        {
-            uint buffer = 0x0u;
-            uint value = 0x0u;
-            int shift = 0;
-
-            do
-            {
-                buffer = Read(8);
-
-                value |= (buffer & 0b0111_1111u) << shift;
-                shift += 7;
-            }
-            while ((buffer & 0b1000_0000u) > 0);
-
-            return value;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -880,6 +629,7 @@ namespace NetStack.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void ReadByteArray(ref byte[] outValue, out int length, int offset)
         {
+            // may throw here consider array to be non one or couple of elements, but larger - not hot path
             Debug.Assert(outValue != null, "Supplied bytearray is null");
 
             length = (int)Read(byteArrLengthBits);
@@ -894,27 +644,5 @@ namespace NetStack.Serialization
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int PeekByteArrayLength() => (int)Peek(byteArrLengthBits);
-
-        public override string ToString()
-        {
-            builder.Length = 0;
-
-            for (int i = chunks.Length - 1; i >= 0; i--)
-            {
-                builder.Append(Convert.ToString(chunks[i], 2).PadLeft(32, '0'));
-            }
-
-            var spaced = new StringBuilder();
-
-            for (int i = 0; i < builder.Length; i++)
-            {
-                spaced.Append(builder[i]);
-
-                if (((i + 1) % 8) == 0)
-                    spaced.Append(" ");
-            }
-
-            return spaced.ToString();
-        }
     }
 }

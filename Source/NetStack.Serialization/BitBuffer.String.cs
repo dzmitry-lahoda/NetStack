@@ -14,7 +14,6 @@ namespace NetStack.Serialization
     // GC allocated String stuff
     partial class BitBuffer
     {
-
         private const int bitsASCII = 7;
         private const int bitsLATIN1 = 8;
         private const int bitsLATINEXT = 9;
@@ -68,6 +67,7 @@ namespace NetStack.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public BitBuffer AddString(string value)
         {
+            // non critical path (until string is one or couple of chars), so may consider throw
             Debug.Assert(value != null, "String is null");
             Debug.Assert(value.Length <= stringLengthMax, $"String too long, raise the {nameof(stringLengthBits)} value or split the string.");
 

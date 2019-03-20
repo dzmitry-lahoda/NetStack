@@ -70,6 +70,7 @@ namespace NetStack.Serialization
             if (scratchUsedBits >= 32)
             {
                 Debug.Assert(chunkIndex < totalNumChunks, "Pushing failed, buffer is full.");
+                // TODO: how much it will cost to cast ref byte into ref uint and set scratch (to allow FromArray with no copy)
                 chunks[chunkIndex] = (uint)(scratch);
                 scratch >>= 32;
                 scratchUsedBits -= 32;
@@ -77,6 +78,92 @@ namespace NetStack.Serialization
             }
 
             bitsWritten += numBits;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public int PeekInt()
+        {
+            uint value = PeekUInt();
+            int zagzig = (int)((value >> 1) ^ (-(int)(value & 1)));
+            return zagzig;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public int PeekInt(int numBits)
+        {
+            uint value = Peek(numBits);
+            int zagzig = (int)((value >> 1) ^ (-(int)(value & 1)));
+            return zagzig;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public BitBuffer AddUInt(uint value)
+        {
+            do
+            {
+                // store seven right bits, if more than 8 with 1, then set 1 to continue
+                var buffer = value & 0b0111_1111u;
+                value >>= 7;
+
+                if (value > 0)
+                    buffer |= 0b1000_0000u;
+
+                Add(8, buffer);
+            }
+            while (value > 0);
+
+            return this;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public uint ReadUInt()
+        {
+            uint buffer = 0x0u;
+            uint value = 0x0u;
+            int shift = 0;
+
+            do
+            {
+                buffer = Read(8);
+
+                value |= (buffer & 0b0111_1111u) << shift;
+                shift += 7;
+            }
+            while ((buffer & 0b1000_0000u) > 0);
+
+            return value;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public BitBuffer AddInt(int value)
+        {
+            uint zigzag = (uint)((value << 1) ^ (value >> 31));
+            AddUInt(zigzag);
+            return this;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public BitBuffer AddInt(int value, int numBits)
+        {
+            uint zigzag = (uint)((value << 1) ^ (value >> 31));
+            Add(numBits, zigzag);
+            return this;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public int ReadInt()
+        {
+            uint value = ReadUInt();
+            int zagzig = (int)((value >> 1) ^ (-(int)(value & 1)));
+            return zagzig;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public int ReadInt(int numBits)
+        {
+            uint value = Read(numBits);
+            int zagzig = (int)((value >> 1) ^ (-(int)(value & 1)));
+            return zagzig;
         }
     }
 }
