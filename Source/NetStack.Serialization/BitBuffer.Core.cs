@@ -81,6 +81,8 @@ namespace NetStack.Serialization
             bitsWritten += numBits;
         }
 
+        // TODO: add special handling for https://en.wikipedia.org/wiki/Nibble or other stuff unity uses fir skips 
+        // https://github.com/Unity-Technologies/FPSSample  https://www.youtube.com/watch?v=k6JTaFE7SYI
         //      Method |     N |     Mean |     Error |    StdDev |   Median |
         // ----------- |------ |---------:|----------:|----------:|---------:|
         //  BoolViaInt | 10000 | 1.998 ms | 0.0666 ms | 0.1943 ms | 1.942 ms |
@@ -97,7 +99,7 @@ namespace NetStack.Serialization
             if (scratchUsedBits >= 32)
             {
                 Debug.Assert(chunkIndex < totalNumChunks, "Pushing failed, buffer is full.");
-                // TODO: how much it will cost to cast ref byte into ref uint and set scratch (to allow FromArray with no copy)
+                // TODO: will it be improvement to for chunks to be (u)long?
                 chunks[chunkIndex] = (uint)(scratch);
                 scratch >>= 32;
                 scratchUsedBits -= 32;

@@ -100,8 +100,10 @@ namespace NetStack.Serialization
                 totalNumBits = numChunks * step * 8;
             }
 
-            // TODO: consider performance improvement after BDN
-            // is it possible to optimize to avoid copy? e.g. may be using byte instread of uint?
+            
+            // data must be 4 or 8 bytes long because 32 and 64 machines https://gafferongames.com/post/reading_and_writing_packets/
+            // TODO: possible to optimize to avoid copy? some kind of unsafe cast?
+            // TODO: try ulong for perfromance as most of devices will be 64 bit?
             for (int i = 0; i < numChunks; i++)
             {
                 int dataIdx = i * step;
