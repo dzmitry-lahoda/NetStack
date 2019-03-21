@@ -15,5 +15,43 @@ namespace NetStack.Serialization
             buffer.FromArray(received);
             Assert.Equal(1999, buffer.Length);
         }
+
+        [Fact]
+        public void ToArrayFromFrom()
+        {
+            var buffer = new BitBuffer(100);
+            buffer.AddLong(long.MaxValue);
+            buffer.AddInt(int.MaxValue);
+            buffer.AddShort(short.MaxValue);
+            var result = buffer.ToArray();
+            buffer.FromArray(result);
+            Assert.Equal(long.MaxValue, buffer.ReadLong());
+            Assert.Equal(int.MaxValue, buffer.ReadInt());
+            Assert.Equal(short.MaxValue, buffer.ReadShort());
+            buffer.FromArray(result);
+            Assert.Equal(long.MaxValue, buffer.ReadLong());
+            Assert.Equal(int.MaxValue, buffer.ReadInt());
+            Assert.Equal(short.MaxValue, buffer.ReadShort());
+        }
+
+        [Fact]
+        public void ToSpanFromFrom()
+        {
+            var buffer = new BitBuffer(100);
+            buffer.AddLong(long.MaxValue);
+            buffer.AddInt(int.MaxValue);
+            buffer.AddShort(short.MaxValue);
+            Span<byte> span = new byte[buffer.Length];
+            ReadOnlySpan<byte> read = span;
+            buffer.ToSpan(ref span);
+            buffer.FromSpan(in read);
+            Assert.Equal(long.MaxValue, buffer.ReadLong());
+            Assert.Equal(int.MaxValue, buffer.ReadInt());
+            Assert.Equal(short.MaxValue, buffer.ReadShort());
+            buffer.FromSpan(in read);
+            Assert.Equal(long.MaxValue, buffer.ReadLong());
+            Assert.Equal(int.MaxValue, buffer.ReadInt());
+            Assert.Equal(short.MaxValue, buffer.ReadShort());
+        }        
     }
 }

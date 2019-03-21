@@ -62,7 +62,7 @@ namespace NetStack.Serialization
         /// <param name="stringLengthBits">Bits used to store length of strings.</param>
         /// <param name="byteArrLengthBits">Bits used to store length of byte arrays.</param>
          public BitBuffer(uint[] buffer, int stringLengthBits = defaultStringLengthBits, int byteArrLengthBits = defaultByteArrLengthBits)
-         {
+        {
             // not performance critical path so fine to check and throw
             if (buffer == null || buffer.Length == 0)
                 throw new ArgumentException("Buffer should be non null or empty", nameof(buffer));
@@ -73,20 +73,29 @@ namespace NetStack.Serialization
             if (byteArrLengthBits <= 0)
                 throw new ArgumentException("Should be positive", nameof(byteArrLengthBits));
 
-            chunks = buffer;
-            bitsRead = 0;
-            bitsWritten = 0;
-            totalNumChunks = buffer.Length;
-            totalNumBits = buffer.Length * Unsafe.SizeOf<uint>() * 8;
-            chunkIndex = 0;
-            scratch = 0;
-            scratchUsedBits = 0;
+            // setup
             this.byteArrLengthBits = byteArrLengthBits;
             byteArrLengthMax = (1 << byteArrLengthBits) - 1;
             this.stringLengthBits = stringLengthBits;
             stringLengthMax = (1 << stringLengthBits) - 1;
             builder = new StringBuilder(stringLengthMax);
-         }
+
+            chunks = buffer;
+
+            totalNumChunks = buffer.Length;
+            totalNumBits = buffer.Length * Unsafe.SizeOf<uint>() * 8;
+
+            Clean();
+        }
+
+        private void Clean()
+        {
+            bitsRead = 0;
+            bitsWritten = 0;
+            chunkIndex = 0;
+            scratch = 0;
+            scratchUsedBits = 0;
+        }
 
         /// <summary>
         /// Count of written bytes.

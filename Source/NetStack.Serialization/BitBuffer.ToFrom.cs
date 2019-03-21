@@ -90,6 +90,8 @@ namespace NetStack.Serialization
             if (position < 0)
                 throw new ArgumentException("Should be non negative", nameof(position));
 
+            Clean();
+
             var step = Unsafe.SizeOf<uint>();
             int numChunks = ((length - position) / step) + 1;
 
@@ -103,7 +105,8 @@ namespace NetStack.Serialization
             
             // data must be 4 or 8 bytes long because 32 and 64 machines https://gafferongames.com/post/reading_and_writing_packets/
             // TODO: possible to optimize to avoid copy? some kind of unsafe cast?
-            // TODO: try ulong for perfromance as most of devices will be 64 bit?
+            // TODO: try ulong for performance as most of devices will be 64 bit?
+            // https://github.com/nxrighthere/NetStack/issues/1#issuecomment-475212246
             for (int i = 0; i < numChunks; i++)
             {
                 int dataIdx = i * step;
@@ -168,9 +171,18 @@ namespace NetStack.Serialization
             return Length;
         }
 
-        public void FromSpan(ref ReadOnlySpan<byte> data, int length)
+
+        public void FromSpan(in ReadOnlySpan<byte> data) => FromSpan(in data, data.Length);
+
+        public void FromSpan(in ReadOnlySpan<byte> data, int length)
         {
-            // may throw here as not hot path, check span length
+            // may throw here as not hot path
+            if (length <= 0)
+                throw new ArgumentException("Should be positive", nameof(length));
+            if (data.Length <= 0)
+                throw new ArgumentException("Should be positive", nameof(data.Length));
+                
+            Clean();
             var step = Unsafe.SizeOf<uint>();
             int numChunks = (length / step) + 1;
 
