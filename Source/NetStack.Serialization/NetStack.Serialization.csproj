@@ -15,7 +15,7 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/dzmitry-lahoda/NetStack</PackageProjectUrl>
     <RepositoryUrl>https://github.com/dzmitry-lahoda/NetStack</RepositoryUrl>  
-    <Version>0.2.2</Version>   
+    <Version>0.3.0</Version>   
     <ReleaseNotes> 
     </ReleaseNotes>
   </PropertyGroup>

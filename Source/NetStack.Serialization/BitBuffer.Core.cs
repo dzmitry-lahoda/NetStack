@@ -22,9 +22,9 @@ namespace NetStack.Serialization
         private int bitsWritten;
 
         private int scratchUsedBits;
-
         private ulong scratch;
 
+        // TODO: create separate method to read bool (see why AddBool faster)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public uint Peek(int numBits)
         {
@@ -65,6 +65,7 @@ namespace NetStack.Serialization
 
             scratch |= ((ulong)value) << scratchUsedBits;
 
+            // maintain with bool index increase, do not reuse - looses 5% of performance on .NET Core event if AggressiveInlining
             scratchUsedBits += numBits;
 
             if (scratchUsedBits >= 32)
@@ -79,6 +80,32 @@ namespace NetStack.Serialization
 
             bitsWritten += numBits;
         }
+
+        //      Method |     N |     Mean |     Error |    StdDev |   Median |
+        // ----------- |------ |---------:|----------:|----------:|---------:|
+        //  BoolViaInt | 10000 | 1.998 ms | 0.0666 ms | 0.1943 ms | 1.942 ms |
+        //    BoolFast | 10000 | 1.592 ms | 0.0493 ms | 0.1429 ms | 1.564 ms |        
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void AddBool(bool value)
+        {
+            if (value)
+                scratch |= 1ul << scratchUsedBits;
+
+            scratchUsedBits += 1;
+
+            if (scratchUsedBits >= 32)
+            {
+                Debug.Assert(chunkIndex < totalNumChunks, "Pushing failed, buffer is full.");
+                // TODO: how much it will cost to cast ref byte into ref uint and set scratch (to allow FromArray with no copy)
+                chunks[chunkIndex] = (uint)(scratch);
+                scratch >>= 32;
+                scratchUsedBits -= 32;
+                chunkIndex++;
+            }
+
+            bitsWritten += 1;
+        }        
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int PeekInt()

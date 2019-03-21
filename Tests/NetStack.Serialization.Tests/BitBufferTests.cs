@@ -91,6 +91,23 @@ namespace NetStack.Serialization
         }
 
         [Fact]
+        public void TrueFalseTrueReadWrite()
+        {
+            var buffer = new BitBuffer();
+            buffer.AddBool(true);
+            buffer.AddBool(false);
+            buffer.AddBool(true);
+            buffer.Finish();
+            var allocated = new byte[ushort.MaxValue];
+            buffer.ToArray(allocated);
+            var reader = new BitBuffer(allocated.Length);
+            reader.FromArray(allocated);
+            Assert.True(reader.ReadBool());
+            Assert.False(reader.ReadBool());
+            Assert.True(reader.ReadBool());
+        }
+
+        [Fact]
         public void ByteReadWrite()
         {
             var buffer = new BitBuffer();
