@@ -19,13 +19,7 @@ namespace NetStack.Serialization
     /// </summary>
     public partial class BitBuffer
     {
-        /// <summary>
-        /// 375 * 4 = 1500 bytes default MTU. Don't have to grow.
-        /// Real MTU is less than 548 bytes in IP4.
-        /// </summary>
-        /// <seealso href="https://en.wikipedia.org/wiki/Maximum_transmission_unit"/>
-        /// <seealso href="https://tools.ietf.org/html/rfc5389/"/>
-        public const int DefaultCapacityUInt = 375;
+        public const int DefaultCapacityUInt = BitBuffer.MtuIeee802Dot3 / 4;
 
         private const int defaultByteArrLengthBits = 9;
 
@@ -73,7 +67,7 @@ namespace NetStack.Serialization
             if (byteArrLengthBits <= 0)
                 throw new ArgumentException("Should be positive", nameof(byteArrLengthBits));
 
-            // setup
+            // one time setup
             this.byteArrLengthBits = byteArrLengthBits;
             byteArrLengthMax = (1 << byteArrLengthBits) - 1;
             this.stringLengthBits = stringLengthBits;
@@ -81,14 +75,16 @@ namespace NetStack.Serialization
             builder = new StringBuilder(stringLengthMax);
 
             chunks = buffer;
-
             totalNumChunks = buffer.Length;
             totalNumBits = buffer.Length * Unsafe.SizeOf<uint>() * 8;
 
             Clean();
         }
 
-        private void Clean()
+        /// <summary>
+        /// Sets buffer cursor to zero. Can start writing again.
+        /// </summary>
+        public void Clean()
         {
             bitsRead = 0;
             bitsWritten = 0;

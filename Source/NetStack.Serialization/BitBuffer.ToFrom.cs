@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Buffers;
 #if !(ENABLE_MONO || ENABLE_IL2CPP)
 using System.Diagnostics;
 using System.Numerics;
@@ -27,6 +28,17 @@ namespace NetStack.Serialization
             ToArray(data);
             return data;
         }
+
+        /// <summary>
+        /// Rents array 
+        /// </summary>
+        public byte[] ToArray(ArrayPool<byte> pool = null)
+        {
+            pool = pool ?? ArrayPool<byte>.Shared;
+            var data = pool.Rent(Length);
+            ToArray(data);
+            return data;
+        }        
 
         /// <summary>
         /// Calls <see cref="Finish"/> and copies all internal data into array.
