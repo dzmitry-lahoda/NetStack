@@ -13,7 +13,7 @@ NetStack does NOT depends on `System.IO.Pipelines` and `System.Threading.Channel
   - [Half precision](https://en.wikipedia.org/wiki/Half-precision_floating-point_format) algorithm
   - [Bounded range](https://gafferongames.com/post/snapshot_compression/#optimizing-position) algorithm
   - [Smallest three](https://gafferongames.com/post/snapshot_compression/#optimizing-orientation) algorithm
-- Serialization
+- Serialization ([Nuget](https://www.nuget.org/packages/NetStack.Serialization))
   - Lightweight and straightforward
   - Fast processing
   - [Span](https://docs.microsoft.com/en-us/dotnet/api/system.span) support
