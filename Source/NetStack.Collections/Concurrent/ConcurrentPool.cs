@@ -1,11 +1,10 @@
 using System;
 using System.Threading;
 
-namespace NetStack.Threading
+namespace NetStack.Collections.Concurrent
 {
     public sealed class ConcurrentPool<T> where T : class
     {
-
         private SpinLock _lock;
         private readonly Func<T> _factory;
         private Segment _head;

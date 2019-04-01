@@ -1,10 +1,6 @@
-<p align="center"> 
-  <img src="https://i.imgur.com/jD77417.png" alt="alt logo">
-</p>
+![Log](Docs/logo.png)
 
-[![PayPal](https://drive.google.com/uc?id=1OQrtNBVJehNVxgPf6T6yX1wIysz1ElLR)](https://www.paypal.me/nxrighthere) [![Bountysource](https://drive.google.com/uc?id=19QRobscL8Ir2RL489IbVjcw3fULfWS_Q)](https://salt.bountysource.com/checkout/amount?team=nxrighthere) [![Coinbase](https://drive.google.com/uc?id=1LckuF-IAod6xmO9yF-jhTjq1m-4f7cgF)](https://commerce.coinbase.com/checkout/03e11816-b6fc-4e14-b974-29a1d0886697)
-
-Code for creating concurrent networking systems for multiplayer games.
+Comprehensively tested code for creating concurrent networking systems for multiplayer games.
 
 NetStack is dependant on `.NET Standard 2.0`, `System.Memory`,  `System.Runtime.CompilerServices.Unsafe`, and oriented towards usage with `C# 7.3+` (Unity 2018.3+). 
 
@@ -20,15 +16,19 @@ NetStack does NOT depends on `System.IO.Pipelines` and `System.Threading.Channel
 - Serialization
   - Lightweight and straightforward
   - Fast processing
-  - [Span](https://adamsitnik.com/Span/) support
+  - [Span](https://docs.microsoft.com/en-us/dotnet/api/system.span) support
   - [Fluent builder](http://www.stefanoricciardi.com/2010/04/14/a-fluent-builder-in-c/) support
   - Compact bit-packing
     - [ZigZag](https://developers.google.com/protocol-buffers/docs/encoding#signed-integers) encoding
     - [Variable-length](https://rosettacode.org/wiki/Variable-length_quantity) encoding
-- Threading
+- Collections.Concurrent
   - ArrayQueue is Single-producer single-consumer first-in-first-out non-blocking queue
   - ConcurrentBuffer is Multi-producer multi-consumer first-in-first-out non-blocking queue
   - ConcurrentPool is Self-stabilizing semi-lockless circular buffer
+- Collections (TODO)
+  - CyclicSequence (from Gaffer on Games)
+  - CyclicSequenceBuffer (from Gaffer on Games)
+  - CyclicIdPool (from Gaffer on Games)
 
 NetStack utilized [1](https://vimeo.com/292969981) and [2](https://forum.unity.com/threads/showcase-enet-unity-ecs-5000-real-time-player-simulation.605656/) 
 
@@ -39,7 +39,7 @@ All scripts are compiled for `.NET Standard 2.0` and cross compiled by `Unity 20
 # Usage
 
 ##### Concurrent objects pool:
-```c#
+```csharp
 // Define a message object
 class MessageObject {
 	public uint id;
@@ -47,7 +47,7 @@ class MessageObject {
 }
 
 // Create a new objects pool with 8 objects in the head
-ConcurrentPool messages = new ConcurrentPool<MessageObject>(8, () => new MessageObject());
+var messages = new ConcurrentPool<MessageObject>(8, () => new MessageObject());
 
 // Acquire an object in the pool
 MessageObject message = messages.Acquire();
@@ -69,9 +69,9 @@ messages.Release(message);
 ```
 
 ##### Concurrent objects buffer:
-```c#
+```csharp
 // Create a new concurrent buffer limited to 8192 cells
-ConcurrentBuffer conveyor = new ConcurrentBuffer(8192);
+var conveyor = new ConcurrentBuffer(8192);
 
 // Enqueue an object
 conveyor.Enqueue(message);
@@ -90,7 +90,7 @@ float speed = HalfPrecision.Decompress(compressedSpeed);
 ```
 
 ##### Compress vector:
-```c#
+```csharp
 // Create a new BoundedRange array for Vector3 position, each entry has bounds and precision
 BoundedRange[] worldBounds = new BoundedRange[3];
 
@@ -109,7 +109,7 @@ Vector3 decompressedPosition = BoundedRange.Decompress(compressedPosition, world
 ```
 
 ##### Compress quaternion:
-```c#
+```csharp
 // Compress rotation data
 CompressedQuaternion compressedRotation = SmallestThree.Compress(rotation);
 
@@ -121,9 +121,9 @@ Quaternion rotation = SmallestThree.Decompress(compressedRotation);
 ```
 
 ##### Serialize/deserialize data:
-```c#
+```csharp
 // Create a new bit buffer with 1024 chunks, the buffer can grow automatically if required
-BitBuffer data = new BitBuffer(1024);
+var data = new BitBuffer(1024);
 
 // Fill bit buffer and serialize data to a byte array
 data.AddUInt(peer)
@@ -161,7 +161,7 @@ Console.WriteLine("Bit buffer is empty: " + data.IsFinished);
 ```
 
 ##### Abstract data serialization with Span:
-```c#
+```csharp
 // Create a one-time allocation buffer pool
 static class BufferPool {
 	[ThreadStatic]

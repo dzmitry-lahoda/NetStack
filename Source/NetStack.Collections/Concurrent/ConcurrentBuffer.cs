@@ -2,7 +2,8 @@
 using System.Runtime.InteropServices;
 using System.Threading;
 
-namespace NetStack.Threading {
+namespace NetStack.Collections.Concurrent
+{
 	[StructLayout(LayoutKind.Explicit, Size = 192)]
 	public sealed class ConcurrentBuffer {
 		[FieldOffset(0)]

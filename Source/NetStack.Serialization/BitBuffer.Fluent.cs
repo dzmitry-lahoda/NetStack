@@ -47,6 +47,90 @@ namespace NetStack.Serialization
             return this;
         }     
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public BitBuffer SByte(sbyte value)
+        {
+            AddSByte(value);
+            return this;
+        }        
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public BitBuffer SByte(sbyte value, int numBits)
+        {
+            AddSByte(value, numBits);
+            return this;
+        }        
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public BitBuffer SByte(sbyte value, sbyte min, sbyte max)
+        {
+            AddSByte(value, min, max);
+            return this;
+        }     
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public BitBuffer Int(int value)
+        {
+            AddInt(value);
+            return this;
+        }        
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public BitBuffer Int(int value, int numBits)
+        {
+            AddInt(value, numBits);
+            return this;
+        }        
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public BitBuffer Int(int value, int min, int max)
+        {
+            AddInt(value, min, max);
+            return this;
+        }  
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public BitBuffer UInt(uint value)
+        {
+            AddUInt(value);
+            return this;
+        }        
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public BitBuffer UInt(uint value, int numBits)
+        {
+            AddUInt(value, numBits);
+            return this;
+        }        
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public BitBuffer UInt(uint value, uint min, uint max)
+        {
+            AddUInt(value, min, max);
+            return this;
+        }  
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public BitBuffer Short(short value)
+        {
+            AddShort(value);
+            return this;
+        }        
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public BitBuffer Short(short value, int numBits)
+        {
+            AddShort(value, numBits);
+            return this;
+        }        
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public BitBuffer Short(short value, short min, short max)
+        {
+            AddShort(value, min, max);
+            return this;
+        }                                
+
         // TODO: cover all methods
     }
 }
