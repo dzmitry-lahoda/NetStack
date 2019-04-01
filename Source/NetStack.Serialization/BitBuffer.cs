@@ -76,41 +76,39 @@ namespace NetStack.Serialization
 
             chunks = buffer;
             totalNumChunks = buffer.Length;
-            totalNumBits = buffer.Length * Unsafe.SizeOf<uint>() * 8;
+            totalNumberBits = buffer.Length * Unsafe.SizeOf<uint>() * 8;
 
-            Clean();
+            Clear();
         }
 
-        /// <summary>
-        /// Sets buffer cursor to zero. Can start writing again.
-        /// </summary>
-        public void Clean()
-        {
-            bitsRead = 0;
-            bitsWritten = 0;
-            chunkIndex = 0;
-            scratch = 0;
-            scratchUsedBits = 0;
-        }
 
         /// <summary>
         /// Count of written bytes.
         /// </summary>
         public int Length => ((bitsWritten - 1) >> 3) + 1;
 
-        public int LengthInBits => bitsWritten;
+        /// <summary>
+        /// Counts of bits in buffer.
+        /// </summary>
+        public int BitsLength => bitsWritten; 
 
         public bool IsFinished => bitsWritten == bitsRead;
 
         public int BitsRead => bitsRead;
 
-        public int BitsAvailable => totalNumBits - bitsWritten;
+        /// <summary>
+        /// Hom much bits can be yet written into buffer before it <see cref="IsFinished"/>.
+        /// </summary>
+        public int BitsAvailable => totalNumberBits - bitsWritten;
 
-        public bool WouldOverflow(int bits) => bitsRead + bits > totalNumBits;
+        public bool WouldOverflow(int bits) => bitsRead + bits > totalNumberBits;
 
+        /// <summary>
+        /// Sets buffer cursor to zero. Can start writing again.
+        /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Clear()
-        {
+        {            
             bitsRead = 0;
             bitsWritten = 0;
 
@@ -131,7 +129,7 @@ namespace NetStack.Serialization
         public void SetReadPosition(int bitsRead)
         {
             Debug.Assert(bitsRead >= 0, "Pushing negative bits");
-            Debug.Assert(bitsRead <= totalNumBits, "Pushing too many bits");
+            Debug.Assert(bitsRead <= totalNumberBits, "Pushing too many bits");
             this.bitsRead = bitsRead;
         }
 
@@ -290,7 +288,7 @@ namespace NetStack.Serialization
             Debug.Assert(min < max, "minus is not lower than max");
 
             int bits = BitsRequired(min, max);
-            Debug.Assert(bits < totalNumBits, "reading too many bits for requested range");
+            Debug.Assert(bits < totalNumberBits, "reading too many bits for requested range");
 
             return (int)(Read(bits) + min);
         }
@@ -301,7 +299,7 @@ namespace NetStack.Serialization
             Debug.Assert(min < max, "minus is not lower than max");
 
             int bits = BitsRequired(min, max);
-            Debug.Assert(bits < totalNumBits, "reading too many bits for requested range");
+            Debug.Assert(bits < totalNumberBits, "reading too many bits for requested range");
 
             return (int)(Peek(bits) + min);
         }
@@ -328,7 +326,7 @@ namespace NetStack.Serialization
             Debug.Assert(min < max, "minus is not lower than max");
 
             int bits = BitsRequired(min, max);
-            Debug.Assert(bits < totalNumBits, "reading too many bits for requested range");
+            Debug.Assert(bits < totalNumberBits, "reading too many bits for requested range");
 
             return (Read(bits) + min);
         }
@@ -353,7 +351,7 @@ namespace NetStack.Serialization
             Debug.Assert(min < max, "minus is not lower than max");
 
             int bits = BitsRequired(min, max);
-            Debug.Assert(bits < totalNumBits, "reading too many bits for requested range");
+            Debug.Assert(bits < totalNumberBits, "reading too many bits for requested range");
 
             return (Peek(bits) + min);
         }
@@ -537,7 +535,7 @@ namespace NetStack.Serialization
             if (length > byteArrLengthMax)
                 length = byteArrLengthMax;
 
-            Debug.Assert(length + 9 <= (totalNumBits - bitsWritten), "Byte array too big for buffer.");
+            Debug.Assert(length + 9 <= (totalNumberBits - bitsWritten), "Byte array too big for buffer.");
 
             Add(byteArrLengthBits, (uint)length);
 

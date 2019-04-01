@@ -102,7 +102,7 @@ namespace NetStack.Serialization
             if (position < 0)
                 throw new ArgumentException("Should be non negative", nameof(position));
 
-            Clean();
+            Clear();
 
             var step = Unsafe.SizeOf<uint>();
             int numChunks = ((length - position) / step) + 1;
@@ -111,7 +111,7 @@ namespace NetStack.Serialization
             {
                 chunks = new uint[numChunks]; // call it once to stay expanded forever
                 totalNumChunks = numChunks;// / 4;
-                totalNumBits = numChunks * step * 8;
+                totalNumberBits = numChunks * step * 8;
             }
 
             
@@ -194,7 +194,7 @@ namespace NetStack.Serialization
             if (data.Length <= 0)
                 throw new ArgumentException("Should be positive", nameof(data.Length));
                 
-            Clean();
+            Clear();
             var step = Unsafe.SizeOf<uint>();
             int numChunks = (length / step) + 1;
 
@@ -202,7 +202,7 @@ namespace NetStack.Serialization
             {
                 chunks = new uint[numChunks];
                 totalNumChunks = numChunks;// / 4;
-                totalNumBits = numChunks * step * 8;
+                totalNumberBits = numChunks * step * 8;
             }
 
             for (int i = 0; i < numChunks; i++)
