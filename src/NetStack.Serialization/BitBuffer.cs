@@ -151,7 +151,7 @@ namespace NetStack.Serialization
         public void AddByte(byte value) => AddRaw(value, 8);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddByte(byte value, int numBits) => AddUInt(value, numBits);
+        public void AddByte(byte value, int numberOfBits) => AddUInt(value, numberOfBits);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddByte(byte value, byte min, byte max) => AddUInt(value, min, max);  
@@ -160,7 +160,7 @@ namespace NetStack.Serialization
         public byte ReadByte() => (byte)ReadRaw(8);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public byte ReadByte(int numBits) => (byte)ReadUInt(numBits);
+        public byte ReadByte(int numberOfBits) => (byte)ReadUInt(numberOfBits);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public byte ReadByte(byte min, byte max) => (byte)ReadUInt(min, max);
@@ -179,7 +179,7 @@ namespace NetStack.Serialization
         } 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public byte PeekByte(int numBits) => (byte)PeekUInt(numBits);
+        public byte PeekByte(int numberOfBits) => (byte)PeekUInt(numberOfBits);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public byte PeekByte(byte min, byte max) => (byte)PeekUInt(min, max);
@@ -189,7 +189,7 @@ namespace NetStack.Serialization
         public void AddSByte(sbyte value) => AddInt(value, 8);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddSByte(sbyte value, int numBits) => AddInt(value, numBits);
+        public void AddSByte(sbyte value, int numberOfBits) => AddInt(value, numberOfBits);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddSByte(sbyte value, sbyte min, sbyte max) => AddInt(value, min, max);
@@ -198,7 +198,7 @@ namespace NetStack.Serialization
         public sbyte ReadSByte() => (sbyte)ReadInt(8);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public sbyte ReadSByte(int numBits) => (sbyte)ReadInt(numBits);
+        public sbyte ReadSByte(int numberOfBits) => (sbyte)ReadInt(numberOfBits);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public sbyte ReadSByte(sbyte min, sbyte max) => (sbyte)ReadInt(min, max);
@@ -207,7 +207,7 @@ namespace NetStack.Serialization
         public sbyte PeekSByte() => (sbyte)ReadRaw(8);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public sbyte PeekSByte(int numBits) => (sbyte)PeekInt(numBits);
+        public sbyte PeekSByte(int numberOfBits) => (sbyte)PeekInt(numberOfBits);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public sbyte PeekSByte(sbyte min, sbyte max) => (sbyte)PeekInt(min, max);
@@ -216,7 +216,7 @@ namespace NetStack.Serialization
         public void AddShort(short value) => AddInt(value);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddShort(short value, int numBits) => AddInt(value, numBits);
+        public void AddShort(short value, int numberOfBits) => AddInt(value, numberOfBits);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddShort(short value, short min, short max) => AddInt(value, min, max);
@@ -225,7 +225,7 @@ namespace NetStack.Serialization
         public short ReadShort() => (short)ReadInt();
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public short ReadShort(int numBits) => (short)ReadInt(numBits);
+        public short ReadShort(int numberOfBits) => (short)ReadInt(numberOfBits);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public short ReadShort(short min, short max) => (short)ReadInt(min, max);
@@ -234,7 +234,7 @@ namespace NetStack.Serialization
         public short PeekShort() => (short)PeekInt();
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public short PeekShort(int numBits) => (short)PeekInt(numBits);
+        public short PeekShort(int numberOfBits) => (short)PeekInt(numberOfBits);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public short PeekShort(short min, short max) => (short)PeekInt(min, max);
@@ -243,7 +243,7 @@ namespace NetStack.Serialization
         public void AddUShort(ushort value) => AddUInt(value);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddUShort(ushort value, int numBits) => AddUInt(value, numBits);
+        public void AddUShort(ushort value, int numberOfBits) => AddUInt(value, numberOfBits);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddUShort(ushort value, ushort min, ushort max) => AddUInt(value, min, max);
@@ -252,7 +252,7 @@ namespace NetStack.Serialization
         public ushort ReadUShort() => (ushort)ReadUInt();
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public ushort ReadUShort(int numBits) => (ushort)ReadUInt(numBits);
+        public ushort ReadUShort(int numberOfBits) => (ushort)ReadUInt(numberOfBits);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public ushort ReadUShort(ushort min, ushort max) => (ushort)ReadUInt(min, max);
@@ -261,7 +261,7 @@ namespace NetStack.Serialization
         public ushort PeekUShort() => (ushort)PeekUInt();
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public ushort PeekUShort(int numBits) => (ushort)PeekUInt(numBits);
+        public ushort PeekUShort(int numberOfBits) => (ushort)PeekUInt(numberOfBits);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public ushort PeekUShort(ushort min, ushort max) => (ushort)PeekUInt(min, max);
@@ -299,7 +299,7 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddUInt(uint value, int numBits) => AddRaw(value, numBits);
+        public void AddUInt(uint value, int numberOfBits) => AddRaw(value, numberOfBits);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddUInt(uint value, uint min, uint max)
@@ -437,19 +437,19 @@ namespace NetStack.Serialization
             float range = max - min;
             float invPrecision = 1.0f / precision;
             float maxVal = range * invPrecision;
-            int numBits = BitOperations.Log2((uint)(maxVal + 0.5f)) + 1;
+            int numberOfBits = BitOperations.Log2((uint)(maxVal + 0.5f)) + 1;
 
-            return ReadRaw(numBits) * precision + min;
+            return ReadRaw(numberOfBits) * precision + min;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public float ReadFloat(float min, float max, int numBits)
+        public float ReadFloat(float min, float max, int numberOfBits)
         {
-            var maxvalue = (1 << numBits) - 1;
+            var maxvalue = (1 << numberOfBits) - 1;
             float range = max - min;
             var precision = range / maxvalue;
 
-            return ReadRaw(numBits) * precision + min;
+            return ReadRaw(numberOfBits) * precision + min;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -458,19 +458,19 @@ namespace NetStack.Serialization
             float range = max - min;
             float invPrecision = 1.0f / precision;
             float maxVal = range * invPrecision;
-            int numBits = BitOperations.Log2((uint)(maxVal + 0.5f)) + 1;
+            int numberOfBits = BitOperations.Log2((uint)(maxVal + 0.5f)) + 1;
 
-            return ReadRaw(numBits) * precision + min;
+            return ReadRaw(numberOfBits) * precision + min;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public float PeekFloat(float min, float max, int numBits)
+        public float PeekFloat(float min, float max, int numberOfBits)
         {
-            var maxvalue = (1 << numBits) - 1;
+            var maxvalue = (1 << numberOfBits) - 1;
             float range = max - min;
             var precision = range / maxvalue;
 
-            return ReadRaw(numBits) * precision + min;
+            return ReadRaw(numberOfBits) * precision + min;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

@@ -49,19 +49,19 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public uint ReadRaw(int numBits)
+        public uint ReadRaw(int numberOfBits)
         {
 #if DEBUG
     var oldScratchUsedBits = scratchUsedBits;
 #endif
 
 #if DEBUG || NETSTACK_VALIDATE
-            if (numBits <= 0 || numBits > 32) throw new ArgumentOutOfRangeException(nameof(numBits), $"Should read from 1 to 32. Cannot read {numBits}"); 
-            if (BitsRead + numBits > totalNumberBits)throw new InvalidOperationException("reading more bits than in buffer");
+            if (numberOfBits <= 0 || numberOfBits > 32) throw new ArgumentOutOfRangeException(nameof(numberOfBits), $"Should read from 1 to 32. Cannot read {numberOfBits}"); 
+            if (BitsRead + numberOfBits > totalNumberBits)throw new InvalidOperationException("reading more bits than in buffer");
             if (scratchUsedBits < 0 || scratchUsedBits > 64) throw new InvalidProgramException($"{scratchUsedBits} Too many bits used in scratch, Overflow?");
 #endif
 
-            if (scratchUsedBits < numBits)
+            if (scratchUsedBits < numberOfBits)
             {
 #if DEBUG || NETSTACK_VALIDATE                
                 if (chunkIndex >= totalNumChunks) throw new InvalidOperationException("reading more than buffer size");
@@ -72,12 +72,12 @@ namespace NetStack.Serialization
             }
 
 #if DEBUG
-            if (scratchUsedBits < numBits) throw new InvalidOperationException("Too many bits requested from scratch");
+            if (scratchUsedBits < numberOfBits) throw new InvalidOperationException("Too many bits requested from scratch");
 #endif
-            uint output = (uint)(scratch & ((((ulong)1) << numBits) - 1));
+            uint output = (uint)(scratch & ((((ulong)1) << numberOfBits) - 1));
 
-            scratch >>= numBits;
-            scratchUsedBits -= numBits;
+            scratch >>= numberOfBits;
+            scratchUsedBits -= numberOfBits;
 
             return output;
         }
@@ -94,9 +94,9 @@ namespace NetStack.Serialization
         /// Reads value without progressing bits position.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public int PeekInt(int numBits)
+        public int PeekInt(int numberOfBits)
         {
-            uint value = ReadRaw(numBits);
+            uint value = ReadRaw(numberOfBits);
             int zagzig = (int)((value >> 1) ^ (-(int)(value & 1)));
             return zagzig;
         }
@@ -129,9 +129,9 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public int ReadInt(int numBits)
+        public int ReadInt(int numberOfBits)
         {
-            uint value = ReadRaw(numBits);
+            uint value = ReadRaw(numberOfBits);
             int zagzig = (int)((value >> 1) ^ (-(int)(value & 1)));
             return zagzig;
         }

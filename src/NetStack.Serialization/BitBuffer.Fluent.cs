@@ -34,9 +34,9 @@ namespace NetStack.Serialization
         }        
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public BitBuffer Byte(byte value, int numBits)
+        public BitBuffer Byte(byte value, int numberOfBits)
         {
-            AddByte(value, numBits);
+            AddByte(value, numberOfBits);
             return this;
         }        
 
@@ -55,9 +55,9 @@ namespace NetStack.Serialization
         }        
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public BitBuffer SByte(sbyte value, int numBits)
+        public BitBuffer SByte(sbyte value, int numberOfBits)
         {
-            AddSByte(value, numBits);
+            AddSByte(value, numberOfBits);
             return this;
         }        
 
@@ -76,9 +76,9 @@ namespace NetStack.Serialization
         }        
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public BitBuffer Int(int value, int numBits)
+        public BitBuffer Int(int value, int numberOfBits)
         {
-            AddInt(value, numBits);
+            AddInt(value, numberOfBits);
             return this;
         }        
 
@@ -97,9 +97,9 @@ namespace NetStack.Serialization
         }        
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public BitBuffer UInt(uint value, int numBits)
+        public BitBuffer UInt(uint value, int numberOfBits)
         {
-            AddUInt(value, numBits);
+            AddUInt(value, numberOfBits);
             return this;
         }        
 
@@ -118,9 +118,9 @@ namespace NetStack.Serialization
         }        
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public BitBuffer Short(short value, int numBits)
+        public BitBuffer Short(short value, int numberOfBits)
         {
-            AddShort(value, numBits);
+            AddShort(value, numberOfBits);
             return this;
         }        
 
@@ -139,9 +139,9 @@ namespace NetStack.Serialization
         }        
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public BitBuffer UShort(ushort value, int numBits)
+        public BitBuffer UShort(ushort value, int numberOfBits)
         {
-            AddUShort(value, numBits);
+            AddUShort(value, numberOfBits);
             return this;
         }        
 
