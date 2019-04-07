@@ -92,16 +92,14 @@ namespace NetStack.Serialization
         /// </summary>
         public int BitsLength => bitsWritten; 
 
-        public bool IsFinished => bitsWritten == bitsRead;
-
-        public int BitsRead => bitsRead;
+        public bool IsFinished => bitsWritten == BitsRead;
 
         /// <summary>
         /// Hom much bits can be yet written into buffer before it <see cref="IsFinished"/>.
         /// </summary>
         public int BitsAvailable => totalNumberBits - bitsWritten;
 
-        public bool WouldOverflow(int bits) => bitsRead + bits > totalNumberBits;
+        public bool WouldOverflow(int bits) => BitsRead + bits > totalNumberBits;
 
         /// <summary>
         /// Sets buffer cursor to zero. Can start writing again.
@@ -109,7 +107,6 @@ namespace NetStack.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Clear()
         {            
-            bitsRead = 0;
             bitsWritten = 0;
 
             chunkIndex = 0;
@@ -121,7 +118,8 @@ namespace NetStack.Serialization
         public void ResetReadPosition()
         {
             Finish();
-            bitsRead = 0;
+            scratchUsedBits = 0;
+            chunkIndex = 0;
         }
 
         // TODO: change API to be more safe on bit buffer operations (protect from misuse)
@@ -130,19 +128,11 @@ namespace NetStack.Serialization
         {
             Debug.Assert(bitsRead >= 0, "Pushing negative bits");
             Debug.Assert(bitsRead <= totalNumberBits, "Pushing too many bits");
-            this.bitsRead = bitsRead;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public uint Read(int numBits)
-        {
-            uint result = Peek(numBits);
-            bitsRead += numBits;
-            return result;
+            throw new NotImplementedException();
         }
 
         /// <summary>
-        /// Call after all <see cref="Add"/> commands.
+        /// Call after all <see cref="AddRaw"/> commands.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Finish()
@@ -158,7 +148,7 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddByte(byte value) => Add(8, value);
+        public void AddByte(byte value) => AddRaw(8, value);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddByte(byte value, int numBits) => AddUInt(value, numBits);
@@ -167,7 +157,7 @@ namespace NetStack.Serialization
         public void AddByte(byte value, byte min, byte max) => AddUInt(value, min, max);  
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public byte ReadByte() => (byte)Read(8);
+        public byte ReadByte() => (byte)ReadRaw(8);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public byte ReadByte(int numBits) => (byte)ReadUInt(numBits);
@@ -176,7 +166,17 @@ namespace NetStack.Serialization
         public byte ReadByte(byte min, byte max) => (byte)ReadUInt(min, max);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public byte PeekByte() => (byte)Peek(8);
+        public byte PeekByte() 
+        {
+            var tmp = scratch;
+            var tmp2 = scratchUsedBits;
+            var tmp3 = chunkIndex;
+            var result = (byte)ReadRaw(8);
+            tmp = scratch;
+            tmp2 = scratchUsedBits;
+            tmp3 = chunkIndex;
+            return result;
+        } 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public byte PeekByte(int numBits) => (byte)PeekUInt(numBits);
@@ -204,7 +204,7 @@ namespace NetStack.Serialization
         public sbyte ReadSByte(sbyte min, sbyte max) => (sbyte)ReadInt(min, max);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public sbyte PeekSByte() => (sbyte)Peek(8);
+        public sbyte PeekSByte() => (sbyte)ReadRaw(8);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public sbyte PeekSByte(int numBits) => (sbyte)PeekInt(numBits);
@@ -273,7 +273,7 @@ namespace NetStack.Serialization
             Debug.Assert(value >= min, "value is lower than minimal");
             Debug.Assert(value <= max, "value is higher than maximal");
             int bits = BitsRequired(min, max);
-            Add(bits, (uint)(value - min));            
+            AddRaw(bits, (uint)(value - min));            
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -284,7 +284,7 @@ namespace NetStack.Serialization
             int bits = BitsRequired(min, max);
             Debug.Assert(bits < totalNumberBits, "reading too many bits for requested range");
 
-            return (int)(Read(bits) + min);
+            return (int)(ReadRaw(bits) + min);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -295,11 +295,11 @@ namespace NetStack.Serialization
             int bits = BitsRequired(min, max);
             Debug.Assert(bits < totalNumberBits, "reading too many bits for requested range");
 
-            return (int)(Peek(bits) + min);
+            return (int)(ReadRaw(bits) + min);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddUInt(uint value, int numBits) => Add(numBits, value);
+        public void AddUInt(uint value, int numBits) => AddRaw(numBits, value);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddUInt(uint value, uint min, uint max)
@@ -308,11 +308,11 @@ namespace NetStack.Serialization
             Debug.Assert(value >= min, "value is lower than minimal");
             Debug.Assert(value <= max, "value is higher than maximal");
             int bits = BitsRequired(min, max);
-            Add(bits, (value - min));            
+            AddRaw(bits, (value - min));            
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public uint ReadUInt(int numBits) => Read(numBits);
+        public uint ReadUInt(int numBits) => ReadRaw(numBits);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public uint ReadUInt(uint min, uint max)
@@ -322,22 +322,18 @@ namespace NetStack.Serialization
             int bits = BitsRequired(min, max);
             Debug.Assert(bits < totalNumberBits, "reading too many bits for requested range");
 
-            return (Read(bits) + min);
+            return (ReadRaw(bits) + min);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public uint PeekUInt()
         {
-            int tempPosition = bitsRead;
             uint value = ReadUInt();
-
-            bitsRead = tempPosition;
-
             return value;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public uint PeekUInt(int numBits) => Peek(numBits);
+        public uint PeekUInt(int numBits) => ReadRaw(numBits);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public uint PeekUInt(uint min, uint max)
@@ -347,7 +343,7 @@ namespace NetStack.Serialization
             int bits = BitsRequired(min, max);
             Debug.Assert(bits < totalNumberBits, "reading too many bits for requested range");
 
-            return (Peek(bits) + min);
+            return (ReadRaw(bits) + min);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -370,11 +366,7 @@ namespace NetStack.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public long PeekLong()
         {
-            int tempPosition = bitsRead;
             long value = ReadLong();
-
-            bitsRead = tempPosition;
-
             return value;
         }
 
@@ -396,9 +388,7 @@ namespace NetStack.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public ulong PeekULong()
         {
-            int tempPosition = bitsRead;
             ulong value = ReadULong();
-            bitsRead = tempPosition;
             return value;
         }
 
@@ -406,7 +396,7 @@ namespace NetStack.Serialization
         public void AddFloat(in float value)
         {
             uint reinterpreted = Unsafe.As<float, uint>(ref Unsafe.AsRef<float>(in value));
-            Add(32, reinterpreted);            
+            AddRaw(32, reinterpreted);            
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -417,7 +407,7 @@ namespace NetStack.Serialization
             float maxVal = range * invPrecision;
             int numBits = BitOperations.Log2((uint)(maxVal + 0.5f)) + 1;
             float adjusted = (value - min) * invPrecision;
-            Add(numBits, (uint)(adjusted + 0.5f));            
+            AddRaw(numBits, (uint)(adjusted + 0.5f));            
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -431,13 +421,13 @@ namespace NetStack.Serialization
 
             float adjusted = (value - min) * invPrecision;
 
-            Add(numBits, (uint)(adjusted + 0.5f));            
+            AddRaw(numBits, (uint)(adjusted + 0.5f));            
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float ReadFloat()
         {
-            var value = Read(32);
+            var value = ReadRaw(32);
             return Unsafe.As<uint, float>(ref value);
         }
 
@@ -449,7 +439,7 @@ namespace NetStack.Serialization
             float maxVal = range * invPrecision;
             int numBits = BitOperations.Log2((uint)(maxVal + 0.5f)) + 1;
 
-            return Read(numBits) * precision + min;
+            return ReadRaw(numBits) * precision + min;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -459,7 +449,7 @@ namespace NetStack.Serialization
             float range = max - min;
             var precision = range / maxvalue;
 
-            return Read(numBits) * precision + min;
+            return ReadRaw(numBits) * precision + min;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -470,7 +460,7 @@ namespace NetStack.Serialization
             float maxVal = range * invPrecision;
             int numBits = BitOperations.Log2((uint)(maxVal + 0.5f)) + 1;
 
-            return Peek(numBits) * precision + min;
+            return ReadRaw(numBits) * precision + min;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -480,13 +470,13 @@ namespace NetStack.Serialization
             float range = max - min;
             var precision = range / maxvalue;
 
-            return Peek(numBits) * precision + min;
+            return ReadRaw(numBits) * precision + min;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float PeekFloat()
         {
-            var value = Peek(32);
+            var value = ReadRaw(32);
             return Unsafe.As<uint, float>(ref value);
         }
 
@@ -531,7 +521,7 @@ namespace NetStack.Serialization
 
             Debug.Assert(length + 9 <= (totalNumberBits - bitsWritten), "Byte array too big for buffer.");
 
-            Add(byteArrLengthBits, (uint)length);
+            AddRaw(byteArrLengthBits, (uint)length);
 
             for (int index = offset; index < length; index++)
             {
@@ -551,7 +541,7 @@ namespace NetStack.Serialization
             // may throw here consider array to be non one or couple of elements, but larger - not hot path
             Debug.Assert(outValue != null, "Supplied bytearray is null");
 
-            length = (int)Read(byteArrLengthBits);
+            length = (int)ReadRaw(byteArrLengthBits);
 
             //Debug.Assert(bitsWritten - bitsRead <= length * 8, "The length for this read is bigger than bitbuffer");
             Debug.Assert(length <= outValue.Length + offset, "The supplied byte array is too small for requested read");
@@ -563,6 +553,6 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public int PeekByteArrayLength() => (int)Peek(byteArrLengthBits);
+        public int PeekByteArrayLength() => (int)ReadRaw(byteArrLengthBits);
     }
 }

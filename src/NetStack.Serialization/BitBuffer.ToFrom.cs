@@ -60,7 +60,7 @@ namespace NetStack.Serialization
             if (position < 0)
                 throw new ArgumentException("Should be non negative", nameof(position));
             var step = Unsafe.SizeOf<uint>();
-            Add(1, 1);
+            AddRaw(1, 1);
 
             Finish();
 
@@ -143,7 +143,6 @@ namespace NetStack.Serialization
 
             var leadingZeros = BitOperations.LeadingZeroCount(data[position + length - 1]);
             bitsWritten = 8 * length - leadingZeros - 1;
-            bitsRead = 0;
         }
 
         /// <summary>
@@ -155,7 +154,7 @@ namespace NetStack.Serialization
         {
             // may throw here as not hot path, check span length
 
-            Add(1, 1);
+            AddRaw(1, 1);
 
             Finish();
 
@@ -227,7 +226,6 @@ namespace NetStack.Serialization
 
             var leadingZeros = BitOperations.LeadingZeroCount(data[length - 1]);
             bitsWritten = 8 * length - leadingZeros - 1;
-            bitsRead = 0;
         }
 
         public override string ToString()

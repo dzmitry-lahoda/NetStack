@@ -13,7 +13,6 @@ namespace NetStack.Serialization
             buffer.AddUShort(ushort.MinValue);
             buffer.AddUShort(ushort.MaxValue / 2);
             buffer.AddUShort(ushort.MaxValue);
-            buffer.Finish();
             var allocated = new byte[ushort.MaxValue];
             buffer.ToArray(allocated);
             var reader = new BitBuffer(allocated.Length);
@@ -75,19 +74,6 @@ namespace NetStack.Serialization
             var reader = new BitBuffer(allocated.Length);
             reader.FromArray(allocated);
             Assert.Equal(123.456f, reader.ReadFloat());
-        }
-
-        [Fact]
-        public void ByteReadWrite()
-        {
-            var buffer = new BitBuffer();
-            buffer.AddByte(byte.MaxValue);
-            buffer.Finish();
-            var allocated = new byte[ushort.MaxValue];
-            buffer.ToArray(allocated);
-            var reader = new BitBuffer(allocated.Length);
-            reader.FromArray(allocated);
-            Assert.Equal(byte.MaxValue, reader.ReadByte());
         }
 
         [Fact]
@@ -218,6 +204,29 @@ namespace NetStack.Serialization
             reader.FromArray(allocated, 10, 100);
             Assert.Equal(13, reader.ReadByte());
             Assert.Equal(long.MaxValue, reader.ReadLong());
+        }
+
+        [Fact]
+        public void BitsRead()
+        {
+            var write = new BitBuffer();
+            write.AddBool(true);
+            write.AddByte(123);
+            write.AddShort(12345);
+            write.AddInt(1234567890);
+            var data = write.ToArray();
+            var reader = new BitBuffer();
+            reader.FromArray(data);
+            
+            Assert.Equal(0, reader.BitsRead);
+            reader.ReadBool();
+            Assert.Equal(1, reader.BitsRead);
+            reader.ReadByte();
+            Assert.Equal(9, reader.BitsRead);
+            reader.ReadShort();
+            Assert.Equal(33, reader.BitsRead);
+            reader.ReadInt();
+            Assert.Equal(73, reader.BitsRead);
         }
     }
 }

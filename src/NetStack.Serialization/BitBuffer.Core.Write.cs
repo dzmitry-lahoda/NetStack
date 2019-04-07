@@ -1,5 +1,3 @@
-
-
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -16,9 +14,12 @@ namespace NetStack.Serialization
     partial class BitBuffer
     {
         private int bitsWritten;
-
+        
+        /// <summary>
+        /// Store value in specified number of bits.
+        /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Add(int numberOfBits, uint value)
+        public void AddRaw(int numberOfBits, uint value)
         {
 #if DEBUG || NETSTACK_VALIDATE
             if (numberOfBits <= 0)
@@ -79,26 +80,31 @@ namespace NetStack.Serialization
             bitsWritten += 1;
         }
 
-
+        /// <summary>
+        /// Adds value 7 bit encoded.
+        /// Store seven right bits, if more than 8 with 1, then set 1 to continue.
+        /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public BitBuffer AddUInt(uint value)
         {
             do
             {
-                // store seven right bits, if more than 8 with 1, then set 1 to continue
                 var buffer = value & 0b0111_1111u;
                 value >>= 7;
 
                 if (value > 0)
                     buffer |= 0b1000_0000u;
 
-                Add(8, buffer);
+                AddRaw(8, buffer);
             }
             while (value > 0);
 
             return this;
         }
-
+        
+        /// <summary>
+        /// Store value ZigZag and 7 bits encoded.
+        /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public BitBuffer AddInt(int value)
         {
@@ -107,11 +113,14 @@ namespace NetStack.Serialization
             return this;
         }
 
+        /// <summary>
+        /// Store value ZigZag encoded in number of bits.
+        /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public BitBuffer AddInt(int value, int numBits)
+        public BitBuffer AddInt(int value, int numberOfBits)
         {
             uint zigzag = (uint)((value << 1) ^ (value >> 31));
-            Add(numBits, zigzag);
+            AddRaw(numberOfBits, zigzag);
             return this;
         }
     }

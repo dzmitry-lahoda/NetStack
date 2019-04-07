@@ -12,36 +12,35 @@ using UnityEngine;
 namespace NetStack.Serialization
 {
     partial class BitBuffer
-    {
-        private int bitsRead;
-
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool ReadBool() 
+    {        
+        public int BitsRead 
         {
-            var result = PeekBool();
-            bitsRead++;
-            return result;
+            get 
+            {
+                var indexInBits = chunkIndex * 32;
+                var over = scratchUsedBits != 0 ? 1 : 0; // TODO: speed up with bit hacking
+                return indexInBits - over * scratchUsedBits;
+            }            
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool PeekBool()
+        public bool ReadBool()
         {
 #if DEBUG || NETSTACK_VALIDATE
-            if (bitsRead >= totalNumberBits) throw new InvalidOperationException("reading more bits than in buffer");
+            if (BitsRead >= totalNumberBits) throw new InvalidOperationException("reading more bits than in buffer");
+            if (scratchUsedBits < 1 && chunkIndex >= totalNumChunks) throw new InvalidOperationException("reading more than buffer size");
 #endif
             if (scratchUsedBits < 1)
             {
-                Debug.Assert(chunkIndex < totalNumChunks, "reading more than buffer size");
-
                 scratch |= ((ulong)(chunks[chunkIndex])) << scratchUsedBits;
                 scratchUsedBits += 32;
                 chunkIndex++;
             }
 
-            Debug.Assert(scratchUsedBits >= 1, "Too many bits requested from scratch");
-
-            uint output = (uint)(scratch & ((((ulong)1) << 1) - 1));
+#if DEBUG
+            if (scratchUsedBits == 0) throw new InvalidOperationException("Too many bits requested from scratch");
+#endif
+            uint output = (uint)(scratch & 1);
 
             scratch >>= 1;
             scratchUsedBits -= 1;
@@ -50,25 +49,31 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public uint Peek(int numBits)
+        public uint ReadRaw(int numBits)
         {
-            Debug.Assert(numBits > 0, "reading negative bits");
-            Debug.Assert(numBits <= 32, "reading too many bits");
-            Debug.Assert(bitsRead + numBits <= totalNumberBits, "reading more bits than in buffer");
+#if DEBUG
+    var oldScratchUsedBits = scratchUsedBits;
+#endif
 
-            Debug.Assert(scratchUsedBits >= 0 && scratchUsedBits <= 64, $"{scratchUsedBits} Too many bits used in scratch, Overflow?");
+#if DEBUG || NETSTACK_VALIDATE
+            if (numBits <= 0 || numBits > 32) throw new ArgumentOutOfRangeException(nameof(numBits), $"Should read from 1 to 32. Cannot read {numBits}"); 
+            if (BitsRead + numBits > totalNumberBits)throw new InvalidOperationException("reading more bits than in buffer");
+            if (scratchUsedBits < 0 || scratchUsedBits > 64) throw new InvalidProgramException($"{scratchUsedBits} Too many bits used in scratch, Overflow?");
+#endif
 
             if (scratchUsedBits < numBits)
             {
-                Debug.Assert(chunkIndex < totalNumChunks, "reading more than buffer size");
-
+#if DEBUG || NETSTACK_VALIDATE                
+                if (chunkIndex >= totalNumChunks) throw new InvalidOperationException("reading more than buffer size");
+#endif
                 scratch |= ((ulong)(chunks[chunkIndex])) << scratchUsedBits;
                 scratchUsedBits += 32;
                 chunkIndex++;
             }
 
-            Debug.Assert(scratchUsedBits >= numBits, "Too many bits requested from scratch");
-
+#if DEBUG
+            if (scratchUsedBits < numBits) throw new InvalidOperationException("Too many bits requested from scratch");
+#endif
             uint output = (uint)(scratch & ((((ulong)1) << numBits) - 1));
 
             scratch >>= numBits;
@@ -91,7 +96,7 @@ namespace NetStack.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int PeekInt(int numBits)
         {
-            uint value = Peek(numBits);
+            uint value = ReadRaw(numBits);
             int zagzig = (int)((value >> 1) ^ (-(int)(value & 1)));
             return zagzig;
         }
@@ -105,7 +110,7 @@ namespace NetStack.Serialization
 
             do
             {
-                buffer = Read(8);
+                buffer = ReadRaw(8);
 
                 value |= (buffer & 0b0111_1111u) << shift;
                 shift += 7;
@@ -126,7 +131,7 @@ namespace NetStack.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int ReadInt(int numBits)
         {
-            uint value = Read(numBits);
+            uint value = ReadRaw(numBits);
             int zagzig = (int)((value >> 1) ^ (-(int)(value & 1)));
             return zagzig;
         }

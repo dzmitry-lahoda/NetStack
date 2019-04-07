@@ -122,27 +122,27 @@ namespace NetStack.Serialization
                 }
             }
 
-            Add(codePageBitsRequried, (uint)codePage);
-            Add(stringLengthBits, (uint)length);
+            AddRaw(codePageBitsRequried, (uint)codePage);
+            AddRaw(stringLengthBits, (uint)length);
 
             switch (codePage)
             {
                 case CodePage.Ascii:
                     for (int i = 0; i < length; i++)
                     {
-                        Add(bitsASCII, value[i]);
+                        AddRaw(bitsASCII, value[i]);
                     }
                     break;
                 case CodePage.Latin1:
                     for (int i = 0; i < length; i++)
                     {
-                        Add(bitsLATIN1, value[i]);
+                        AddRaw(bitsLATIN1, value[i]);
                     }
                     break;
                 case CodePage.LatinExtended:
                     for (int i = 0; i < length; i++)
                     {
-                        Add(bitsLATINEXT, value[i]);
+                        AddRaw(bitsLATINEXT, value[i]);
                     }
                     break;
                 default:
@@ -150,13 +150,13 @@ namespace NetStack.Serialization
                     {
                         if (value[i] > 127)
                         {
-                            Add(1, 1);
-                            Add(bitsUTF16, value[i]);
+                            AddRaw(1, 1);
+                            AddRaw(bitsUTF16, value[i]);
                         }
                         else
                         {
-                            Add(1, 0);
-                            Add(bitsASCII, value[i]);
+                            AddRaw(1, 0);
+                            AddRaw(bitsASCII, value[i]);
                         }
                     }
                     break;
@@ -177,37 +177,37 @@ namespace NetStack.Serialization
 
         private void ReadString(StringBuilder outVal)
         {
-            uint codePage = Read(2);
-            uint length = Read(stringLengthBits);
+            uint codePage = ReadRaw(2);
+            uint length = ReadRaw(stringLengthBits);
 
             switch (codePage)
             {
                 case 0:
                     for (int i = 0; i < length; i++)
                     {
-                        outVal.Append((char)Read(bitsASCII));
+                        outVal.Append((char)ReadRaw(bitsASCII));
                     }
                     break;
                 case 1:
                     for (int i = 0; i < length; i++)
                     {
-                        outVal.Append((char)Read(bitsLATIN1));
+                        outVal.Append((char)ReadRaw(bitsLATIN1));
                     }
                     break;
                 case 2:
                     for (int i = 0; i < length; i++)
                     {
-                        outVal.Append((char)Read(bitsLATINEXT));
+                        outVal.Append((char)ReadRaw(bitsLATINEXT));
                     }
                     break;
                 default:
                     for (int i = 0; i < length; i++)
                     {
-                        var needs16 = Read(1);
+                        var needs16 = ReadRaw(1);
                         if (needs16 == 1)
-                            outVal.Append((char)Read(bitsUTF16));
+                            outVal.Append((char)ReadRaw(bitsUTF16));
                         else
-                            outVal.Append((char)Read(bitsASCII));
+                            outVal.Append((char)ReadRaw(bitsASCII));
                     }
                     break;
             }

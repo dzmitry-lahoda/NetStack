@@ -20,16 +20,16 @@ namespace NetStack.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BitBuffer AddHalfFloat(this BitBuffer self, float value)
         {
-            self.Add(16, HalfPrecision.Compress(value));
+            self.AddRaw(16, HalfPrecision.Compress(value));
             return self;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float ReadHalfFloat(this BitBuffer self) =>
-            HalfPrecision.Decompress((ushort)self.Read(16));        
+            HalfPrecision.Decompress((ushort)self.ReadRaw(16));        
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float PeekHalfFloat(this BitBuffer self) =>
-            HalfPrecision.Decompress((ushort)self.Peek(16));
+            HalfPrecision.Decompress((ushort)self.ReadRaw(16));
     }
 }

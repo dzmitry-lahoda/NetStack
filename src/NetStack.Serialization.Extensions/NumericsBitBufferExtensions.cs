@@ -119,10 +119,10 @@ namespace NetStack.Serialization
                 c = (uint)((cflt * packer) + halfrangeFloat);
             }
 
-            self.Add(2, m);
-            self.Add(bitsPerComponent, a);
-            self.Add(bitsPerComponent, b);
-            self.Add(bitsPerComponent, c);
+            self.AddRaw(2, m);
+            self.AddRaw(bitsPerComponent, a);
+            self.AddRaw(bitsPerComponent, b);
+            self.AddRaw(bitsPerComponent, c);
 
             return self;
         }
@@ -133,10 +133,10 @@ namespace NetStack.Serialization
             int halfrange = (1 << bitsPerValue - 1); //  - 1
             float unpacker = SmallestThreeUnpack * (1f / halfrange);
 
-            uint m = self.Read(2);
-            int aint = (int)self.Read(bitsPerValue);
-            int bint = (int)self.Read(bitsPerValue);
-            int cint = (int)self.Read(bitsPerValue);
+            uint m = self.ReadRaw(2);
+            int aint = (int)self.ReadRaw(bitsPerValue);
+            int bint = (int)self.ReadRaw(bitsPerValue);
+            int cint = (int)self.ReadRaw(bitsPerValue);
 
             aint -= halfrange;
             bint -= halfrange;
