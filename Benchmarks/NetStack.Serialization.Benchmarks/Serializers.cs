@@ -17,7 +17,7 @@ namespace NetStack.Serialization
         }
 
         // TODO: 
-        // hoffman/GRPC/MessagePack/raw bytes into buffer via Unsafe/via ObjectLayoutInspector and other slow stuff to get if should migrate
+        // hoffman/managed protobuf/GRPC/MessagePack/raw bytes into buffer via Unsafe/via ObjectLayoutInspector and other slow stuff to get if should migrate
         [Benchmark]
         public void ProtoBufferSerialization()
         {

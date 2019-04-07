@@ -19,7 +19,7 @@ namespace NetStack.Serialization
         /// Store value in specified number of bits.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddRaw(int numberOfBits, uint value)
+        public void AddRaw(uint value, int numberOfBits)
         {
 #if DEBUG || NETSTACK_VALIDATE
             if (numberOfBits <= 0)
@@ -95,7 +95,7 @@ namespace NetStack.Serialization
                 if (value > 0)
                     buffer |= 0b1000_0000u;
 
-                AddRaw(8, buffer);
+                AddRaw(buffer, 8);
             }
             while (value > 0);
 
@@ -120,7 +120,7 @@ namespace NetStack.Serialization
         public BitBuffer AddInt(int value, int numberOfBits)
         {
             uint zigzag = (uint)((value << 1) ^ (value >> 31));
-            AddRaw(numberOfBits, zigzag);
+            AddRaw(zigzag, numberOfBits);
             return this;
         }
     }

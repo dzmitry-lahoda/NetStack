@@ -122,27 +122,27 @@ namespace NetStack.Serialization
                 }
             }
 
-            AddRaw(codePageBitsRequried, (uint)codePage);
-            AddRaw(stringLengthBits, (uint)length);
+            AddRaw((uint)codePage, codePageBitsRequried);
+            AddRaw((uint)length, stringLengthBits);
 
             switch (codePage)
             {
                 case CodePage.Ascii:
                     for (int i = 0; i < length; i++)
                     {
-                        AddRaw(bitsASCII, value[i]);
+                        AddRaw(value[i], bitsASCII);
                     }
                     break;
                 case CodePage.Latin1:
                     for (int i = 0; i < length; i++)
                     {
-                        AddRaw(bitsLATIN1, value[i]);
+                        AddRaw(value[i], bitsLATIN1);
                     }
                     break;
                 case CodePage.LatinExtended:
                     for (int i = 0; i < length; i++)
                     {
-                        AddRaw(bitsLATINEXT, value[i]);
+                        AddRaw(value[i], bitsLATINEXT);
                     }
                     break;
                 default:
@@ -151,12 +151,12 @@ namespace NetStack.Serialization
                         if (value[i] > 127)
                         {
                             AddRaw(1, 1);
-                            AddRaw(bitsUTF16, value[i]);
+                            AddRaw(value[i], bitsUTF16);
                         }
                         else
                         {
-                            AddRaw(1, 0);
-                            AddRaw(bitsASCII, value[i]);
+                            AddRaw(0, 1);
+                            AddRaw(value[i], bitsASCII);
                         }
                     }
                     break;

@@ -119,10 +119,10 @@ namespace NetStack.Serialization
                 c = (uint)((cflt * packer) + halfrangeFloat);
             }
 
-            self.AddRaw(2, m);
-            self.AddRaw(bitsPerComponent, a);
-            self.AddRaw(bitsPerComponent, b);
-            self.AddRaw(bitsPerComponent, c);
+            self.AddRaw(m, 2);
+            self.AddRaw(a, bitsPerComponent);
+            self.AddRaw(b, bitsPerComponent);
+            self.AddRaw(c, bitsPerComponent);
 
             return self;
         }

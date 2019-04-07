@@ -148,7 +148,7 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddByte(byte value) => AddRaw(8, value);
+        public void AddByte(byte value) => AddRaw(value, 8);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddByte(byte value, int numBits) => AddUInt(value, numBits);
@@ -273,7 +273,7 @@ namespace NetStack.Serialization
             Debug.Assert(value >= min, "value is lower than minimal");
             Debug.Assert(value <= max, "value is higher than maximal");
             int bits = BitsRequired(min, max);
-            AddRaw(bits, (uint)(value - min));            
+            AddRaw((uint)(value - min), bits);            
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -299,7 +299,7 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddUInt(uint value, int numBits) => AddRaw(numBits, value);
+        public void AddUInt(uint value, int numBits) => AddRaw(value, numBits);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddUInt(uint value, uint min, uint max)
@@ -308,11 +308,11 @@ namespace NetStack.Serialization
             Debug.Assert(value >= min, "value is lower than minimal");
             Debug.Assert(value <= max, "value is higher than maximal");
             int bits = BitsRequired(min, max);
-            AddRaw(bits, (value - min));            
+            AddRaw(value - min, bits);            
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public uint ReadUInt(int numBits) => ReadRaw(numBits);
+        public uint ReadUInt(int numberOfBits) => ReadRaw(numberOfBits);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public uint ReadUInt(uint min, uint max)
@@ -333,7 +333,7 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public uint PeekUInt(int numBits) => ReadRaw(numBits);
+        public uint PeekUInt(int numberOfBits) => ReadRaw(numberOfBits);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public uint PeekUInt(uint min, uint max)
@@ -396,7 +396,7 @@ namespace NetStack.Serialization
         public void AddFloat(in float value)
         {
             uint reinterpreted = Unsafe.As<float, uint>(ref Unsafe.AsRef<float>(in value));
-            AddRaw(32, reinterpreted);            
+            AddRaw(reinterpreted, 32);            
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -405,15 +405,15 @@ namespace NetStack.Serialization
             float range = max - min;
             float invPrecision = 1.0f / precision;
             float maxVal = range * invPrecision;
-            int numBits = BitOperations.Log2((uint)(maxVal + 0.5f)) + 1;
+            int numberOfBits = BitOperations.Log2((uint)(maxVal + 0.5f)) + 1;
             float adjusted = (value - min) * invPrecision;
-            AddRaw(numBits, (uint)(adjusted + 0.5f));            
+            AddRaw((uint)(adjusted + 0.5f), numberOfBits);            
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddFloat(float value, float min, float max, int numBits)
+        public void AddFloat(float value, float min, float max, int numberOfBits)
         {
-            var maxvalue = (1 << numBits) - 1;
+            var maxvalue = (1 << numberOfBits) - 1;
 
             float range = max - min;
             var precision = range / maxvalue;
@@ -421,7 +421,7 @@ namespace NetStack.Serialization
 
             float adjusted = (value - min) * invPrecision;
 
-            AddRaw(numBits, (uint)(adjusted + 0.5f));            
+            AddRaw((uint)(adjusted + 0.5f), numberOfBits);            
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -521,7 +521,7 @@ namespace NetStack.Serialization
 
             Debug.Assert(length + 9 <= (totalNumberBits - bitsWritten), "Byte array too big for buffer.");
 
-            AddRaw(byteArrLengthBits, (uint)length);
+            AddRaw((uint)length, byteArrLengthBits);
 
             for (int index = offset; index < length; index++)
             {

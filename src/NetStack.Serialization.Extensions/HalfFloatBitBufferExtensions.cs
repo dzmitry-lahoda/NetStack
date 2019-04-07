@@ -20,7 +20,7 @@ namespace NetStack.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BitBuffer AddHalfFloat(this BitBuffer self, float value)
         {
-            self.AddRaw(16, HalfPrecision.Compress(value));
+            self.AddRaw(HalfPrecision.Compress(value), 16);
             return self;
         }
 
