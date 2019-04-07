@@ -1,8 +1,8 @@
-![Log](docs/logo.png)
+![Logo](docs/logo.png)
 
 Comprehensively tested code for creating concurrent networking systems for multiplayer games.
 
-NetStack is dependant on `System.Memory`,  `System.Runtime.CompilerServices.Unsafe`. Optimized for `C# 7.3+`, `Unity 2018.3+` and `.NET Core 2.1+`. Works o `.NET Standard 2.0`. 
+NetStack is dependant on `System.Memory`,  `System.Runtime.CompilerServices.Unsafe`. Optimized for `C# 7.3+`, `Unity 2018.3+` and `.NET Core 2.1+`. Works on `.NET Standard 2.0`. 
 
 NetStack does NOT depends on `System.IO.Pipelines` and `System.Threading.Channels`.
   
@@ -13,11 +13,11 @@ All validation and exception are behind `#if DEBUG || NETSTACK_VALIDATE`.
 
 # Modules
 
-- Compression
+## Compression
   - [Half precision](https://en.wikipedia.org/wiki/Half-precision_floating-point_format) algorithm
   - [Bounded range](https://gafferongames.com/post/snapshot_compression/#optimizing-position) algorithm
   - [Smallest three](https://gafferongames.com/post/snapshot_compression/#optimizing-orientation) algorithm
-- Serialization ([Nuget](https://www.nuget.org/packages/NetStack.Serialization))
+## Serialization ([Nuget](https://www.nuget.org/packages/NetStack.Serialization))
   - Lightweight and straightforward
   - Fast processing
   - [Span](https://docs.microsoft.com/en-us/dotnet/api/system.span) support
@@ -30,7 +30,15 @@ All validation and exception are behind `#if DEBUG || NETSTACK_VALIDATE`.
     - TODO: allow for interfaces with constrained generic usage (Unity FPSSample) so can do RAW bytes write
     - TODO: allow zero copy read write by init from byte array, cast head into ref as uint
     - TODO: allow plug custom compressor instead of 7bit encoding like (huffman Unity FPSSample in learning and ready alphabet encodings)
-- Collections.Concurrent
+
+### Optimization priorities
+
+1. Size of data
+2. Memory allocation and copy 
+3. Raw operations performance
+4. Code readability and maintainability
+
+## Collections.Concurrent
   - ArrayQueue is Single-producer single-consumer first-in-first-out non-blocking queue
   - ConcurrentBuffer is Multi-producer multi-consumer first-in-first-out non-blocking queue
   - ConcurrentPool is Self-stabilizing semi-lockless circular buffer
