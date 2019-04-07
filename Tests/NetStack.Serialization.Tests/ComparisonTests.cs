@@ -1,1 +1,0 @@
-// add comparision in size of output with some classical compression or like (huffman?, gzip?)

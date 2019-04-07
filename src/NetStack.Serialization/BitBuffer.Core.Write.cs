@@ -13,7 +13,16 @@ namespace NetStack.Serialization
 {
     partial class BitBuffer
     {
-        private int bitsWritten;
+        // total count of used bits since buffer start
+        public int BitsPassed2
+        {
+            get 
+            {
+                var indexInBits = chunkIndex * 32;
+                var over = scratchUsedBits != 0 ? 1 : 0; // TODO: speed up with bit hacking
+                return indexInBits + over * Math.Abs(scratchUsedBits);
+            }            
+        }
         
         /// <summary>
         /// Store value in specified number of bits.
@@ -28,8 +37,8 @@ namespace NetStack.Serialization
             if (numberOfBits > 32) // Unsafe.Sizeof<uint>() * 8
                 throw new ArgumentOutOfRangeException($"{nameof(numberOfBits)} should be less than or equal to 32", nameof(numberOfBits));
 
-            if (bitsWritten + numberOfBits > totalNumberBits)
-                throw new InvalidOperationException($"Writing {numberOfBits} bits will exceed maximal capacity of {totalNumberBits}, while {bitsWritten} bits written");
+            if (BitsPassed2 + numberOfBits > totalNumberBits)
+                throw new InvalidOperationException($"Writing {numberOfBits} bits will exceed maximal capacity of {totalNumberBits}, while {BitsPassed2} bits written");
 
             if (value > (uint)((1ul << numberOfBits) - 1))
                 throw new InvalidOperationException($"{value} is too big, won't fit in requested {numberOfBits} number of bits");
@@ -50,8 +59,6 @@ namespace NetStack.Serialization
                 scratchUsedBits -= 32;
                 chunkIndex++;
             }
-
-            bitsWritten += numberOfBits;
         }
 
         //      Method |     N |     Mean |     Error |    StdDev |   Median |
@@ -76,8 +83,6 @@ namespace NetStack.Serialization
                 scratchUsedBits -= 32;
                 chunkIndex++;
             }
-
-            bitsWritten += 1;
         }
 
         /// <summary>

@@ -97,9 +97,9 @@ namespace NetStack.Serialization
             if (length > stringLengthMax)
                 length = stringLengthMax;
 
-            if (length * 17 + 10 > (totalNumberBits - bitsWritten)) // possible overflow
+            if (length * 17 + 10 > (totalNumberBits - BitsPassed2)) // possible overflow
             {
-                if (BitsRequired(value, length) > (totalNumberBits - bitsWritten))
+                if (BitsRequired(value, length) > (totalNumberBits - BitsPassed2))
                     throw new ArgumentOutOfRangeException("String would not fit in bitstream.");
             }
 

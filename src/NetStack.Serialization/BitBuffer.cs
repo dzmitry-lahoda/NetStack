@@ -74,10 +74,8 @@ namespace NetStack.Serialization
             stringLengthMax = (1 << stringLengthBits) - 1;
             builder = new StringBuilder(stringLengthMax);
 
-            chunks = buffer;
-            totalNumChunks = buffer.Length;
-            totalNumberBits = buffer.Length * Unsafe.SizeOf<uint>() * 8;
-
+            Chunks = buffer;
+            
             Clear();
         }
 
@@ -85,21 +83,16 @@ namespace NetStack.Serialization
         /// <summary>
         /// Count of written bytes.
         /// </summary>
-        public int Length => ((bitsWritten - 1) >> 3) + 1;
+        public int Length => ((BitsPassed2 - 1) >> 3) + 1;
 
-        /// <summary>
-        /// Counts of bits in buffer.
-        /// </summary>
-        public int BitsLength => bitsWritten; 
-
-        public bool IsFinished => bitsWritten == BitsRead;
+        public bool IsFinished => BitsPassed2 == BitsPassed;
 
         /// <summary>
         /// Hom much bits can be yet written into buffer before it <see cref="IsFinished"/>.
         /// </summary>
-        public int BitsAvailable => totalNumberBits - bitsWritten;
+        public int BitsAvailable => totalNumberBits - BitsPassed2;
 
-        public bool WouldOverflow(int bits) => BitsRead + bits > totalNumberBits;
+        public bool WouldOverflow(int bits) => BitsPassed + bits > totalNumberBits;
 
         /// <summary>
         /// Sets buffer cursor to zero. Can start writing again.
@@ -107,8 +100,6 @@ namespace NetStack.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Clear()
         {            
-            bitsWritten = 0;
-
             chunkIndex = 0;
             scratch = 0;
             scratchUsedBits = 0;
@@ -519,14 +510,14 @@ namespace NetStack.Serialization
             if (length > byteArrLengthMax)
                 length = byteArrLengthMax;
 
-            Debug.Assert(length + 9 <= (totalNumberBits - bitsWritten), "Byte array too big for buffer.");
+            Debug.Assert(length + 9 <= (totalNumberBits - BitsPassed2), "Byte array too big for buffer.");
 
             AddRaw((uint)length, byteArrLengthBits);
 
-            for (int index = offset; index < length; index++)
+            for (var index = offset; index < length; index++)
             {
                 AddByte(value[index]);
-            }            
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -543,7 +534,7 @@ namespace NetStack.Serialization
 
             length = (int)ReadRaw(byteArrLengthBits);
 
-            //Debug.Assert(bitsWritten - bitsRead <= length * 8, "The length for this read is bigger than bitbuffer");
+            //Debug.Assert(BitsPassed2 - bitsRead <= length * 8, "The length for this read is bigger than bitbuffer");
             Debug.Assert(length <= outValue.Length + offset, "The supplied byte array is too small for requested read");
 
             for (int index = offset; index < length; index++)

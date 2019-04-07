@@ -15,11 +15,7 @@ namespace NetStack.Collections.Concurrent
 		[FieldOffset(128)]
 		private int _dequeuePosition;
 
-		public int Count {
-			get {
-				return _enqueuePosition - _dequeuePosition;
-			}
-		}
+		public int Count => _enqueuePosition - _dequeuePosition;
 
 		public ConcurrentBuffer(int bufferSize) {
 			if (bufferSize < 2)

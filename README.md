@@ -4,7 +4,8 @@ Comprehensively tested code for creating concurrent networking systems for multi
 
 NetStack is dependant on `System.Memory`,  `System.Runtime.CompilerServices.Unsafe`. Optimized for `C# 7.3+`, `Unity 2018.3+` and `.NET Core 2.1+`. Works on `.NET Standard 2.0`. 
 
-NetStack does NOT depends on `System.IO.Pipelines` and `System.Threading.Channels`.
+NetStack does NOT depends on `System.IO.Pipelines` nor `System.Threading.Channels` nor `System.Net.Sockets`. 
+Does NOT have code to control threads and sockets.
   
 
 # Exceptions, validation.
@@ -25,12 +26,15 @@ All validation and exception are behind `#if DEBUG || NETSTACK_VALIDATE`.
   - Compact bit-packing
     - [ZigZag](https://developers.google.com/protocol-buffers/docs/encoding#signed-integers) encoding
     - [Variable-length](https://rosettacode.org/wiki/Variable-length_quantity) encoding
-    - TODO: opimize write of 2,3,4 bits values
+    - TODO: optimize write of 2,3,4 bits values
     - TODO: allow to start write from where previous bit buffer finished (Unity FPSSample)
     - TODO: allow for interfaces with constrained generic usage (Unity FPSSample) so can do RAW bytes write
     - TODO: allow zero copy read write by init from byte array, cast head into ref as uint
+    - TODO: add delta methods with small vs big delimeter 
     - TODO: allow plug custom compressor instead of 7bit encoding like (huffman Unity FPSSample in learning and ready alphabet encodings)
-
+    - TODO: add custom visualizer or custom to string (to 01 to to hex)
+		- TODO: Given possible do delta of prediction. Should prediction API be part of serializer?
+  
 ### Optimization priorities
 
 1. Size of data
@@ -46,6 +50,8 @@ All validation and exception are behind `#if DEBUG || NETSTACK_VALIDATE`.
   - CyclicSequence (from Gaffer on Games)
   - CyclicSequenceBuffer (from Gaffer on Games)
   - CyclicIdPool (from Gaffer on Games)
+
+
 
 NetStack utilized [1](https://vimeo.com/292969981) and [2](https://forum.unity.com/threads/showcase-enet-unity-ecs-5000-real-time-player-simulation.605656/) 
 

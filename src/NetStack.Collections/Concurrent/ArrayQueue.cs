@@ -16,13 +16,7 @@ namespace NetStack.Collections.Concurrent
         [FieldOffset(128)]
         private int _dequeuePosition;
 
-        public int Count
-        {
-            get
-            {
-                return _enqueuePosition - _dequeuePosition;
-            }
-        }
+        public int Count => _enqueuePosition - _dequeuePosition;
 
         public ArrayQueue(int capacity)
         {
@@ -108,15 +102,8 @@ namespace NetStack.Collections.Concurrent
 
             internal int IsSet
             {
-                get
-                {
-                    return Volatile.Read(ref isSet);
-                }
-
-                set
-                {
-                    Volatile.Write(ref isSet, value);
-                }
+                get => Volatile.Read(ref isSet);
+                set => Volatile.Write(ref isSet, value);
             }
         }
     }

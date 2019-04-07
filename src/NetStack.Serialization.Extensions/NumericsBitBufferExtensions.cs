@@ -164,7 +164,7 @@ namespace NetStack.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Quaternion PeekQuaternion(this BitBuffer self, int bitsPerValue = 12)
         {
-            var curReadpos = self.BitsRead;
+            var curReadpos = self.BitsPassed;
             var value = self.ReadQuaternion(bitsPerValue);
             self.SetReadPosition(curReadpos);          
             return value;

@@ -13,7 +13,7 @@ namespace NetStack.Serialization
             var bits = BitBuffer.BitsRequired("0",1);
             var bitBuffer = new BitBuffer();
             bitBuffer.AddString("0");
-            Assert.Equal(bits, bitBuffer.BitsLength);
+            Assert.Equal(bits, bitBuffer.BitsPassed2);
             var result = bitBuffer.ToArray();
         }
 
@@ -23,7 +23,7 @@ namespace NetStack.Serialization
             var bits = BitBuffer.BitsRequired("Ё",1);
             var bitBuffer = new BitBuffer();
             bitBuffer.AddString("Ё");
-            Assert.Equal(bits, bitBuffer.BitsLength);
+            Assert.Equal(bits, bitBuffer.BitsPassed2);
             var result = bitBuffer.ToArray();
         }
 
@@ -53,7 +53,6 @@ namespace NetStack.Serialization
         {
             var buffer = new BitBuffer();
             buffer.AddString("lahoda.prо/минск");
-            buffer.Finish();
             var allocated = new byte[ushort.MaxValue];
             buffer.ToArray(allocated);
             var reader = new BitBuffer(allocated.Length);

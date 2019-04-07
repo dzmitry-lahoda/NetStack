@@ -13,7 +13,8 @@ namespace NetStack.Serialization
 {
     partial class BitBuffer
     {        
-        public int BitsRead 
+        // total count of used bits since buffer start
+        public int BitsPassed 
         {
             get 
             {
@@ -27,7 +28,7 @@ namespace NetStack.Serialization
         public bool ReadBool()
         {
 #if DEBUG || NETSTACK_VALIDATE
-            if (BitsRead >= totalNumberBits) throw new InvalidOperationException("reading more bits than in buffer");
+            if (BitsPassed >= totalNumberBits) throw new InvalidOperationException("reading more bits than in buffer");
             if (scratchUsedBits < 1 && chunkIndex >= totalNumChunks) throw new InvalidOperationException("reading more than buffer size");
 #endif
             if (scratchUsedBits < 1)
@@ -57,7 +58,7 @@ namespace NetStack.Serialization
 
 #if DEBUG || NETSTACK_VALIDATE
             if (numberOfBits <= 0 || numberOfBits > 32) throw new ArgumentOutOfRangeException(nameof(numberOfBits), $"Should read from 1 to 32. Cannot read {numberOfBits}"); 
-            if (BitsRead + numberOfBits > totalNumberBits)throw new InvalidOperationException("reading more bits than in buffer");
+            if (BitsPassed + numberOfBits > totalNumberBits)throw new InvalidOperationException("reading more bits than in buffer");
             if (scratchUsedBits < 0 || scratchUsedBits > 64) throw new InvalidProgramException($"{scratchUsedBits} Too many bits used in scratch, Overflow?");
 #endif
 
