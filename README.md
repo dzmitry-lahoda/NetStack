@@ -2,10 +2,14 @@
 
 Comprehensively tested code for creating concurrent networking systems for multiplayer games.
 
-NetStack is dependant on `.NET Standard 2.0`, `System.Memory`,  `System.Runtime.CompilerServices.Unsafe`, and oriented towards usage with `C# 7.3+` (Unity 2018.3+). 
+NetStack is dependant on `System.Memory`,  `System.Runtime.CompilerServices.Unsafe`. Optimized for `C# 7.3+`, `Unity 2018.3+` and `.NET Core 2.1+`. Works o `.NET Standard 2.0`. 
 
 NetStack does NOT depends on `System.IO.Pipelines` and `System.Threading.Channels`.
   
+
+# Exceptions, validation.
+
+All validation and exception are behind `#if DEBUG || NETSTACK_VALIDATE`.
 
 # Modules
 
@@ -21,6 +25,11 @@ NetStack does NOT depends on `System.IO.Pipelines` and `System.Threading.Channel
   - Compact bit-packing
     - [ZigZag](https://developers.google.com/protocol-buffers/docs/encoding#signed-integers) encoding
     - [Variable-length](https://rosettacode.org/wiki/Variable-length_quantity) encoding
+    - TODO: opimize write of 2,3,4 bits values
+    - TODO: allow to start write from where previous bit buffer finished (Unity FPSSample)
+    - TODO: allow for interfaces with constrained generic usage (Unity FPSSample) so can do RAW bytes write
+    - TODO: allow zero copy read write by init from byte array, cast head into ref as uint
+    - TODO: allow plug custom compressor instead of 7bit encoding like (huffman Unity FPSSample in learning and ready alphabet encodings)
 - Collections.Concurrent
   - ArrayQueue is Single-producer single-consumer first-in-first-out non-blocking queue
   - ConcurrentBuffer is Multi-producer multi-consumer first-in-first-out non-blocking queue
@@ -31,10 +40,6 @@ NetStack does NOT depends on `System.IO.Pipelines` and `System.Threading.Channel
   - CyclicIdPool (from Gaffer on Games)
 
 NetStack utilized [1](https://vimeo.com/292969981) and [2](https://forum.unity.com/threads/showcase-enet-unity-ecs-5000-real-time-player-simulation.605656/) 
-
-# Building
-
-All scripts are compiled for `.NET Standard 2.0` and cross compiled by `Unity 2018.3+`.
 
 # Usage
 

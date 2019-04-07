@@ -205,32 +205,6 @@ namespace NetStack.Serialization
         }
 
         [Fact]
-        public void AnsiStringWriteRead()
-        {
-            var buffer = new BitBuffer();
-            buffer.AddString("123456789");
-            buffer.Finish();
-            var allocated = new byte[ushort.MaxValue];
-            buffer.ToArray(allocated);
-            var reader = new BitBuffer(allocated.Length);
-            reader.FromArray(allocated);
-            Assert.Equal("123456789", reader.ReadString());
-        }
-
-        [Fact]
-        public void StringWriteRead()
-        {
-            var buffer = new BitBuffer();
-            buffer.AddString("lahoda.prо/минск");
-            buffer.Finish();
-            var allocated = new byte[ushort.MaxValue];
-            buffer.ToArray(allocated);
-            var reader = new BitBuffer(allocated.Length);
-            reader.FromArray(allocated);
-            Assert.Equal("lahoda.prо/минск", reader.ReadString());
-        }
-
-        [Fact]
         public void ByteArrayWriteRead()
         {
             var buffer = new BitBuffer();

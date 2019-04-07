@@ -559,6 +559,7 @@ namespace NetStack.Serialization
 
             length = (int)Read(byteArrLengthBits);
 
+            //Debug.Assert(bitsWritten - bitsRead <= length * 8, "The length for this read is bigger than bitbuffer");
             Debug.Assert(length <= outValue.Length + offset, "The supplied byte array is too small for requested read");
 
             for (int index = offset; index < length; index++)

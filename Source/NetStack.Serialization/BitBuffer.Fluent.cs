@@ -129,7 +129,29 @@ namespace NetStack.Serialization
         {
             AddShort(value, min, max);
             return this;
-        }                                
+        }                              
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public BitBuffer UShort(ushort value)
+        {
+            AddUShort(value);
+            return this;
+        }        
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public BitBuffer UShort(ushort value, int numBits)
+        {
+            AddUShort(value, numBits);
+            return this;
+        }        
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public BitBuffer UShort(ushort value, ushort min, ushort max)
+        {
+            AddUShort(value, min, max);
+            return this;
+        }  
+
 
         // TODO: cover all methods
     }

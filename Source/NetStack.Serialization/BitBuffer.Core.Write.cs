@@ -20,7 +20,7 @@ namespace NetStack.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Add(int numberOfBits, uint value)
         {
-#if DEBUG // allows to switch off checks in production
+#if DEBUG || NETSTACK_VALIDATE
             if (numberOfBits <= 0)
                 throw new ArgumentOutOfRangeException($"{nameof(numberOfBits)} should be positive", nameof(numberOfBits));
 
@@ -53,8 +53,6 @@ namespace NetStack.Serialization
             bitsWritten += numberOfBits;
         }
 
-        // TODO: add special handling for https://en.wikipedia.org/wiki/Nibble or other stuff unity uses fir skips 
-        // https://github.com/Unity-Technologies/FPSSample  https://www.youtube.com/watch?v=k6JTaFE7SYI
         //      Method |     N |     Mean |     Error |    StdDev |   Median |
         // ----------- |------ |---------:|----------:|----------:|---------:|
         //  BoolViaInt | 10000 | 1.998 ms | 0.0666 ms | 0.1943 ms | 1.942 ms |
@@ -80,7 +78,6 @@ namespace NetStack.Serialization
 
             bitsWritten += 1;
         }
-
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

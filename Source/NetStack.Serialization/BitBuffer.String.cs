@@ -23,46 +23,68 @@ namespace NetStack.Serialization
         private int stringLengthMax;
         private StringBuilder builder;
 
-        public static int BitsRequired(string value, int length)
-        {
-            var bitLength = 10;
 
-            uint codePage = 0; // Ascii
+        internal enum CodePage : byte
+        {
+            Ascii = 0,
+            Latin1 = 1,
+            LatinExtended = 2,
+            UTF16 = 3
+        }
+
+        private const int codePageBitsRequried = 2;
+
+        public static int BitsRequired(string value, int length, int bitLength = defaultStringLengthBits)
+        {
+#if DEBUG || NETSTACK_VALIDATE
+    if (value == null)
+    {
+        throw new ArgumentNullException(nameof(value));
+    }
+#endif
+            var codePage = CodePage.Ascii; 
             for (int i = 0; i < length; i++)
             {
                 var val = value[i];
                 if (val > 127)
                 {
-                    codePage = 1; // Latin1
+                    codePage = CodePage.Latin1;
                     if (val > 255)
                     {
-                        codePage = 2; // LatinExtended 
+                        codePage = CodePage.LatinExtended;  
                         if (val > 511)
                         {
-                            codePage = 3; // UTF-16
+                            codePage = CodePage.UTF16;
                             break;
                         }
                     }
                 }
             }
 
-            if (codePage == 0)
-                bitLength += length * 7;
-            else if (codePage == 1)
-                bitLength += length * 8;
-            else if (codePage == 2)
-                bitLength += length * 9;
-            else if (codePage == 3)
-                for (int i = 0; i < length; i++)
-                {
-                    if (value[i] > 127)
-                        bitLength += 17;
-                    else
-                        bitLength += 8;
-                }
+            switch (codePage)
+            {
+                case CodePage.Ascii:
+                    bitLength += length * 7;
+                    break;
+                case CodePage.Latin1:
+                    bitLength += length * 8;
+                    break;
+                case CodePage.LatinExtended:
+                    bitLength += length * 9;
+                    break;
+                default:
+                    for (int i = 0; i < length; i++) {
+                        if (value[i] > 127)
+                            bitLength += 17;
+                        else
+                            bitLength += 8;
+                    }
+                    break;
+            }
 
-            return bitLength;
+            return bitLength + codePageBitsRequried;
         }        
+
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public BitBuffer AddString(string value)
@@ -81,43 +103,43 @@ namespace NetStack.Serialization
                     throw new ArgumentOutOfRangeException("String would not fit in bitstream.");
             }
 
-            uint codePage = 0; // Ascii
+            var codePage = CodePage.Ascii;
             for (int i = 0; i < length; i++)
             {
                 var val = value[i];
                 if (val > 127)
                 {
-                    codePage = 1; // Latin1
+                    codePage = CodePage.Latin1;
                     if (val > 255)
                     {
-                        codePage = 2; // LatinExtended 
+                        codePage = CodePage.LatinExtended; 
                         if (val > 511)
                         {
-                            codePage = 3; // UTF-16
+                            codePage = CodePage.UTF16;
                             break;
                         }
                     }
                 }
             }
 
-            Add(2, codePage);
+            Add(codePageBitsRequried, (uint)codePage);
             Add(stringLengthBits, (uint)length);
 
             switch (codePage)
             {
-                case 0:
+                case CodePage.Ascii:
                     for (int i = 0; i < length; i++)
                     {
                         Add(bitsASCII, value[i]);
                     }
                     break;
-                case 1:
+                case CodePage.Latin1:
                     for (int i = 0; i < length; i++)
                     {
                         Add(bitsLATIN1, value[i]);
                     }
                     break;
-                case 2:
+                case CodePage.LatinExtended:
                     for (int i = 0; i < length; i++)
                     {
                         Add(bitsLATINEXT, value[i]);
