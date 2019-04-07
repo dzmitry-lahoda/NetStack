@@ -8,11 +8,10 @@
 
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="0.11.3" />
-    <ProjectReference Include="..\src\System.Unit.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Source\NetStack.Serialization\NetStack.Serialization.csproj" />
+    <ProjectReference Include="..\..\src\NetStack.Serialization\NetStack.Serialization.csproj" />
   </ItemGroup>
 
 </Project>

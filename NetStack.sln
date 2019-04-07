@@ -3,23 +3,23 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Source", "Source", "{8A7AE70C-2E4D-4028-AC89-9BF9427A283C}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{8A7AE70C-2E4D-4028-AC89-9BF9427A283C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetStack.Serialization", "Source\NetStack.Serialization\NetStack.Serialization.csproj", "{0FC212E3-5CEC-43B9-9DFC-96BE00A442D6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetStack.Serialization", "src\NetStack.Serialization\NetStack.Serialization.csproj", "{0FC212E3-5CEC-43B9-9DFC-96BE00A442D6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetStack.Compression", "Source\NetStack.Compression\NetStack.Compression.csproj", "{B33407A1-9F38-4056-934F-265BC63B431A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetStack.Compression", "src\NetStack.Compression\NetStack.Compression.csproj", "{B33407A1-9F38-4056-934F-265BC63B431A}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{4F4501DE-FD0A-490C-AB56-874B7979BBB1}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{4F4501DE-FD0A-490C-AB56-874B7979BBB1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetStack.Serialization.Tests", "Tests\NetStack.Serialization.Tests\NetStack.Serialization.Tests.csproj", "{6270AAA3-1021-49EB-8972-A45A07E9539C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetStack.Serialization.Tests", "tests\NetStack.Serialization.Tests\NetStack.Serialization.Tests.csproj", "{6270AAA3-1021-49EB-8972-A45A07E9539C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetStack.Compression.Tests", "Tests\NetStack.Compression.Tests\NetStack.Compression.Tests.csproj", "{61206AFF-D804-48EF-8845-25F58630547B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetStack.Compression.Tests", "tests\NetStack.Compression.Tests\NetStack.Compression.Tests.csproj", "{61206AFF-D804-48EF-8845-25F58630547B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetStack.Serialization.Extensions", "Source\NetStack.Serialization.Extensions\NetStack.Serialization.Extensions.csproj", "{3744F0BF-AFFA-42C1-8601-12AF4400163D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetStack.Serialization.Extensions", "src\NetStack.Serialization.Extensions\NetStack.Serialization.Extensions.csproj", "{3744F0BF-AFFA-42C1-8601-12AF4400163D}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Benchmarks", "Benchmarks", "{C43E7088-091A-4429-AE84-437010339ADB}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "benchmarks", "benchmarks", "{C43E7088-091A-4429-AE84-437010339ADB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetStack.Serialization.Benchmarks", "Benchmarks\NetStack.Serialization.Benchmarks\NetStack.Serialization.Benchmarks.csproj", "{E266CE35-3EA9-44B0-9F5B-5D56CC34D112}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetStack.Serialization.Benchmarks", "benchmarks\NetStack.Serialization.Benchmarks\NetStack.Serialization.Benchmarks.csproj", "{E266CE35-3EA9-44B0-9F5B-5D56CC34D112}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

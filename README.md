@@ -1,4 +1,4 @@
-![Log](Docs/logo.png)
+![Log](docs/logo.png)
 
 Comprehensively tested code for creating concurrent networking systems for multiplayer games.
 
