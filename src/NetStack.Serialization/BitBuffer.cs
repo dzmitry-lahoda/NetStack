@@ -158,12 +158,6 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool ReadBool() => Read(1) > 0;
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool PeekBool() => Peek(1) > 0;
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddByte(byte value) => Add(8, value);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

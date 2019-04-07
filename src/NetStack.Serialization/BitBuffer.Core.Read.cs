@@ -15,7 +15,40 @@ namespace NetStack.Serialization
     {
         private int bitsRead;
 
-        // TODO: create separate method to read bool (see why AddBool faster)
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool ReadBool() 
+        {
+            var result = PeekBool();
+            bitsRead++;
+            return result;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool PeekBool()
+        {
+#if DEBUG || NETSTACK_VALIDATE
+            if (bitsRead >= totalNumberBits) throw new InvalidOperationException("reading more bits than in buffer");
+#endif
+            if (scratchUsedBits < 1)
+            {
+                Debug.Assert(chunkIndex < totalNumChunks, "reading more than buffer size");
+
+                scratch |= ((ulong)(chunks[chunkIndex])) << scratchUsedBits;
+                scratchUsedBits += 32;
+                chunkIndex++;
+            }
+
+            Debug.Assert(scratchUsedBits >= 1, "Too many bits requested from scratch");
+
+            uint output = (uint)(scratch & ((((ulong)1) << 1) - 1));
+
+            scratch >>= 1;
+            scratchUsedBits -= 1;
+
+            return output > 0;
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public uint Peek(int numBits)
         {
@@ -23,7 +56,7 @@ namespace NetStack.Serialization
             Debug.Assert(numBits <= 32, "reading too many bits");
             Debug.Assert(bitsRead + numBits <= totalNumberBits, "reading more bits than in buffer");
 
-            Debug.Assert(scratchUsedBits >= 0 && scratchUsedBits <= 64, "Too many bits used in scratch, Overflow?");
+            Debug.Assert(scratchUsedBits >= 0 && scratchUsedBits <= 64, $"{scratchUsedBits} Too many bits used in scratch, Overflow?");
 
             if (scratchUsedBits < numBits)
             {
