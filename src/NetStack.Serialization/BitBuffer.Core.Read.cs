@@ -13,8 +13,11 @@ namespace NetStack.Serialization
 {
     partial class BitBuffer
     {        
+        public bool IsReadFinished => totalNumberBits == BitsRead;
+        
+
         // total count of used bits since buffer start
-        public int BitsPassed 
+        public int BitsRead 
         {
             get 
             {
@@ -28,7 +31,7 @@ namespace NetStack.Serialization
         public bool ReadBool()
         {
 #if DEBUG || NETSTACK_VALIDATE
-            if (BitsPassed >= totalNumberBits) throw new InvalidOperationException("reading more bits than in buffer");
+            if (BitsRead >= totalNumberBits) throw new InvalidOperationException("reading more bits than in buffer");
             if (scratchUsedBits < 1 && chunkIndex >= totalNumChunks) throw new InvalidOperationException("reading more than buffer size");
 #endif
             if (scratchUsedBits < 1)
@@ -58,7 +61,7 @@ namespace NetStack.Serialization
 
 #if DEBUG || NETSTACK_VALIDATE
             if (numberOfBits <= 0 || numberOfBits > 32) throw new ArgumentOutOfRangeException(nameof(numberOfBits), $"Should read from 1 to 32. Cannot read {numberOfBits}"); 
-            if (BitsPassed + numberOfBits > totalNumberBits)throw new InvalidOperationException("reading more bits than in buffer");
+            if (BitsRead + numberOfBits > totalNumberBits)throw new InvalidOperationException("reading more bits than in buffer");
             if (scratchUsedBits < 0 || scratchUsedBits > 64) throw new InvalidProgramException($"{scratchUsedBits} Too many bits used in scratch, Overflow?");
 #endif
 
@@ -136,5 +139,25 @@ namespace NetStack.Serialization
             int zagzig = (int)((value >> 1) ^ (-(int)(value & 1)));
             return zagzig;
         }
+
+        // TODO: change API to be more safe on bit buffer operations (protect from misuse)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void SetReadPosition(int bitsRead)
+        {
+#if DEBUG || NETSTACK_VALIDATE        
+        if (bitsRead < 0) throw new ArgumentException("Pushing negative bits", nameof(bitsRead));
+        if (bitsRead > totalNumberBits) throw new ArgumentException("Pushing too many bits", nameof(bitsRead));
+#endif            
+            throw new NotImplementedException();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void ResetReadPosition()
+        {
+            scratchUsedBits = 0;
+            chunkIndex = 0;
+            scratch = 0;
+        }        
+
     }
 }

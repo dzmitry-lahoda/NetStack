@@ -19,8 +19,6 @@ namespace NetStack.Serialization
         private const int bitsLATINEXT = 9;
         private const int bitsUTF16 = 16;
 
-        private int stringLengthBits;
-        private int stringLengthMax;
         private StringBuilder builder;
 
 
@@ -34,7 +32,7 @@ namespace NetStack.Serialization
 
         private const int codePageBitsRequried = 2;
 
-        public static int BitsRequired(string value, int length, int bitLength = defaultStringLengthBits)
+        public static int BitsRequired(string value, int length, int bitLength = BitBufferOptions.DefaultStringLengthBits)
         {
 #if DEBUG || NETSTACK_VALIDATE
     if (value == null)
@@ -91,15 +89,15 @@ namespace NetStack.Serialization
         {
             // non critical path (until string is one or couple of chars), so may consider throw
             Debug.Assert(value != null, "String is null");
-            Debug.Assert(value.Length <= stringLengthMax, $"String too long, raise the {nameof(stringLengthBits)} value or split the string.");
+            Debug.Assert(value.Length <= config.StringLengthMax, $"String too long, raise the {nameof(config.StringLengthBits)} value or split the string.");
 
             int length = value.Length;
-            if (length > stringLengthMax)
-                length = stringLengthMax;
+            if (length > config.StringLengthMax)
+                length = config.StringLengthMax;
 
-            if (length * 17 + 10 > (totalNumberBits - BitsPassed2)) // possible overflow
+            if (length * 17 + 10 > (totalNumberBits - BitsWritten)) // possible overflow
             {
-                if (BitsRequired(value, length) > (totalNumberBits - BitsPassed2))
+                if (BitsRequired(value, length) > (totalNumberBits - BitsWritten))
                     throw new ArgumentOutOfRangeException("String would not fit in bitstream.");
             }
 
@@ -123,7 +121,7 @@ namespace NetStack.Serialization
             }
 
             AddRaw((uint)codePage, codePageBitsRequried);
-            AddRaw((uint)length, stringLengthBits);
+            AddRaw((uint)length, config.StringLengthBits);
 
             switch (codePage)
             {
@@ -178,7 +176,7 @@ namespace NetStack.Serialization
         private void ReadString(StringBuilder outVal)
         {
             uint codePage = ReadRaw(2);
-            uint length = ReadRaw(stringLengthBits);
+            uint length = ReadRaw(config.StringLengthBits);
 
             switch (codePage)
             {

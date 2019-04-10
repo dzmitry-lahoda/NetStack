@@ -24,7 +24,7 @@ namespace NetStack.Serialization
             var buffer = new BitBuffer();
             var expected = new SimpleStruct { a = 1.2f, b = 123, c = byte.MaxValue, d = ushort.MaxValue };
             buffer.AddUnsafe(in expected);
-            Assert.True(buffer.Length < Unsafe.SizeOf<SimpleStruct>());
+            Assert.True(buffer.LengthWritten < Unsafe.SizeOf<SimpleStruct>());
         }
 
         [Fact]

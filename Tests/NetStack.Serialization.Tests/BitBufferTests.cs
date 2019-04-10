@@ -180,21 +180,21 @@ namespace NetStack.Serialization
         public void ByteArrayMaxWriteRead()
         {
             var buffer = new BitBuffer();
-            var input = new byte[buffer.ByteArrLengthMax];
+            var input = new byte[buffer.Options.ByteArrLengthMax];
             buffer.AddByteArray(input);
             buffer.Finish();
             var allocated = new byte[ushort.MaxValue];
             buffer.ToArray(allocated);
             var reader = new BitBuffer(allocated.Length);
             reader.FromArray(allocated);
-            Assert.Equal(buffer.ByteArrLengthMax, reader.PeekByteArrayLength());
+            Assert.Equal(buffer.Options.ByteArrLengthMax, reader.PeekByteArrayLength());
         }
 
         [Fact]
         public void ToFromArrayPosition()
         {
             var buffer = new BitBuffer();
-            var input = new byte[buffer.ByteArrLengthMax];
+            var input = new byte[buffer.Options.ByteArrLengthMax];
             buffer.AddByte(13);
             buffer.AddLong(long.MaxValue);
             buffer.Finish();

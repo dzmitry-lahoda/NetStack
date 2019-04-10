@@ -12,7 +12,7 @@ namespace NetStack.Serialization
             var buffer = new BitBuffer();
             var angle = 359.1f;
             buffer.AddHalfFloat(angle);     
-            Assert.Equal(16, buffer.BitsPassed2);       
+            Assert.Equal(16, buffer.BitsWritten);       
             var data = buffer.ToArray();
             buffer.FromArray(data);
             var result = buffer.ReadHalfFloat();
@@ -25,7 +25,7 @@ namespace NetStack.Serialization
             var buffer = new BitBuffer();
             var angle = 359.01f;
             buffer.AddFloat(angle, 0f, 360f,0.01f);
-            Assert.Equal(16, buffer.BitsPassed2);
+            Assert.Equal(16, buffer.BitsWritten);
             var data = buffer.ToArray();
             buffer.FromArray(data);
             var result = buffer.ReadFloat(0f, 360f,0.01f);
@@ -38,7 +38,7 @@ namespace NetStack.Serialization
             var buffer = new BitBuffer();
             var angle = 0f;
             buffer.AddFloat(angle);
-            Assert.Equal(32, buffer.BitsPassed2);
+            Assert.Equal(32, buffer.BitsWritten);
             var data = buffer.ToArray();
             buffer.FromArray(data);
             var result = buffer.ReadFloat();
@@ -51,7 +51,7 @@ namespace NetStack.Serialization
             var buffer = new BitBuffer();
             var angle = 35901u;
             buffer.AddUInt(angle, 0, 36000);
-            Assert.Equal(16, buffer.BitsPassed2);
+            Assert.Equal(16, buffer.BitsWritten);
             var data = buffer.ToArray();
             buffer.FromArray(data);
             var result = buffer.ReadFloat(0f, 360f,0.01f);

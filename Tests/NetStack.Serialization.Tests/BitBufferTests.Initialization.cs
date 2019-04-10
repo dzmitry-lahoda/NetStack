@@ -56,7 +56,7 @@ namespace NetStack.Serialization
             buffer.AddLong(long.MaxValue);
             buffer.AddInt(int.MaxValue);
             buffer.AddShort(short.MaxValue);
-            Span<byte> span = new byte[buffer.Length];
+            Span<byte> span = new byte[buffer.LengthWritten];
             ReadOnlySpan<byte> read = span;
             buffer.ToSpan(span);
             buffer.FromSpan(in read);

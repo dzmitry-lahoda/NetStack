@@ -10,10 +10,10 @@ namespace NetStack.Serialization
         public void Capacity()
         {
             var buffer = new BitBuffer(100);
-            Assert.Equal(0, buffer.Length);
+            Assert.Equal(0, buffer.LengthWritten);
             var received = new byte[2000];
             buffer.FromArray(received);
-            Assert.Equal(0, buffer.Length);
+            Assert.Equal(0, buffer.LengthWritten);
         }
 
        [Fact]
@@ -21,28 +21,28 @@ namespace NetStack.Serialization
         {
             var write = new BitBuffer();
             
-            Assert.Equal(0, write.BitsPassed2);
+            Assert.Equal(0, write.BitsWritten);
             write.AddBool(true);
-            Assert.Equal(1, write.BitsPassed2);
+            Assert.Equal(1, write.BitsWritten);
             write.AddByte(123);
-            Assert.Equal(9, write.BitsPassed2);
+            Assert.Equal(9, write.BitsWritten);
             write.AddShort(12345);
-            Assert.Equal(33, write.BitsPassed2);
+            Assert.Equal(33, write.BitsWritten);
             write.AddInt(1234567890);
-            Assert.Equal(73, write.BitsPassed2);
+            Assert.Equal(73, write.BitsWritten);
             var data = write.ToArray();
             var reader = new BitBuffer();
             reader.FromArray(data);
             
-            Assert.Equal(0, reader.BitsPassed);
+            Assert.Equal(0, reader.BitsRead);
             reader.ReadBool();
-            Assert.Equal(1, reader.BitsPassed);
+            Assert.Equal(1, reader.BitsRead);
             reader.ReadByte();
-            Assert.Equal(9, reader.BitsPassed);
+            Assert.Equal(9, reader.BitsRead);
             reader.ReadShort();
-            Assert.Equal(33, reader.BitsPassed);
+            Assert.Equal(33, reader.BitsRead);
             reader.ReadInt();
-            Assert.Equal(73, reader.BitsPassed);
+            Assert.Equal(73, reader.BitsRead);
         }        
     }
 }

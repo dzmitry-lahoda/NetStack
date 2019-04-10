@@ -13,7 +13,7 @@ namespace NetStack.Serialization
             var bits = BitBuffer.BitsRequired("0",1);
             var bitBuffer = new BitBuffer();
             bitBuffer.AddString("0");
-            Assert.Equal(bits, bitBuffer.BitsPassed2);
+            Assert.Equal(bits, bitBuffer.BitsWritten);
             var result = bitBuffer.ToArray();
         }
 
@@ -23,7 +23,7 @@ namespace NetStack.Serialization
             var bits = BitBuffer.BitsRequired("Ё",1);
             var bitBuffer = new BitBuffer();
             bitBuffer.AddString("Ё");
-            Assert.Equal(bits, bitBuffer.BitsPassed2);
+            Assert.Equal(bits, bitBuffer.BitsWritten);
             var result = bitBuffer.ToArray();
         }
 

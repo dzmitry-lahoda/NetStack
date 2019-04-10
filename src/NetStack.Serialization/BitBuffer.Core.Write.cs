@@ -13,8 +13,16 @@ namespace NetStack.Serialization
 {
     partial class BitBuffer
     {
+        // true if has not capacity to write numberOfBits
+        public bool CannotAdd(int numberOfBits) => BitsWritten + numberOfBits > totalNumberBits;
+
+        /// <summary>
+        /// Count of written bytes.
+        /// </summary>
+        public int LengthWritten => ((BitsWritten - 1) >> 3) + 1;
+
         // total count of used bits since buffer start
-        public int BitsPassed2
+        public int BitsWritten
         {
             get 
             {
@@ -23,6 +31,27 @@ namespace NetStack.Serialization
                 return indexInBits + over * Math.Abs(scratchUsedBits);
             }            
         }
+
+        /// <summary>
+        /// Call after all write commands.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Finish()
+        {
+            if (scratchUsedBits != 0)
+            {
+                Debug.Assert(chunkIndex < totalNumChunks, "buffer overflow when trying to finalize stream");
+                chunks[chunkIndex] = (uint)(scratch & 0xFFFFFFFF);
+                scratch >>= 32;
+                scratchUsedBits -= 32;
+                chunkIndex++;
+            }
+        }        
+
+        /// <summary>
+        /// Hom much bits can be yet written into buffer before it <see cref="IsReadFinished"/>.
+        /// </summary>
+        public int BitsAvailable => totalNumberBits - BitsWritten;        
         
         /// <summary>
         /// Store value in specified number of bits.
@@ -37,8 +66,8 @@ namespace NetStack.Serialization
             if (numberOfBits > 32) // Unsafe.Sizeof<uint>() * 8
                 throw new ArgumentOutOfRangeException($"{nameof(numberOfBits)} should be less than or equal to 32", nameof(numberOfBits));
 
-            if (BitsPassed2 + numberOfBits > totalNumberBits)
-                throw new InvalidOperationException($"Writing {numberOfBits} bits will exceed maximal capacity of {totalNumberBits}, while {BitsPassed2} bits written");
+            if (BitsWritten + numberOfBits > totalNumberBits)
+                throw new InvalidOperationException($"Writing {numberOfBits} bits will exceed maximal capacity of {totalNumberBits}, while {BitsWritten} bits written");
 
             if (value > (uint)((1ul << numberOfBits) - 1))
                 throw new InvalidOperationException($"{value} is too big, won't fit in requested {numberOfBits} number of bits");

@@ -23,7 +23,7 @@ namespace NetStack.Serialization
         /// <returns></returns>
         public byte[] ToArray()
         {
-            var data = new byte[Length];
+            var data = new byte[LengthWritten];
             ToArray(data);
             return data;
         }
@@ -34,7 +34,7 @@ namespace NetStack.Serialization
         public byte[] ToArray(ArrayPool<byte> pool = null)
         {
             pool = pool ?? ArrayPool<byte>.Shared;
-            var data = pool.Rent(Length);
+            var data = pool.Rent(LengthWritten);
             ToArray(data);
             return data;
         }        
@@ -48,7 +48,7 @@ namespace NetStack.Serialization
         {
             int length = data.Length;
             ToArray(data, 0, length);
-            return Length;
+            return LengthWritten;
         }
 
         public void ToArray(byte[] data, int position, int length)
@@ -60,7 +60,7 @@ namespace NetStack.Serialization
                 throw new ArgumentException("Should be non negative", nameof(position));
             var step = Unsafe.SizeOf<uint>();
             AddRaw(1, 1);
-            var bitsPassed = BitsPassed2;
+            var bitsPassed = BitsWritten;
 
             Finish();
 
@@ -153,7 +153,7 @@ namespace NetStack.Serialization
             // may throw here as not hot path, check span length
 
             AddRaw(1, 1);
-            var bitsPassed = BitsPassed2;
+            var bitsPassed = BitsWritten;
             Finish();
 
             int numChunks = (bitsPassed >> 5) + 1;
@@ -177,7 +177,7 @@ namespace NetStack.Serialization
                     data[dataIdx + 3] = (byte)(chunk >> 24);
             }
 
-            return Length;
+            return LengthWritten;
         }
 
 
