@@ -21,7 +21,7 @@ namespace NetStack.Serialization
                     if (random.Next() % 7 == 0)
                         buffer.AddInt(int.MaxValue);
                     if (random.Next() % 5 == 0)
-                        buffer.AddShort(short.MaxValue);
+                        buffer.i16(short.MaxValue);
                     if (random.Next() % 3 == 0)
                         buffer.AddBool(true);                        
                 }
@@ -39,7 +39,7 @@ namespace NetStack.Serialization
             var buffer = new BitBufferWrite(100);
             buffer.AddLong(long.MaxValue);
             buffer.AddInt(int.MaxValue);
-            buffer.AddShort(short.MaxValue);
+            buffer.i16(short.MaxValue);
             var result = buffer.ToArray();
             var reader = new BitBufferRead();
             reader.FromArray(result);
@@ -58,7 +58,7 @@ namespace NetStack.Serialization
             var buffer = new BitBufferWrite(100);
             buffer.AddLong(long.MaxValue);
             buffer.AddInt(int.MaxValue);
-            buffer.AddShort(short.MaxValue);
+            buffer.i16(short.MaxValue);
             Span<byte> span = new byte[buffer.LengthWritten];
             ReadOnlySpan<byte> read = span;
             buffer.ToSpan(span);

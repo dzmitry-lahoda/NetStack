@@ -27,37 +27,37 @@ namespace NetStack.Serialization
 
         private void ReadString(StringBuilder outVal)
         {
-            uint codePage = ReadRaw(2);
-            uint length = ReadRaw(config.StringLengthBits);
+            uint codePage = raw(2);
+            uint length = raw(config.StringLengthBits);
 
             switch (codePage)
             {
                 case 0:
                     for (int i = 0; i < length; i++)
                     {
-                        outVal.Append((char)ReadRaw(bitsASCII));
+                        outVal.Append((char)raw(bitsASCII));
                     }
                     break;
                 case 1:
                     for (int i = 0; i < length; i++)
                     {
-                        outVal.Append((char)ReadRaw(bitsLATIN1));
+                        outVal.Append((char)raw(bitsLATIN1));
                     }
                     break;
                 case 2:
                     for (int i = 0; i < length; i++)
                     {
-                        outVal.Append((char)ReadRaw(bitsLATINEXT));
+                        outVal.Append((char)raw(bitsLATINEXT));
                     }
                     break;
                 default:
                     for (int i = 0; i < length; i++)
                     {
-                        var needs16 = ReadRaw(1);
+                        var needs16 = raw(1);
                         if (needs16 == 1)
-                            outVal.Append((char)ReadRaw(bitsUTF16));
+                            outVal.Append((char)raw(bitsUTF16));
                         else
-                            outVal.Append((char)ReadRaw(bitsASCII));
+                            outVal.Append((char)raw(bitsASCII));
                     }
                     break;
             }

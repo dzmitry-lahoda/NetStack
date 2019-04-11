@@ -46,7 +46,7 @@ namespace NetStack.Serialization
                 {
                     if (size > 4)
                     {
-                        self.AddUInt(reinterpretedValue);
+                        self.u32(reinterpretedValue);
                         size -= 4;
                         reinterpretedValue = ref Unsafe.Add(ref reinterpretedValue, 1);
                     }
@@ -64,7 +64,7 @@ namespace NetStack.Serialization
         {
             if (size == 1)
             {
-                self.AddByte(value);
+                self.u8(value);
             }
             else if (size == 2)
             {
@@ -76,12 +76,12 @@ namespace NetStack.Serialization
                 ref var reinterpretedValue1 = ref Unsafe.As<byte, ushort>(ref value);
                 self.AddUShort(reinterpretedValue1);
                 ref var reinterpretedValue2 = ref Unsafe.Add(ref value, 2);
-                self.AddByte(reinterpretedValue2);
+                self.u8(reinterpretedValue2);
             }
             else if (size == 4)
             {
                 ref var reinterpretedValue = ref Unsafe.As<byte, uint>(ref value);
-                self.AddUInt(reinterpretedValue);
+                self.u32(reinterpretedValue);
             }
         }
 
@@ -107,7 +107,7 @@ namespace NetStack.Serialization
                 {
                     if (size >= 4)
                     {
-                        reinterpretedValue = self.ReadUInt();
+                        reinterpretedValue = self.u32();
                         size -= 4;
                         reinterpretedValue = ref Unsafe.Add(ref reinterpretedValue, 1);
                     }

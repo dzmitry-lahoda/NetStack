@@ -115,11 +115,11 @@ namespace NetStack.Serialization
         }
 
         /// <summary>
-        /// Adds value 7 bit encoded.
+        /// Adds value 7 bit encoded value.
         /// Store seven right bits, if more than 8 with 1, then set 1 to continue.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddUInt(uint value)
+        public void u32(uint value)
         {
             do
             {
@@ -141,7 +141,7 @@ namespace NetStack.Serialization
         public void AddInt(int value)
         {
             uint zigzag = (uint)((value << 1) ^ (value >> 31));
-            AddUInt(zigzag);
+            u32(zigzag);
         }
 
         /// <summary>

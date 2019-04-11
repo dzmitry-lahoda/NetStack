@@ -27,9 +27,9 @@ namespace NetStack.Serialization
         public void SByteReadWrite()
         {
             var buffer = new BitBufferWrite();
-            buffer.AddSByte(sbyte.MinValue);
-            buffer.AddSByte(sbyte.MaxValue / 2);
-            buffer.AddSByte(sbyte.MaxValue);
+            buffer.i8(sbyte.MinValue);
+            buffer.i8(sbyte.MaxValue / 2);
+            buffer.i8(sbyte.MaxValue);
             buffer.Finish();
             var allocated = new byte[ushort.MaxValue];
             buffer.ToArray(allocated);
@@ -45,11 +45,11 @@ namespace NetStack.Serialization
         public void ShortReadWrite()
         {
             var buffer = new BitBufferWrite();
-            buffer.AddShort(short.MinValue);
-            buffer.AddShort(short.MinValue / 2);
-            buffer.AddShort(0);
-            buffer.AddShort(short.MaxValue / 2);
-            buffer.AddShort(short.MaxValue);
+            buffer.i16(short.MinValue);
+            buffer.i16(short.MinValue / 2);
+            buffer.i16(0);
+            buffer.i16(short.MaxValue / 2);
+            buffer.i16(short.MaxValue);
             buffer.Finish();
             var allocated = new byte[ushort.MaxValue];
             buffer.ToArray(allocated);
@@ -93,15 +93,15 @@ namespace NetStack.Serialization
         public void UintReadWrite()
         {
             var buffer = new BitBufferWrite();
-            buffer.AddUInt(uint.MinValue);
-            buffer.AddUInt(uint.MaxValue);
+            buffer.u32(uint.MinValue);
+            buffer.u32(uint.MaxValue);
             buffer.Finish();
             var allocated = new byte[ushort.MaxValue];
             buffer.ToArray(allocated);
             var reader = new BitBufferRead(allocated.Length);
             reader.FromArray(allocated);
-            Assert.Equal(uint.MinValue, reader.ReadUInt());
-            Assert.Equal(uint.MaxValue, reader.ReadUInt());
+            Assert.Equal(uint.MinValue, reader.u32());
+            Assert.Equal(uint.MaxValue, reader.u32());
         }
 
         [Fact]
@@ -138,7 +138,7 @@ namespace NetStack.Serialization
         public void IntMinMaxRequired()
         {
             var buffer = new BitBufferWrite();
-            buffer.AddInt(12345, 0, 123456);
+            buffer.i32(12345, 0, 123456);
             buffer.Finish();
             var allocated = new byte[ushort.MaxValue];
             buffer.ToArray(allocated);
@@ -195,7 +195,7 @@ namespace NetStack.Serialization
         {
             var buffer = new BitBufferWrite();
             var input = new byte[buffer.Options.ByteArrLengthMax];
-            buffer.AddByte(13);
+            buffer.u8(13);
             buffer.AddLong(long.MaxValue);
             buffer.Finish();
             var allocated = new byte[ushort.MaxValue];

@@ -12,7 +12,7 @@ namespace NetStack.Serialization
         public void ByteWriteRead()
         {
             var buffer = new BitBufferWrite();
-            buffer.AddByte(byte.MaxValue);
+            buffer.u8(byte.MaxValue);
             buffer.Finish();
             var allocated = new byte[ushort.MaxValue];
             buffer.ToArray(allocated);
@@ -25,7 +25,7 @@ namespace NetStack.Serialization
         public void ByteMaxValueWritePeek()
         {
             var buffer = new BitBufferWrite();
-            buffer.AddByte(byte.MaxValue);
+            buffer.u8(byte.MaxValue);
             var data = buffer.ToArray();
             var reader = new BitBufferRead();
             reader.FromArray(data);
@@ -35,7 +35,7 @@ namespace NetStack.Serialization
         public void ByteMaxValueWritePeek1024()
         {
             var buffer = new BitBufferWrite();
-            buffer.AddByte(byte.MaxValue);
+            buffer.u8(byte.MaxValue);
             var data = buffer.ToArray();
             var reader = new BitBufferRead();
             reader.FromArray(data);
@@ -52,7 +52,7 @@ namespace NetStack.Serialization
             for (int i = 0; i < 513; i++)
             {
                 //buffer.AddByte(i % 2 == 0 ? byte.MaxValue : (byte)0);
-                buffer.AddByte(byte.MaxValue) ;
+                buffer.u8(byte.MaxValue) ;
             }
 
             var data = buffer.ToArray();

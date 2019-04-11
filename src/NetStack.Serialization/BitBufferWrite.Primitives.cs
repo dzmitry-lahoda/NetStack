@@ -13,8 +13,11 @@ namespace NetStack.Serialization
 {
     partial class BitBufferWrite
     {
+        /// <summary>
+        /// Adds int value.
+        /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddInt(int value, int min, int max)
+        public void i32(int value, int min, int max)
         {
             Debug.Assert(min < max, "minus is not lower than max");
             Debug.Assert(value >= min, "value is lower than minimal");
@@ -25,34 +28,34 @@ namespace NetStack.Serialization
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddByte(byte value) => AddRaw(value, 8);
+        public void u8(byte value) => AddRaw(value, 8);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddByte(byte value, int numberOfBits) => AddUInt(value, numberOfBits);
+        public void u8(byte value, int numberOfBits) => AddUInt(value, numberOfBits);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddByte(byte value, byte min, byte max) => AddUInt(value, min, max);
+        public void u8(byte value, byte min, byte max) => AddUInt(value, min, max);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddSByte(sbyte value) => AddInt(value, 8);
+        public void i8(sbyte value) => AddInt(value, 8);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddSByte(sbyte value, int numberOfBits) => AddInt(value, numberOfBits);
+        public void i8(sbyte value, int numberOfBits) => AddInt(value, numberOfBits);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddSByte(sbyte value, sbyte min, sbyte max) => AddInt(value, min, max);
+        public void i8(sbyte value, sbyte min, sbyte max) => i32(value, min, max);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddShort(short value) => AddInt(value);
+        public void i16(short value) => AddInt(value);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddShort(short value, int numberOfBits) => AddInt(value, numberOfBits);
+        public void i16(short value, int numberOfBits) => AddInt(value, numberOfBits);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddShort(short value, short min, short max) => AddInt(value, min, max);
+        public void i16(short value, short min, short max) => i32(value, min, max);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddUShort(ushort value) => AddUInt(value);
+        public void AddUShort(ushort value) => u32(value);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddUShort(ushort value, int numberOfBits) => AddUInt(value, numberOfBits);
@@ -84,8 +87,8 @@ namespace NetStack.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddULong(ulong value)
         {
-            AddUInt((uint)(value & uint.MaxValue));
-            AddUInt((uint)(value >> 32));
+            u32((uint)(value & uint.MaxValue));
+            u32((uint)(value >> 32));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -152,7 +155,7 @@ namespace NetStack.Serialization
 
             for (var index = offset; index < length; index++)
             {
-                AddByte(value[index]);
+                u8(value[index]);
             }
         }        
     }

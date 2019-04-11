@@ -25,9 +25,9 @@ namespace NetStack.Serialization
             Assert.Equal(0, write.BitsWritten);
             write.AddBool(true);
             Assert.Equal(1, write.BitsWritten);
-            write.AddByte(123);
+            write.u8(123);
             Assert.Equal(9, write.BitsWritten);
-            write.AddShort(12345);
+            write.i16(12345);
             Assert.Equal(33, write.BitsWritten);
             write.AddInt(1234567890);
             Assert.Equal(73, write.BitsWritten);
@@ -36,7 +36,7 @@ namespace NetStack.Serialization
             reader.FromArray(data);
             
             Assert.Equal(0, reader.BitsRead);
-            reader.ReadBool();
+            reader.@bool();
             Assert.Equal(1, reader.BitsRead);
             reader.ReadByte();
             Assert.Equal(9, reader.BitsRead);

@@ -22,6 +22,7 @@ All validation and exception are behind `#if DEBUG || NETSTACK_VALIDATE`.
   - Lightweight and straightforward
   - Fast processing
   - [Span](https://docs.microsoft.com/en-us/dotnet/api/system.span) support
+  - Uses modern shortcuts for naming primitives like `i32` for `int`, etc. 
   - Compact bit-packing
     - [ZigZag](https://developers.google.com/protocol-buffers/docs/encoding#signed-integers) encoding
     - [Variable-length](https://rosettacode.org/wiki/Variable-length_quantity) encoding

@@ -27,8 +27,11 @@ namespace NetStack.Serialization
             }            
         }
 
+        /// <summary>
+        /// Reads one bit boolean.
+        /// </summary>        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool ReadBool()
+        public bool @bool()
         {
 #if DEBUG || NETSTACK_VALIDATE
             if (BitsRead >= totalNumberBits) throw new InvalidOperationException("reading more bits than in buffer");
@@ -52,8 +55,11 @@ namespace NetStack.Serialization
             return output > 0;
         }
 
+        /// <summary>
+        /// Reads raw data.
+        /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public uint ReadRaw(int numberOfBits)
+        public uint raw(int numberOfBits)
         {
 #if DEBUG
     var oldScratchUsedBits = scratchUsedBits;
@@ -86,35 +92,44 @@ namespace NetStack.Serialization
             return output;
         }
 
+        /// <summary>
+        /// Reads int, but does not move cursor.
+        /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public int PeekInt()
+        public int i32Peek()
         {
-            uint value = PeekUInt();
+            uint value = u32Peek();
             int zagzig = (int)((value >> 1) ^ (-(int)(value & 1)));
             return zagzig;
         }
 
+        /// <summary>
+        /// Reads uint, but does not move cursor.
+        /// </summary>
+        /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public uint PeekUInt()
+        public uint u32Peek()
         {
-            uint value = ReadUInt();
+            uint value = u32();
             return value;
         }
 
-
         /// <summary>
-        /// Reads value without progressing bits position.
+        /// Reads int value without progressing bits position.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public int PeekInt(int numberOfBits)
+        public int i32Peek(int numberOfBits)
         {
-            uint value = ReadRaw(numberOfBits);
+            uint value = raw(numberOfBits);
             int zagzig = (int)((value >> 1) ^ (-(int)(value & 1)));
             return zagzig;
         }
 
+        /// <summary>
+        /// Reads 7 bit encoded uint value.
+        /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public uint ReadUInt()
+        public uint u32()
         {
             uint buffer = 0x0u;
             uint value = 0x0u;
@@ -122,7 +137,7 @@ namespace NetStack.Serialization
 
             do
             {
-                buffer = ReadRaw(8);
+                buffer = raw(8);
 
                 value |= (buffer & 0b0111_1111u) << shift;
                 shift += 7;
@@ -135,7 +150,7 @@ namespace NetStack.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int ReadInt()
         {
-            uint value = ReadUInt();
+            uint value = u32();
             int zagzig = (int)((value >> 1) ^ (-(int)(value & 1)));
             return zagzig;
         }
@@ -143,7 +158,7 @@ namespace NetStack.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int ReadInt(int numberOfBits)
         {
-            uint value = ReadRaw(numberOfBits);
+            uint value = raw(numberOfBits);
             int zagzig = (int)((value >> 1) ^ (-(int)(value & 1)));
             return zagzig;
         }

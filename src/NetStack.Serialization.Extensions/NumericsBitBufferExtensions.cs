@@ -131,10 +131,10 @@ namespace NetStack.Serialization
             int halfrange = (1 << bitsPerValue - 1); //  - 1
             float unpacker = SmallestThreeUnpack * (1f / halfrange);
 
-            uint m = self.ReadRaw(2);
-            int aint = (int)self.ReadRaw(bitsPerValue);
-            int bint = (int)self.ReadRaw(bitsPerValue);
-            int cint = (int)self.ReadRaw(bitsPerValue);
+            uint m = self.raw(2);
+            int aint = (int)self.raw(bitsPerValue);
+            int bint = (int)self.raw(bitsPerValue);
+            int cint = (int)self.raw(bitsPerValue);
 
             aint -= halfrange;
             bint -= halfrange;
