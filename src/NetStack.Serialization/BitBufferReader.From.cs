@@ -15,7 +15,7 @@ using BitOperations = System.Numerics.BitOperations;
 
 namespace NetStack.Serialization
 {
-    public partial class BitBufferRead
+    public partial class BitBufferReader
     {
         public void FromArray(byte[] data)
         {

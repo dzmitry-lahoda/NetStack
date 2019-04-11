@@ -15,7 +15,7 @@ namespace NetStack.Serialization
             buffer.AddUShort(ushort.MaxValue);
             var allocated = new byte[ushort.MaxValue];
             buffer.ToArray(allocated);
-            var reader = new BitBufferRead(allocated.Length);
+            var reader = new BitBufferReader(allocated.Length);
             reader.FromArray(allocated);
             Assert.Equal(ushort.MinValue, reader.ReadUShort());
             ushort half = ushort.MaxValue / 2;
@@ -33,7 +33,7 @@ namespace NetStack.Serialization
             buffer.Finish();
             var allocated = new byte[ushort.MaxValue];
             buffer.ToArray(allocated);
-            var reader = new BitBufferRead(allocated.Length);
+            var reader = new BitBufferReader(allocated.Length);
             reader.FromArray(allocated);
             Assert.Equal(sbyte.MinValue, reader.ReadSByte());
             sbyte half = sbyte.MaxValue / 2;
@@ -53,7 +53,7 @@ namespace NetStack.Serialization
             buffer.Finish();
             var allocated = new byte[ushort.MaxValue];
             buffer.ToArray(allocated);
-            var reader = new BitBufferRead(allocated.Length);
+            var reader = new BitBufferReader(allocated.Length);
             reader.FromArray(allocated);
             Assert.Equal(short.MinValue, reader.ReadShort());
             Assert.Equal(short.MinValue / 2, reader.ReadShort());
@@ -71,7 +71,7 @@ namespace NetStack.Serialization
             buffer.Finish();
             var allocated = new byte[ushort.MaxValue];
             buffer.ToArray(allocated);
-            var reader = new BitBufferRead(allocated.Length);
+            var reader = new BitBufferReader(allocated.Length);
             reader.FromArray(allocated);
             Assert.Equal(123.456f, reader.ReadFloat());
         }
@@ -84,7 +84,7 @@ namespace NetStack.Serialization
             buffer.Finish();
             var allocated = new byte[ushort.MaxValue];
             buffer.ToArray(allocated);
-            var reader = new BitBufferRead(allocated.Length);
+            var reader = new BitBufferReader(allocated.Length);
             reader.FromArray(allocated);
             Assert.Equal(long.MaxValue, reader.ReadLong());
         }
@@ -98,7 +98,7 @@ namespace NetStack.Serialization
             buffer.Finish();
             var allocated = new byte[ushort.MaxValue];
             buffer.ToArray(allocated);
-            var reader = new BitBufferRead(allocated.Length);
+            var reader = new BitBufferReader(allocated.Length);
             reader.FromArray(allocated);
             Assert.Equal(uint.MinValue, reader.u32());
             Assert.Equal(uint.MaxValue, reader.u32());
@@ -112,7 +112,7 @@ namespace NetStack.Serialization
             buffer.Finish();
             var allocated = new byte[ushort.MaxValue];
             buffer.ToArray(allocated);
-            var reader = new BitBufferRead(allocated.Length);
+            var reader = new BitBufferReader(allocated.Length);
             reader.FromArray(allocated);
             Assert.Equal(double.MaxValue, reader.ReadDouble());
         }
@@ -126,7 +126,7 @@ namespace NetStack.Serialization
             buffer.Finish();
             var allocated = new byte[ushort.MaxValue];
             buffer.ToArray(allocated);
-            var reader = new BitBufferRead(allocated.Length);
+            var reader = new BitBufferReader(allocated.Length);
             reader.FromArray(allocated);
             Assert.Equal(1234.5f, reader.ReadFloat(0, 12345.6f, 0.01f));
         }
@@ -140,7 +140,7 @@ namespace NetStack.Serialization
             buffer.Finish();
             var allocated = new byte[ushort.MaxValue];
             buffer.ToArray(allocated);
-            var reader = new BitBufferRead(allocated.Length);
+            var reader = new BitBufferReader(allocated.Length);
             reader.FromArray(allocated);
             var output = new byte[5];
             reader.ReadByteArray(output, out var length);
@@ -156,7 +156,7 @@ namespace NetStack.Serialization
             buffer.Finish();
             var allocated = new byte[ushort.MaxValue];
             buffer.ToArray(allocated);
-            var reader = new BitBufferRead(allocated.Length);
+            var reader = new BitBufferReader(allocated.Length);
             reader.FromArray(allocated);
             Assert.Equal(buffer.Options.ByteArrLengthMax, reader.PeekByteArrayLength());
         }
@@ -171,7 +171,7 @@ namespace NetStack.Serialization
             buffer.Finish();
             var allocated = new byte[ushort.MaxValue];
             buffer.ToArray(allocated, 10, 100);
-            var reader = new BitBufferRead(allocated.Length);
+            var reader = new BitBufferReader(allocated.Length);
             reader.FromArray(allocated, 10, 100);
             Assert.Equal(13, reader.u8());
             Assert.Equal(long.MaxValue, reader.ReadLong());

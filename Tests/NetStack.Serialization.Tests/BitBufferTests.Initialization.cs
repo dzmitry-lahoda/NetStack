@@ -10,7 +10,7 @@ namespace NetStack.Serialization
         public void RandomManyTimes()
         {
             var buffer = new BitBufferWrite();
-            var reader = new BitBufferRead();
+            var reader = new BitBufferReader();
             var random = new Random(42);
             for (var i = 0; i < short.MaxValue; i++)
             {
@@ -41,7 +41,7 @@ namespace NetStack.Serialization
             buffer.i32(int.MaxValue);
             buffer.i16(short.MaxValue);
             var result = buffer.ToArray();
-            var reader = new BitBufferRead();
+            var reader = new BitBufferReader();
             reader.FromArray(result);
             Assert.Equal(long.MaxValue, reader.ReadLong());
             Assert.Equal(int.MaxValue, reader.i32());
@@ -62,7 +62,7 @@ namespace NetStack.Serialization
             Span<byte> span = new byte[buffer.LengthWritten];
             ReadOnlySpan<byte> read = span;
             buffer.ToSpan(span);
-            var reader = new BitBufferRead();            
+            var reader = new BitBufferReader();            
             reader.FromSpan(read);
             Assert.Equal(long.MaxValue, reader.ReadLong());
             Assert.Equal(int.MaxValue, reader.i32());

@@ -16,7 +16,7 @@ namespace NetStack.Serialization
             buffer.Finish();
             var allocated = new byte[ushort.MaxValue];
             buffer.ToArray(allocated);
-            var reader = new BitBufferRead(allocated.Length);
+            var reader = new BitBufferReader(allocated.Length);
             reader.FromArray(allocated);
             Assert.Equal(int.MinValue, reader.i32());
             Assert.Equal(0, reader.i32());
@@ -35,7 +35,7 @@ namespace NetStack.Serialization
             buffer.i32(0);
             var bitsWritten = buffer.BitsWritten;
             var data = buffer.ToArray();
-            var reader = new BitBufferRead();
+            var reader = new BitBufferReader();
             reader.FromArray(data);
             Assert.Equal(12345, reader.i32(0, 123456));
             Assert.Equal(1, reader.i32());

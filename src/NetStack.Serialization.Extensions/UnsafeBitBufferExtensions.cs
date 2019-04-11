@@ -90,7 +90,7 @@ namespace NetStack.Serialization
         /// </summary>
         /// <typeparam name="T">Element with predefined size.</typeparam>
         /// <returns>The value.</returns>
-        public static T ReadUnsafe<T>(this BitBufferRead self)
+        public static T ReadUnsafe<T>(this BitBufferReader self)
            where T : unmanaged
         {
             var size = Unsafe.SizeOf<T>();
@@ -123,7 +123,7 @@ namespace NetStack.Serialization
             return value;
         }
 
-        private static void ReadSmallUnmanaged(this BitBufferRead self, ref byte value, int size)
+        private static void ReadSmallUnmanaged(this BitBufferReader self, ref byte value, int size)
         {
             if (size == 1)
             {

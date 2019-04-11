@@ -16,7 +16,7 @@ namespace NetStack.Serialization
             writer.Finish();
             var allocated = new byte[ushort.MaxValue];
             writer.ToArray(allocated);
-            var reader = new BitBufferRead(allocated.Length);
+            var reader = new BitBufferReader(allocated.Length);
             reader.FromArray(allocated);
             Assert.Equal(byte.MaxValue, reader.u8());
         }
@@ -33,7 +33,7 @@ namespace NetStack.Serialization
             buffer.u8(0);
             var bitsWritten = buffer.BitsWritten;
             var data = buffer.ToArray();
-            var reader = new BitBufferRead();
+            var reader = new BitBufferReader();
             reader.FromArray(data);
             Assert.Equal(123, reader.u8(0, 201));
             Assert.Equal(1, reader.u8());
@@ -50,7 +50,7 @@ namespace NetStack.Serialization
             var writer = new BitBufferWrite();
             writer.u8(byte.MaxValue);
             var data = writer.ToArray();
-            var reader = new BitBufferRead();
+            var reader = new BitBufferReader();
             reader.FromArray(data);
             Assert.Equal(byte.MaxValue, reader.u8Peek());
         }
@@ -60,7 +60,7 @@ namespace NetStack.Serialization
             var writer = new BitBufferWrite();
             writer.u8(byte.MaxValue);
             var data = writer.ToArray();
-            var reader = new BitBufferRead();
+            var reader = new BitBufferReader();
             reader.FromArray(data);
             for (int i = 0; i < 1024; i++)
             {
@@ -79,7 +79,7 @@ namespace NetStack.Serialization
             }
 
             var data = writer.ToArray();
-            var reader = new BitBufferRead();
+            var reader = new BitBufferReader();
             reader.FromArray(data);
             for (int i = 0; i < 513; i++)
             {

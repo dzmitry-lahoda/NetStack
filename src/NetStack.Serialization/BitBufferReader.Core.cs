@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace NetStack.Serialization
 {
-    partial class BitBufferRead
+    partial class BitBufferReader
     {        
         public bool CanReadMore => totalNumberBits > BitsRead;
     

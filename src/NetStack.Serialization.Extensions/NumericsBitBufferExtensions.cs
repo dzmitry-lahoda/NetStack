@@ -126,7 +126,7 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Quaternion ReadQuaternion(this BitBufferRead self, int bitsPerValue = 12)
+        public static Quaternion ReadQuaternion(this BitBufferReader self, int bitsPerValue = 12)
         {
             int halfrange = (1 << bitsPerValue - 1); //  - 1
             float unpacker = SmallestThreeUnpack * (1f / halfrange);
@@ -160,7 +160,7 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Quaternion PeekQuaternion(this BitBufferRead self, int bitsPerValue = 12)
+        public static Quaternion PeekQuaternion(this BitBufferReader self, int bitsPerValue = 12)
         {
             var curReadpos = self.BitsRead;
             var value = self.ReadQuaternion(bitsPerValue);

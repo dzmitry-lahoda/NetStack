@@ -17,7 +17,7 @@ namespace NetStack.Serialization
     /// <summary>
     /// Bit level compression by ranged values.
     /// </summary>
-    public partial class BitBufferRead : BitBuffer
+    public partial class BitBufferReader : BitBuffer
     {
         private BitBufferOptions config;
 
@@ -31,7 +31,7 @@ namespace NetStack.Serialization
         /// Call <see cref="FromArray"/> to reinitialize with copy of data.
         /// </summary>
         /// <param name="capacity">Count of 4 byte integers used as internal buffer.</param>
-        public BitBufferRead(int capacity = DefaultCapacityUInt, BitBufferOptions config = default)
+        public BitBufferReader(int capacity = DefaultCapacityUInt, BitBufferOptions config = default)
         : this(new uint[capacity], config)
         {
         }
@@ -40,7 +40,7 @@ namespace NetStack.Serialization
         /// Creates new instance with its own buffer. 
         /// </summary>
         /// <param name="buffer">Custom buffer.</param>
-        public BitBufferRead(uint[] buffer, BitBufferOptions config = default)
+        public BitBufferReader(uint[] buffer, BitBufferOptions config = default)
         {
             // TODO: try inline config as struct to improve access perfromance? Test it via benchmark
             this.config = config ?? defaultConfig;
