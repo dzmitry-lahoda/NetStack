@@ -51,5 +51,27 @@ namespace NetStack.Serialization
             scratch = 0;
             scratchUsedBits = 0;
         }
+
+        public override string ToString()
+        {
+            var toStringBuilder = new StringBuilder(chunks.Length * 8);
+
+            for (int i = chunks.Length - 1; i >= 0; i--)
+            {
+                toStringBuilder.Append(Convert.ToString(chunks[i], 2).PadLeft(32, '0'));
+            }
+
+            var spaced = new StringBuilder();
+
+            for (int i = 0; i < toStringBuilder.Length; i++)
+            {
+                spaced.Append(toStringBuilder[i]);
+
+                if (((i + 1) % 8) == 0)
+                    spaced.Append(" ");
+            }
+
+            return spaced.ToString();
+        }        
     }
 }

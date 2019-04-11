@@ -17,74 +17,6 @@ namespace NetStack.Serialization
 {
     public partial class BitBuffer
     {
-        /// <summary>
-        /// Dot not use for production. GC allocated array.
-        /// </summary>
-        /// <returns></returns>
-        public byte[] ToArray()
-        {
-            var data = new byte[LengthWritten];
-            ToArray(data);
-            return data;
-        }
-
-        /// <summary>
-        /// Rents array 
-        /// </summary>
-        public byte[] ToArray(ArrayPool<byte> pool = null)
-        {
-            pool = pool ?? ArrayPool<byte>.Shared;
-            var data = pool.Rent(LengthWritten);
-            ToArray(data);
-            return data;
-        }        
-
-        /// <summary>
-        /// Calls <see cref="Finish"/> and copies all internal data into array.
-        /// </summary>
-        /// <param name="data">The output buffer.</param>
-        /// <returns>Count of bytes written.</returns>
-        public int ToArray(byte[] data)
-        {
-            int length = data.Length;
-            ToArray(data, 0, length);
-            return LengthWritten;
-        }
-
-        public void ToArray(byte[] data, int position, int length)
-        {
-            // may throw here as not hot path
-            if (length <= 0)
-                throw new ArgumentException("Should be positive", nameof(length));
-            if (position < 0)
-                throw new ArgumentException("Should be non negative", nameof(position));
-            var step = Unsafe.SizeOf<uint>();
-            AddRaw(1, 1);
-            var bitsPassed = BitsWritten;
-
-            Finish();
-
-            int numChunks = (bitsPassed >> 5) + 1;
-
-            for (int i = 0; i < numChunks; i++)
-            {
-                int dataIdx = i * step;
-                uint chunk = chunks[i];
-
-                if (dataIdx < length)
-                    data[position + dataIdx] = (byte)(chunk);
-
-                if (dataIdx + 1 < length)
-                    data[position + dataIdx + 1] = (byte)(chunk >> 8);
-
-                if (dataIdx + 2 < length)
-                    data[position + dataIdx + 2] = (byte)(chunk >> 16);
-
-                if (dataIdx + 3 < length)
-                    data[position + dataIdx + 3] = (byte)(chunk >> 24);
-            }
-        }
-
         public int FromArray(byte[] data)
         {
             int length = data.Length;
@@ -143,44 +75,6 @@ namespace NetStack.Serialization
             return 8 * length - leadingZeros - 1;
         }
 
-        /// <summary>
-        /// Calls <see cref="Finish"/> and copies all internal data into span.
-        /// </summary>
-        /// <param name="data">The output buffer.</param>
-        /// <returns>Count of bytes written.</returns>
-        public int ToSpan(Span<byte> data)
-        {
-            // may throw here as not hot path, check span length
-
-            AddRaw(1, 1);
-            var bitsPassed = BitsWritten;
-            Finish();
-
-            int numChunks = (bitsPassed >> 5) + 1;
-            int length = data.Length;
-            var step = Unsafe.SizeOf<uint>();
-            for (int i = 0; i < numChunks; i++)
-            {
-                int dataIdx = i * step;
-                uint chunk = chunks[i];
-
-                if (dataIdx < length)
-                    data[dataIdx] = (byte)(chunk);
-
-                if (dataIdx + 1 < length)
-                    data[dataIdx + 1] = (byte)(chunk >> 8);
-
-                if (dataIdx + 2 < length)
-                    data[dataIdx + 2] = (byte)(chunk >> 16);
-
-                if (dataIdx + 3 < length)
-                    data[dataIdx + 3] = (byte)(chunk >> 24);
-            }
-
-            return LengthWritten;
-        }
-
-
         public int FromSpan(in ReadOnlySpan<byte> data) => FromSpan(in data, data.Length);
 
         public int FromSpan(in ReadOnlySpan<byte> data, int length)
@@ -223,28 +117,5 @@ namespace NetStack.Serialization
             var leadingZeros = BitOperations.LeadingZeroCount(data[length - 1]);
             return 8 * length - leadingZeros - 1;
         }
-
-        public override string ToString()
-        {
-            builder.Length = 0;
-
-            for (int i = chunks.Length - 1; i >= 0; i--)
-            {
-                builder.Append(Convert.ToString(chunks[i], 2).PadLeft(32, '0'));
-            }
-
-            var spaced = new StringBuilder();
-
-            for (int i = 0; i < builder.Length; i++)
-            {
-                spaced.Append(builder[i]);
-
-                if (((i + 1) % 8) == 0)
-                    spaced.Append(" ");
-            }
-
-            return spaced.ToString();
-        }
-
     }
 }
