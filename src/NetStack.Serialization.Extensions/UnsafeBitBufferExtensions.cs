@@ -127,7 +127,7 @@ namespace NetStack.Serialization
         {
             if (size == 1)
             {
-                value = self.ReadByte();
+                value = self.u8();
             }
             else if (size == 2)
             {
@@ -139,7 +139,7 @@ namespace NetStack.Serialization
                 ref var reinterpretedValue1 = ref Unsafe.As<byte, ushort>(ref value);
                 reinterpretedValue1 = self.ReadUShort();
                 ref var reinterpretedValue2 = ref Unsafe.Add(ref value, 2);
-                reinterpretedValue2 = self.ReadByte();
+                reinterpretedValue2 = self.u8();
             } 
         }
     }

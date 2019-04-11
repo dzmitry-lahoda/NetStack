@@ -173,7 +173,7 @@ namespace NetStack.Serialization
             buffer.ToArray(allocated, 10, 100);
             var reader = new BitBufferRead(allocated.Length);
             reader.FromArray(allocated, 10, 100);
-            Assert.Equal(13, reader.ReadByte());
+            Assert.Equal(13, reader.u8());
             Assert.Equal(long.MaxValue, reader.ReadLong());
         }
    }

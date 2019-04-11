@@ -38,7 +38,7 @@ namespace NetStack.Serialization
             Assert.Equal(0, reader.BitsRead);
             reader.@bool();
             Assert.Equal(1, reader.BitsRead);
-            reader.ReadByte();
+            reader.u8();
             Assert.Equal(9, reader.BitsRead);
             reader.ReadShort();
             Assert.Equal(33, reader.BitsRead);

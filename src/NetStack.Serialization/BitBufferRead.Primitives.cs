@@ -27,16 +27,16 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public byte ReadByte() => (byte)raw(8);
+        public byte u8() => (byte)raw(8);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public byte ReadByte(int numberOfBits) => (byte)ReadUInt(numberOfBits);
+        public byte u8(int numberOfBits) => (byte)ReadUInt(numberOfBits);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public byte ReadByte(byte min, byte max) => (byte)ReadUInt(min, max);
+        public byte u8(byte min, byte max) => (byte)ReadUInt(min, max);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public byte PeekByte()
+        public byte u8Peek()
         {
             var tmp = scratch;
             var tmp2 = scratchUsedBits;
@@ -49,10 +49,10 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public byte PeekByte(int numberOfBits) => (byte)PeekUInt(numberOfBits);
+        public byte u8Peek(int numberOfBits) => (byte)PeekUInt(numberOfBits);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public byte PeekByte(byte min, byte max) => (byte)PeekUInt(min, max);
+        public byte u8Peek(byte min, byte max) => (byte)PeekUInt(min, max);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public sbyte ReadSByte() => (sbyte)i32(8);
@@ -282,7 +282,7 @@ namespace NetStack.Serialization
 
             for (int index = offset; index < length; index++)
             {
-                outValue[index] = ReadByte();
+                outValue[index] = u8();
             }
         }
 
