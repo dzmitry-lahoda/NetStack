@@ -37,19 +37,19 @@ namespace NetStack.Serialization
         public void u8(byte value, byte min, byte max) => AddUInt(value, min, max);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void i8(sbyte value) => AddInt(value, 8);
+        public void i8(sbyte value) => i32(value, 8);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void i8(sbyte value, int numberOfBits) => AddInt(value, numberOfBits);
+        public void i8(sbyte value, int numberOfBits) => i32(value, numberOfBits);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void i8(sbyte value, sbyte min, sbyte max) => i32(value, min, max);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void i16(short value) => AddInt(value);
+        public void i16(short value) => i32(value);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void i16(short value, int numberOfBits) => AddInt(value, numberOfBits);
+        public void i16(short value, int numberOfBits) => i32(value, numberOfBits);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void i16(short value, short min, short max) => i32(value, min, max);
@@ -80,8 +80,8 @@ namespace NetStack.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddLong(long value)
         {
-            AddInt((int)(value & uint.MaxValue));
-            AddInt((int)(value >> 32));
+            i32((int)(value & uint.MaxValue));
+            i32((int)(value >> 32));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

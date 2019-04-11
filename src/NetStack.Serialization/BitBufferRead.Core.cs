@@ -13,9 +13,8 @@ namespace NetStack.Serialization
 {
     partial class BitBufferRead
     {        
-        public bool IsReadFinished => totalNumberBits == BitsRead;
-        
-
+        public bool CanReadMore => totalNumberBits > BitsRead;
+    
         // total count of used bits since buffer start
         public int BitsRead 
         {
@@ -148,7 +147,7 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public int ReadInt()
+        public int i32()
         {
             uint value = u32();
             int zagzig = (int)((value >> 1) ^ (-(int)(value & 1)));
@@ -156,7 +155,7 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public int ReadInt(int numberOfBits)
+        public int i32(int numberOfBits)
         {
             uint value = raw(numberOfBits);
             int zagzig = (int)((value >> 1) ^ (-(int)(value & 1)));

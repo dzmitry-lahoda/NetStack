@@ -17,16 +17,16 @@ namespace NetStack.Serialization
 {
     public partial class BitBufferRead
     {
-        public int FromArray(byte[] data)
+        public void FromArray(byte[] data)
         {
             int length = data.Length;
-            return FromArray(data, 0, length);
+            FromArray(data, 0, length);
         }
 
         /// <summary>
         /// Copies data from array.
         /// </summary>
-        public int FromArray(byte[] data, int position, int length)
+        public void FromArray(byte[] data, int position, int length)
         {
             // may throw here as not hot path
             if (length <= 0)
@@ -70,14 +70,10 @@ namespace NetStack.Serialization
 
                 chunks[i] = chunk;
             }
-
-            var leadingZeros = BitOperations.LeadingZeroCount(data[position + length - 1]);
-            return 8 * length - leadingZeros - 1;
         }
+        public void FromSpan(ReadOnlySpan<byte> data) => FromSpan(data, data.Length);
 
-        public int FromSpan(ReadOnlySpan<byte> data) => FromSpan(data, data.Length);
-
-        public int FromSpan(ReadOnlySpan<byte> data, int length)
+        public void FromSpan(ReadOnlySpan<byte> data, int length)
         {
             // may throw here as not hot path
             if (length <= 0)
@@ -113,9 +109,6 @@ namespace NetStack.Serialization
 
                 chunks[i] = chunk;
             }
-
-            var leadingZeros = BitOperations.LeadingZeroCount(data[length - 1]);
-            return 8 * length - leadingZeros - 1;
         }
     }
 }

@@ -19,7 +19,7 @@ namespace NetStack.Serialization
                     if (random.Next() % 11 == 0)
                         buffer.AddLong(long.MaxValue);
                     if (random.Next() % 7 == 0)
-                        buffer.AddInt(int.MaxValue);
+                        buffer.i32(int.MaxValue);
                     if (random.Next() % 5 == 0)
                         buffer.i16(short.MaxValue);
                     if (random.Next() % 3 == 0)
@@ -38,17 +38,17 @@ namespace NetStack.Serialization
         {
             var buffer = new BitBufferWrite(100);
             buffer.AddLong(long.MaxValue);
-            buffer.AddInt(int.MaxValue);
+            buffer.i32(int.MaxValue);
             buffer.i16(short.MaxValue);
             var result = buffer.ToArray();
             var reader = new BitBufferRead();
             reader.FromArray(result);
             Assert.Equal(long.MaxValue, reader.ReadLong());
-            Assert.Equal(int.MaxValue, reader.ReadInt());
+            Assert.Equal(int.MaxValue, reader.i32());
             Assert.Equal(short.MaxValue, reader.ReadShort());
             reader.FromArray(result);
             Assert.Equal(long.MaxValue, reader.ReadLong());
-            Assert.Equal(int.MaxValue, reader.ReadInt());
+            Assert.Equal(int.MaxValue, reader.i32());
             Assert.Equal(short.MaxValue, reader.ReadShort());
         }
 
@@ -57,7 +57,7 @@ namespace NetStack.Serialization
         {
             var buffer = new BitBufferWrite(100);
             buffer.AddLong(long.MaxValue);
-            buffer.AddInt(int.MaxValue);
+            buffer.i32(int.MaxValue);
             buffer.i16(short.MaxValue);
             Span<byte> span = new byte[buffer.LengthWritten];
             ReadOnlySpan<byte> read = span;
@@ -65,11 +65,11 @@ namespace NetStack.Serialization
             var reader = new BitBufferRead();            
             reader.FromSpan(read);
             Assert.Equal(long.MaxValue, reader.ReadLong());
-            Assert.Equal(int.MaxValue, reader.ReadInt());
+            Assert.Equal(int.MaxValue, reader.i32());
             Assert.Equal(short.MaxValue, reader.ReadShort());
             reader.FromSpan(read);
             Assert.Equal(long.MaxValue, reader.ReadLong());
-            Assert.Equal(int.MaxValue, reader.ReadInt());
+            Assert.Equal(int.MaxValue, reader.i32());
             Assert.Equal(short.MaxValue, reader.ReadShort());
         }
     }

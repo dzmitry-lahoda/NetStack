@@ -138,7 +138,7 @@ namespace NetStack.Serialization
         /// Store value ZigZag and 7 bits encoded.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddInt(int value)
+        public void i32(int value)
         {
             uint zigzag = (uint)((value << 1) ^ (value >> 31));
             u32(zigzag);
@@ -148,7 +148,7 @@ namespace NetStack.Serialization
         /// Store value ZigZag encoded in number of bits.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddInt(int value, int numberOfBits)
+        public void i32(int value, int numberOfBits)
         {
             uint zigzag = (uint)((value << 1) ^ (value >> 31));
             AddRaw(zigzag, numberOfBits);

@@ -117,36 +117,7 @@ namespace NetStack.Serialization
             Assert.Equal(double.MaxValue, reader.ReadDouble());
         }
 
-        [Fact]
-        public void IntReadWrite()
-        {
-            var buffer = new BitBufferWrite();
-            buffer.AddInt(int.MinValue);
-            buffer.AddInt(0);
-            buffer.AddInt(int.MaxValue);
-            buffer.Finish();
-            var allocated = new byte[ushort.MaxValue];
-            buffer.ToArray(allocated);
-            var reader = new BitBufferRead(allocated.Length);
-            reader.FromArray(allocated);
-            Assert.Equal(int.MinValue, reader.ReadInt());
-            Assert.Equal(0, reader.ReadInt());
-            Assert.Equal(int.MaxValue, reader.ReadInt());
-        }     
-
-        [Fact]
-        public void IntMinMaxRequired()
-        {
-            var buffer = new BitBufferWrite();
-            buffer.i32(12345, 0, 123456);
-            buffer.Finish();
-            var allocated = new byte[ushort.MaxValue];
-            buffer.ToArray(allocated);
-            var reader = new BitBufferRead(allocated.Length);
-            reader.FromArray(allocated);
-            Assert.Equal(12345, reader.ReadInt(0, 123456));
-        }
-
+     
         [Fact]
         public void FloatMinMaxRequired()
         {

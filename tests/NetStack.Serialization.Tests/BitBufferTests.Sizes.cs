@@ -29,7 +29,7 @@ namespace NetStack.Serialization
             Assert.Equal(9, write.BitsWritten);
             write.i16(12345);
             Assert.Equal(33, write.BitsWritten);
-            write.AddInt(1234567890);
+            write.i32(1234567890);
             Assert.Equal(73, write.BitsWritten);
             var data = write.ToArray();
             var reader = new BitBufferRead();
@@ -42,7 +42,7 @@ namespace NetStack.Serialization
             Assert.Equal(9, reader.BitsRead);
             reader.ReadShort();
             Assert.Equal(33, reader.BitsRead);
-            reader.ReadInt();
+            reader.i32();
             Assert.Equal(73, reader.BitsRead);
         }        
     }

@@ -55,13 +55,13 @@ namespace NetStack.Serialization
         public byte PeekByte(byte min, byte max) => (byte)PeekUInt(min, max);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public sbyte ReadSByte() => (sbyte)ReadInt(8);
+        public sbyte ReadSByte() => (sbyte)i32(8);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public sbyte ReadSByte(int numberOfBits) => (sbyte)ReadInt(numberOfBits);
+        public sbyte ReadSByte(int numberOfBits) => (sbyte)i32(numberOfBits);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public sbyte ReadSByte(sbyte min, sbyte max) => (sbyte)ReadInt(min, max);
+        public sbyte ReadSByte(sbyte min, sbyte max) => (sbyte)i32(min, max);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public sbyte PeekSByte() => (sbyte)raw(8);
@@ -73,13 +73,13 @@ namespace NetStack.Serialization
         public sbyte PeekSByte(sbyte min, sbyte max) => (sbyte)PeekInt(min, max);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public short ReadShort() => (short)ReadInt();
+        public short ReadShort() => (short)i32();
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public short ReadShort(int numberOfBits) => (short)ReadInt(numberOfBits);
+        public short ReadShort(int numberOfBits) => (short)i32(numberOfBits);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public short ReadShort(short min, short max) => (short)ReadInt(min, max);
+        public short ReadShort(short min, short max) => (short)i32(min, max);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public short PeekShort() => (short)i32Peek();
@@ -108,9 +108,11 @@ namespace NetStack.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public ushort PeekUShort(ushort min, ushort max) => (ushort)PeekUInt(min, max);
 
-
+        /// <summary>
+        /// Reads signed 32 bit integer.
+        /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public int ReadInt(int min, int max)
+        public int i32(int min, int max)
         {
             Debug.Assert(min < max, "minus is not lower than max");
 
@@ -162,8 +164,8 @@ namespace NetStack.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public long ReadLong()
         {
-            int low = ReadInt();
-            int high = ReadInt();
+            int low = i32();
+            int high = i32();
             long value = high;
 
             return value << 32 | (uint)low;

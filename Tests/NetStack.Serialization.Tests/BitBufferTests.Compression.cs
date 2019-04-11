@@ -171,10 +171,10 @@ namespace NetStack.Serialization
         public void IntMaxValue4()
         {
             var buffer = new BitBufferWrite();
-            buffer.AddInt(int.MaxValue);
-            buffer.AddInt(int.MaxValue);
-            buffer.AddInt(int.MaxValue);
-            buffer.AddInt(int.MaxValue);
+            buffer.i32(int.MaxValue);
+            buffer.i32(int.MaxValue);
+            buffer.i32(int.MaxValue);
+            buffer.i32(int.MaxValue);
             Assert.Equal(20, buffer.LengthWritten);
         }
 
@@ -204,7 +204,7 @@ namespace NetStack.Serialization
         {
             var buffer = new BitBufferWrite();
             for (var i=0; i< 8;i++)
-                buffer.AddInt(short.MaxValue/3);
+                buffer.i32(short.MaxValue/3);
             Assert.Equal(24, buffer.LengthWritten);
         }
 
