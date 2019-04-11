@@ -10,7 +10,7 @@ namespace NetStack.Serialization
     /// <seealso href="https://en.wikipedia.org/wiki/Maximum_transmission_unit"/>
     /// <seealso href="https://tools.ietf.org/html/rfc5389/"/>
     /// <seealso href="https://tools.ietf.org/html/rfc1191"/>
-    partial class BitBuffer
+    public static class BitBufferLimits
     {
         public const int MtuIeee802Dot3 = 1492;
 

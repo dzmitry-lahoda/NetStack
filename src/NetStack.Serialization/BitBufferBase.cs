@@ -12,7 +12,7 @@ using UnityEngine;
 namespace NetStack.Serialization
 {
     // core untyped data specific part of bit buffer
-    public partial class BitBufferBase
+    public partial class BitBuffer
     {
         public static int BitsRequired(int min, int max) =>
             (min == max) ? 1 : BitOperations.Log2((uint)(max - min)) + 1;

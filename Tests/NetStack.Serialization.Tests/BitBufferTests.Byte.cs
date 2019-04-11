@@ -11,12 +11,12 @@ namespace NetStack.Serialization
         [Fact]
         public void ByteWriteRead()
         {
-            var buffer = new BitBuffer();
+            var buffer = new BitBufferWrite();
             buffer.AddByte(byte.MaxValue);
             buffer.Finish();
             var allocated = new byte[ushort.MaxValue];
             buffer.ToArray(allocated);
-            var reader = new BitBuffer(allocated.Length);
+            var reader = new BitBufferRead(allocated.Length);
             reader.FromArray(allocated);
             Assert.Equal(byte.MaxValue, reader.ReadByte());
         }
@@ -24,20 +24,20 @@ namespace NetStack.Serialization
         [Fact]
         public void ByteMaxValueWritePeek()
         {
-            var buffer = new BitBuffer();
+            var buffer = new BitBufferWrite();
             buffer.AddByte(byte.MaxValue);
             var data = buffer.ToArray();
-            var reader = new BitBuffer();
+            var reader = new BitBufferRead();
             reader.FromArray(data);
             Assert.Equal(byte.MaxValue, reader.PeekByte());
         }
         
         public void ByteMaxValueWritePeek1024()
         {
-            var buffer = new BitBuffer();
+            var buffer = new BitBufferWrite();
             buffer.AddByte(byte.MaxValue);
             var data = buffer.ToArray();
-            var reader = new BitBuffer();
+            var reader = new BitBufferRead();
             reader.FromArray(data);
             for (int i = 0; i < 1024; i++)
             {
@@ -48,7 +48,7 @@ namespace NetStack.Serialization
         [Fact]
         public void ByteWritePeekRead256()
         {
-            var buffer = new BitBuffer(1000);
+            var buffer = new BitBufferWrite(1000);
             for (int i = 0; i < 513; i++)
             {
                 //buffer.AddByte(i % 2 == 0 ? byte.MaxValue : (byte)0);
@@ -56,7 +56,7 @@ namespace NetStack.Serialization
             }
 
             var data = buffer.ToArray();
-            var reader = new BitBuffer();
+            var reader = new BitBufferRead();
             reader.FromArray(data);
             for (int i = 0; i < 513; i++)
             {

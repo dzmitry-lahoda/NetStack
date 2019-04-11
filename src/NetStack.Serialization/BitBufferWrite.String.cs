@@ -12,10 +12,10 @@ using UnityEngine;
 namespace NetStack.Serialization
 {
     // GC allocated String stuff
-    partial class BitBuffer
+    partial class BitBufferWrite
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public BitBuffer AddString(string value)
+        public void AddString(string value)
         {
             // non critical path (until string is one or couple of chars), so may consider throw
             Debug.Assert(value != null, "String is null");
@@ -89,8 +89,6 @@ namespace NetStack.Serialization
                     }
                     break;
             }
-
-            return this;
         }
     }
 }

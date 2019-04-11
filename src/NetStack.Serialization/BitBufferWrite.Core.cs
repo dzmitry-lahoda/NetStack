@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace NetStack.Serialization
 {
-    partial class BitBuffer
+    partial class BitBufferWrite
     {
         // true if has not capacity to write numberOfBits
         public bool CannotAdd(int numberOfBits) => BitsWritten + numberOfBits > totalNumberBits;
@@ -119,7 +119,7 @@ namespace NetStack.Serialization
         /// Store seven right bits, if more than 8 with 1, then set 1 to continue.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public BitBuffer AddUInt(uint value)
+        public void AddUInt(uint value)
         {
             do
             {
@@ -132,30 +132,26 @@ namespace NetStack.Serialization
                 AddRaw(buffer, 8);
             }
             while (value > 0);
-
-            return this;
         }
         
         /// <summary>
         /// Store value ZigZag and 7 bits encoded.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public BitBuffer AddInt(int value)
+        public void AddInt(int value)
         {
             uint zigzag = (uint)((value << 1) ^ (value >> 31));
             AddUInt(zigzag);
-            return this;
         }
 
         /// <summary>
         /// Store value ZigZag encoded in number of bits.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public BitBuffer AddInt(int value, int numberOfBits)
+        public void AddInt(int value, int numberOfBits)
         {
             uint zigzag = (uint)((value << 1) ^ (value >> 31));
             AddRaw(zigzag, numberOfBits);
-            return this;
         }
     }
 }

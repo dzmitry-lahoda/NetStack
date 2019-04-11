@@ -30,7 +30,7 @@ namespace NetStack.Serialization
         /// <typeparam name="T">Any struct with no references to managed heap.</typeparam>
         /// <param name="value">The value.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static BitBuffer AddUnsafe<T>(this BitBuffer self, in T value)
+        public static void AddUnsafe<T>(this BitBufferWrite self, in T value)
             where T : unmanaged
         {
             var size = Unsafe.SizeOf<T>();
@@ -58,11 +58,9 @@ namespace NetStack.Serialization
                     }
                 }
             }
-
-            return self;
         }
 
-        private static void WriteSmallUnmanaged(this BitBuffer self, ref byte value, int size)
+        private static void WriteSmallUnmanaged(this BitBufferWrite self, ref byte value, int size)
         {
             if (size == 1)
             {
@@ -92,7 +90,7 @@ namespace NetStack.Serialization
         /// </summary>
         /// <typeparam name="T">Element with predefined size.</typeparam>
         /// <returns>The value.</returns>
-        public static T ReadUnsafe<T>(this BitBuffer self)
+        public static T ReadUnsafe<T>(this BitBufferRead self)
            where T : unmanaged
         {
             var size = Unsafe.SizeOf<T>();
@@ -125,7 +123,7 @@ namespace NetStack.Serialization
             return value;
         }
 
-        private static void ReadSmallUnmanaged(this BitBuffer self, ref byte value, int size)
+        private static void ReadSmallUnmanaged(this BitBufferRead self, ref byte value, int size)
         {
             if (size == 1)
             {

@@ -22,7 +22,6 @@ All validation and exception are behind `#if DEBUG || NETSTACK_VALIDATE`.
   - Lightweight and straightforward
   - Fast processing
   - [Span](https://docs.microsoft.com/en-us/dotnet/api/system.span) support
-  - [Fluent builder](http://www.stefanoricciardi.com/2010/04/14/a-fluent-builder-in-c/) support
   - Compact bit-packing
     - [ZigZag](https://developers.google.com/protocol-buffers/docs/encoding#signed-integers) encoding
     - [Variable-length](https://rosettacode.org/wiki/Variable-length_quantity) encoding
@@ -33,8 +32,9 @@ All validation and exception are behind `#if DEBUG || NETSTACK_VALIDATE`.
     - TODO: add delta methods with small vs big delimeter 
     - TODO: allow plug custom compressor instead of 7bit encoding like (huffman Unity FPSSample in learning and ready alphabet encodings)
     - TODO: add custom visualizer or custom to string (to 01 to to hex)
-		- TODO: Given possible do delta of prediction. Should prediction API be part of serializer?
-  
+	- TODO: Given possible do delta of prediction. Should prediction API be part of serializer?
+    - No Fluent interface as it gives performance overhead and does not improves override. May still accept it as pull of separate project.
+
 ### Optimization priorities
 
 1. Size of data
@@ -142,21 +142,21 @@ Quaternion rotation = SmallestThree.Decompress(compressedRotation);
 ##### Serialize/deserialize data:
 ```csharp
 // Create a new bit buffer with 1024 chunks, the buffer can grow automatically if required
-var data = new BitBuffer(1024);
+var writer = new BitBufferWrite(1024);
 
 // Fill bit buffer and serialize data to a byte array
-data.AddUInt(peer)
-.AddString(name)
-.AddBool(accelerated)
-.AddUShort(speed)
-.AddUInt(compressedPosition.x)
-.AddUInt(compressedPosition.y)
-.AddUInt(compressedPosition.z)
-.AddByte(compressedRotation.m)
-.AddShort(compressedRotation.a)
-.AddShort(compressedRotation.b)
-.AddShort(compressedRotation.c)
-.ToArray(buffer);
+writer.AddUInt(peer);
+writer.AddString(name);
+writer.AddBool(accelerated);
+writer.data..AddUShort(speed);
+writer.AddUInt(compressedPosition.x);
+writer.AddUInt(compressedPosition.y);
+writer.AddUInt(compressedPosition.z);
+writer.AddByte(compressedRotation.m);
+writer.AddShort(compressedRotation.a);
+writer.AddShort(compressedRotation.b);
+writer.AddShort(compressedRotation.c);
+var bytes = data.ToArray(buffer);
 
 // Get a length of actual data in bit buffer for sending through the network
 Console.WriteLine("Data length: " + data.Length);
@@ -164,19 +164,21 @@ Console.WriteLine("Data length: " + data.Length);
 // Reset bit buffer for further reusing
 data.Clear();
 
+var reader = new BitBufferWrite(1024);
+
 // Deserialize data from a byte array
-data.FromArray(buffer, length);
+reader.FromArray(buffer, length);
 
 // Unload bit buffer in the same order
-uint peer = data.ReadUInt();
-string name = data.ReadString();
-bool accelerated = data.ReadBool();
-ushort speed = data.ReadUShort();
-CompressedVector3 position = new CompressedVector3(data.ReadUInt(), data.ReadUInt(), data.ReadUInt());
-CompressedQuaternion rotation = new CompressedQuaternion(data.ReadByte(), data.ReadShort(), data.ReadShort(), data.ReadShort());
+uint peer = reader.ReadUInt();
+string name = reader.ReadString();
+bool accelerated = reader.ReadBool();
+ushort speed = reader.ReadUShort();
+CompressedVector3 position = new CompressedVector3(reader.ReadUInt(), reader.ReadUInt(), reader.ReadUInt());
+CompressedQuaternion rotation = new CompressedQuaternion(reader.ReadByte(), reader.ReadShort(), reader.ReadShort(), reader.ReadShort());
 
 // Check if bit buffer is fully unloaded
-Console.WriteLine("Bit buffer is empty: " + data.IsFinished);
+Console.WriteLine("Bit buffer is empty: " + reader.IsFinished);
 ```
 
 ##### Abstract data serialization with Span:

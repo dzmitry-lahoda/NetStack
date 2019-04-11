@@ -11,10 +11,10 @@ namespace NetStack.Serialization
         [Fact]
         public void PeekBool()
         {
-            var buffer = new BitBuffer();
+            var buffer = new BitBufferWrite();
             buffer.AddBool(true);
             var data = buffer.ToArray();
-            var reader = new BitBuffer();
+            var reader = new BitBufferRead();
             reader.FromArray(data);
             Assert.True(reader.PeekBool());
             Assert.True(reader.ReadBool());
@@ -23,14 +23,14 @@ namespace NetStack.Serialization
         [Fact]
         public void BoolWritePeekRead1024()
         {
-            var buffer = new BitBuffer();
+            var buffer = new BitBufferWrite();
             for (int i = 0; i < 1024; i++)
             {
                 buffer.AddBool(true);
             }
 
             var data = buffer.ToArray();
-            var reader = new BitBuffer();
+            var reader = new BitBufferRead();
             reader.FromArray(data);
             for (int i = 0; i < 1024; i++)
             {
@@ -42,10 +42,10 @@ namespace NetStack.Serialization
         [Fact]
         public void BoolWritePeek128()
         {
-            var buffer = new BitBuffer();
+            var buffer = new BitBufferWrite();
             buffer.AddBool(true);
             var data = buffer.ToArray();
-            var reader = new BitBuffer();
+            var reader = new BitBufferRead();
             reader.FromArray(data);
             for (int i = 0; i < 128; i++)
             {
@@ -56,12 +56,12 @@ namespace NetStack.Serialization
         [Fact]
         public void BoolReadWrite()
         {
-            var buffer = new BitBuffer();
+            var buffer = new BitBufferWrite();
             buffer.AddBool(true);
             buffer.Finish();
             var allocated = new byte[ushort.MaxValue];
             buffer.ToArray(allocated);
-            var reader = new BitBuffer(allocated.Length);
+            var reader = new BitBufferRead(allocated.Length);
             reader.FromArray(allocated);
             Assert.True(reader.ReadBool());
         }
@@ -69,14 +69,14 @@ namespace NetStack.Serialization
         [Fact]
         public void TrueFalseTrueReadWrite()
         {
-            var buffer = new BitBuffer();
+            var buffer = new BitBufferWrite();
             buffer.AddBool(true);
             buffer.AddBool(false);
             buffer.AddBool(true);
             buffer.Finish();
             var allocated = new byte[ushort.MaxValue];
             buffer.ToArray(allocated);
-            var reader = new BitBuffer(allocated.Length);
+            var reader = new BitBufferRead(allocated.Length);
             reader.FromArray(allocated);
             Assert.True(reader.ReadBool());
             Assert.False(reader.ReadBool());

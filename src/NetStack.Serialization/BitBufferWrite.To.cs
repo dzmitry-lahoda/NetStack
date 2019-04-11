@@ -15,7 +15,7 @@ using BitOperations = System.Numerics.BitOperations;
 
 namespace NetStack.Serialization
 {
-    public partial class BitBuffer
+    public partial class BitBufferWrite
     {
         /// <summary>
         /// Dot not use for production. GC allocated array.

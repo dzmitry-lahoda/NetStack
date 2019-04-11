@@ -9,7 +9,7 @@ namespace NetStack.Serialization
         [Fact]
         public void BoolIsBit7()
         {
-            var buffer = new BitBuffer();
+            var buffer = new BitBufferWrite();
             buffer.AddBool(true);
             buffer.AddBool(true);
             buffer.AddBool(true);
@@ -23,7 +23,7 @@ namespace NetStack.Serialization
         [Fact]
         public void BoolIsBit9()
         {
-            var buffer = new BitBuffer();
+            var buffer = new BitBufferWrite();
             buffer.AddBool(true);
             buffer.AddBool(true);
             buffer.AddBool(true);
@@ -40,7 +40,7 @@ namespace NetStack.Serialization
         [Fact]
         public void ByteMax3()
         {
-            var buffer = new BitBuffer();
+            var buffer = new BitBufferWrite();
             buffer.AddByte(byte.MaxValue);
             buffer.AddByte(byte.MaxValue);
             buffer.AddByte(byte.MaxValue);
@@ -50,7 +50,7 @@ namespace NetStack.Serialization
         [Fact]
         public void ByteMin3()
         {
-            var buffer = new BitBuffer();
+            var buffer = new BitBufferWrite();
             buffer.AddByte(byte.MinValue);
             buffer.AddByte(byte.MinValue);
             buffer.AddByte(byte.MinValue);
@@ -60,7 +60,7 @@ namespace NetStack.Serialization
         [Fact]
         public void ByteMin8()
         {
-            var buffer = new BitBuffer();
+            var buffer = new BitBufferWrite();
             buffer.AddByte(byte.MinValue);
             buffer.AddByte(byte.MinValue);
             buffer.AddByte(byte.MinValue);
@@ -75,7 +75,7 @@ namespace NetStack.Serialization
         [Fact]
         public void ByteRangeMin8()
         {
-            var buffer = new BitBuffer();
+            var buffer = new BitBufferWrite();
             buffer.AddByte(byte.MinValue, 0, (byte)sbyte.MaxValue);
             buffer.AddByte(byte.MinValue, 0, (byte)sbyte.MaxValue);
             buffer.AddByte(byte.MinValue, 0, (byte)sbyte.MaxValue);
@@ -90,7 +90,7 @@ namespace NetStack.Serialization
         [Fact]
         public void ByteRangeMin8Max10()
         {
-            var buffer = new BitBuffer();
+            var buffer = new BitBufferWrite();
             buffer.AddByte(byte.MinValue, 0, 10);
             buffer.AddByte(byte.MinValue, 0, 10);
             buffer.AddByte(byte.MinValue, 0, 10);
@@ -105,7 +105,7 @@ namespace NetStack.Serialization
         [Fact]
         public void ByteHalf()
         {
-            var buffer = new BitBuffer();
+            var buffer = new BitBufferWrite();
             buffer.AddByte(byte.MaxValue / 2);
             buffer.AddByte(byte.MaxValue / 2);
             buffer.AddByte(byte.MaxValue / 2);
@@ -121,7 +121,7 @@ namespace NetStack.Serialization
         [Fact]
         public void ByteShortMin4()
         {
-            var buffer = new BitBuffer();
+            var buffer = new BitBufferWrite();
             buffer.AddShort(short.MinValue);
             buffer.AddShort(short.MinValue);
             buffer.AddShort(short.MinValue);
@@ -132,7 +132,7 @@ namespace NetStack.Serialization
         [Fact]
         public void ByteShort0()
         {
-            var buffer = new BitBuffer();
+            var buffer = new BitBufferWrite();
             buffer.AddShort(0);
             buffer.AddShort(0);
             buffer.AddShort(0);
@@ -143,7 +143,7 @@ namespace NetStack.Serialization
         [Fact]
         public void ShortMinMax4()
         {
-            var buffer = new BitBuffer();
+            var buffer = new BitBufferWrite();
             buffer.AddShort(short.MaxValue, short.MinValue, short.MaxValue);
             buffer.AddShort(short.MaxValue, short.MinValue, short.MaxValue);
             buffer.AddShort(short.MaxValue, short.MinValue, short.MaxValue);
@@ -154,7 +154,7 @@ namespace NetStack.Serialization
         [Fact]
         public void UIntMax()
         {
-            var buffer = new BitBuffer();
+            var buffer = new BitBufferWrite();
             buffer.AddUInt(uint.MaxValue);
             Assert.Equal(5, buffer.LengthWritten);
         }
@@ -162,7 +162,7 @@ namespace NetStack.Serialization
         [Fact]
         public void UIntMin()
         {
-            var buffer = new BitBuffer();
+            var buffer = new BitBufferWrite();
             buffer.AddUInt(uint.MinValue);
             Assert.Equal(1, buffer.LengthWritten);
         }
@@ -170,7 +170,7 @@ namespace NetStack.Serialization
         [Fact]
         public void IntMaxValue4()
         {
-            var buffer = new BitBuffer();
+            var buffer = new BitBufferWrite();
             buffer.AddInt(int.MaxValue);
             buffer.AddInt(int.MaxValue);
             buffer.AddInt(int.MaxValue);
@@ -181,7 +181,7 @@ namespace NetStack.Serialization
         [Fact]
         public void IntZeroMaxValue4()
         {
-            var buffer = new BitBuffer();
+            var buffer = new BitBufferWrite();
             buffer.AddInt(int.MaxValue, 0, int.MaxValue);
             buffer.AddInt(int.MaxValue, 0, int.MaxValue);
             buffer.AddInt(int.MaxValue, 0, int.MaxValue);
@@ -192,7 +192,7 @@ namespace NetStack.Serialization
         [Fact]
         public void ShortMax4Divided()
         {
-            var buffer = new BitBuffer();
+            var buffer = new BitBufferWrite();
             for (var i=0; i< 8;i++)
                 buffer.AddShort(short.MaxValue/3);
                                   
@@ -202,7 +202,7 @@ namespace NetStack.Serialization
         [Fact]
         public void IntOfShortMax4Divided()
         {
-            var buffer = new BitBuffer();
+            var buffer = new BitBufferWrite();
             for (var i=0; i< 8;i++)
                 buffer.AddInt(short.MaxValue/3);
             Assert.Equal(24, buffer.LengthWritten);
@@ -211,7 +211,7 @@ namespace NetStack.Serialization
         [Fact]
         public void ShortZeroMax4()
         {
-            var buffer = new BitBuffer();
+            var buffer = new BitBufferWrite();
             buffer.AddShort(short.MaxValue, 0, short.MaxValue);
             buffer.AddShort(short.MaxValue, 0, short.MaxValue);
             buffer.AddShort(short.MaxValue, 0, short.MaxValue);
@@ -222,7 +222,7 @@ namespace NetStack.Serialization
         [Fact]
         public void SByte0()
         {
-            var buffer = new BitBuffer();
+            var buffer = new BitBufferWrite();
             buffer.AddSByte(0);
             buffer.AddSByte(0);
             buffer.AddSByte(0);
@@ -233,7 +233,7 @@ namespace NetStack.Serialization
         [Fact]
         public void SbyteMax4()
         {
-            var buffer = new BitBuffer();
+            var buffer = new BitBufferWrite();
             buffer.AddSByte(sbyte.MaxValue);
             buffer.AddSByte(sbyte.MaxValue);
             buffer.AddSByte(sbyte.MaxValue);
@@ -248,7 +248,7 @@ namespace NetStack.Serialization
         [Fact]
         public void SByteZeroMax4()
         {
-            var buffer = new BitBuffer();
+            var buffer = new BitBufferWrite();
             buffer.AddSByte(sbyte.MaxValue, 0, sbyte.MaxValue);
             buffer.AddSByte(sbyte.MaxValue, 0, sbyte.MaxValue);
             buffer.AddSByte(sbyte.MaxValue, 0, sbyte.MaxValue);

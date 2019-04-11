@@ -9,11 +9,12 @@ namespace NetStack.Serialization
         [Fact]
         public void RandomManyTimes()
         {
-            var buffer = new BitBuffer();
+            var buffer = new BitBufferWrite();
+            var reader = new BitBufferRead();
             var random = new Random(42);
             for (var i = 0; i < short.MaxValue; i++)
             {
-                for (var j = 0; j < BitBuffer.MtuIeee802; j++)
+                for (var j = 0; j < BitBufferLimits.MtuIeee802; j++)
                 {
                     if (random.Next() % 11 == 0)
                         buffer.AddLong(long.MaxValue);
@@ -25,8 +26,9 @@ namespace NetStack.Serialization
                         buffer.AddBool(true);                        
                 }
 
+
                 var result = buffer.ToArray();
-                buffer.FromArray(result);
+                reader.FromArray(result);
                 buffer.Clear();
             }
         }
@@ -34,39 +36,41 @@ namespace NetStack.Serialization
         [Fact]
         public void ToArrayFromFrom()
         {
-            var buffer = new BitBuffer(100);
+            var buffer = new BitBufferWrite(100);
             buffer.AddLong(long.MaxValue);
             buffer.AddInt(int.MaxValue);
             buffer.AddShort(short.MaxValue);
             var result = buffer.ToArray();
-            buffer.FromArray(result);
-            Assert.Equal(long.MaxValue, buffer.ReadLong());
-            Assert.Equal(int.MaxValue, buffer.ReadInt());
-            Assert.Equal(short.MaxValue, buffer.ReadShort());
-            buffer.FromArray(result);
-            Assert.Equal(long.MaxValue, buffer.ReadLong());
-            Assert.Equal(int.MaxValue, buffer.ReadInt());
-            Assert.Equal(short.MaxValue, buffer.ReadShort());
+            var reader = new BitBufferRead();
+            reader.FromArray(result);
+            Assert.Equal(long.MaxValue, reader.ReadLong());
+            Assert.Equal(int.MaxValue, reader.ReadInt());
+            Assert.Equal(short.MaxValue, reader.ReadShort());
+            reader.FromArray(result);
+            Assert.Equal(long.MaxValue, reader.ReadLong());
+            Assert.Equal(int.MaxValue, reader.ReadInt());
+            Assert.Equal(short.MaxValue, reader.ReadShort());
         }
 
         [Fact]
         public void ToSpanFromFrom()
         {
-            var buffer = new BitBuffer(100);
+            var buffer = new BitBufferWrite(100);
             buffer.AddLong(long.MaxValue);
             buffer.AddInt(int.MaxValue);
             buffer.AddShort(short.MaxValue);
             Span<byte> span = new byte[buffer.LengthWritten];
             ReadOnlySpan<byte> read = span;
             buffer.ToSpan(span);
-            buffer.FromSpan(in read);
-            Assert.Equal(long.MaxValue, buffer.ReadLong());
-            Assert.Equal(int.MaxValue, buffer.ReadInt());
-            Assert.Equal(short.MaxValue, buffer.ReadShort());
-            buffer.FromSpan(in read);
-            Assert.Equal(long.MaxValue, buffer.ReadLong());
-            Assert.Equal(int.MaxValue, buffer.ReadInt());
-            Assert.Equal(short.MaxValue, buffer.ReadShort());
+            var reader = new BitBufferRead();            
+            reader.FromSpan(read);
+            Assert.Equal(long.MaxValue, reader.ReadLong());
+            Assert.Equal(int.MaxValue, reader.ReadInt());
+            Assert.Equal(short.MaxValue, reader.ReadShort());
+            reader.FromSpan(read);
+            Assert.Equal(long.MaxValue, reader.ReadLong());
+            Assert.Equal(int.MaxValue, reader.ReadInt());
+            Assert.Equal(short.MaxValue, reader.ReadShort());
         }
     }
 }

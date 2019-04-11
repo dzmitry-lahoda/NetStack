@@ -14,12 +14,12 @@ namespace NetStack.Serialization
     // GC allocated String stuff
     partial class BitBuffer
     {
-        private const int bitsASCII = 7;
-        private const int bitsLATIN1 = 8;
-        private const int bitsLATINEXT = 9;
-        private const int bitsUTF16 = 16;
+        protected const int bitsASCII = 7;
+        protected const int bitsLATIN1 = 8;
+        protected const int bitsLATINEXT = 9;
+        protected const int bitsUTF16 = 16;
 
-        private StringBuilder builder;
+        protected StringBuilder builder;
 
 
         internal enum CodePage : byte
@@ -30,7 +30,7 @@ namespace NetStack.Serialization
             UTF16 = 3
         }
 
-        private const int codePageBitsRequried = 2;
+        protected const int codePageBitsRequried = 2;
 
         public static int BitsRequired(string value, int length, int bitLength = BitBufferOptions.DefaultStringLengthBits)
         {

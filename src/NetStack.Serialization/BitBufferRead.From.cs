@@ -15,7 +15,7 @@ using BitOperations = System.Numerics.BitOperations;
 
 namespace NetStack.Serialization
 {
-    public partial class BitBuffer
+    public partial class BitBufferRead
     {
         public int FromArray(byte[] data)
         {
@@ -75,9 +75,9 @@ namespace NetStack.Serialization
             return 8 * length - leadingZeros - 1;
         }
 
-        public int FromSpan(in ReadOnlySpan<byte> data) => FromSpan(in data, data.Length);
+        public int FromSpan(ReadOnlySpan<byte> data) => FromSpan(data, data.Length);
 
-        public int FromSpan(in ReadOnlySpan<byte> data, int length)
+        public int FromSpan(ReadOnlySpan<byte> data, int length)
         {
             // may throw here as not hot path
             if (length <= 0)

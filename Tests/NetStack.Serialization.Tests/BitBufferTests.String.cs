@@ -11,7 +11,7 @@ namespace NetStack.Serialization
         public void CodePagesBitsRequited()
         {
             var bits = BitBuffer.BitsRequired("0",1);
-            var bitBuffer = new BitBuffer();
+            var bitBuffer = new BitBufferWrite();
             bitBuffer.AddString("0");
             Assert.Equal(bits, bitBuffer.BitsWritten);
             var result = bitBuffer.ToArray();
@@ -21,7 +21,7 @@ namespace NetStack.Serialization
         public void ЁBitsRequited()
         {
             var bits = BitBuffer.BitsRequired("Ё",1);
-            var bitBuffer = new BitBuffer();
+            var bitBuffer = new BitBufferWrite();
             bitBuffer.AddString("Ё");
             Assert.Equal(bits, bitBuffer.BitsWritten);
             var result = bitBuffer.ToArray();
@@ -38,12 +38,12 @@ namespace NetStack.Serialization
         [Fact]
         public void AnsiStringWriteRead()
         {
-            var buffer = new BitBuffer();
+            var buffer = new BitBufferWrite();
             buffer.AddString("123456789");
             buffer.Finish();
             var allocated = new byte[ushort.MaxValue];
             buffer.ToArray(allocated);
-            var reader = new BitBuffer(allocated.Length);
+            var reader = new BitBufferRead(allocated.Length);
             reader.FromArray(allocated);
             Assert.Equal("123456789", reader.ReadString());
         }
@@ -51,11 +51,11 @@ namespace NetStack.Serialization
         [Fact]
         public void StringWriteRead()
         {
-            var buffer = new BitBuffer();
+            var buffer = new BitBufferWrite();
             buffer.AddString("lahoda.prо/минск");
             var allocated = new byte[ushort.MaxValue];
             buffer.ToArray(allocated);
-            var reader = new BitBuffer(allocated.Length);
+            var reader = new BitBufferRead(allocated.Length);
             reader.FromArray(allocated);
             Assert.Equal("lahoda.prо/минск", reader.ReadString());
         }

@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace NetStack.Serialization
 {
-    partial class BitBuffer
+    partial class BitBufferRead
     {        
         public bool IsReadFinished => totalNumberBits == BitsRead;
         
@@ -93,6 +93,14 @@ namespace NetStack.Serialization
             int zagzig = (int)((value >> 1) ^ (-(int)(value & 1)));
             return zagzig;
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public uint PeekUInt()
+        {
+            uint value = ReadUInt();
+            return value;
+        }
+
 
         /// <summary>
         /// Reads value without progressing bits position.

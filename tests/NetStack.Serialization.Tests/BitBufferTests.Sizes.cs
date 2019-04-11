@@ -9,17 +9,18 @@ namespace NetStack.Serialization
         [Fact]
         public void Capacity()
         {
-            var buffer = new BitBuffer(100);
+            var buffer = new BitBufferWrite(100);
             Assert.Equal(0, buffer.LengthWritten);
             var received = new byte[2000];
-            buffer.FromArray(received);
+            var reader = new BitBufferRead();
+            reader.FromArray(received);
             Assert.Equal(0, buffer.LengthWritten);
         }
 
        [Fact]
         public void BitsRead()
         {
-            var write = new BitBuffer();
+            var write = new BitBufferWrite();
             
             Assert.Equal(0, write.BitsWritten);
             write.AddBool(true);
@@ -31,7 +32,7 @@ namespace NetStack.Serialization
             write.AddInt(1234567890);
             Assert.Equal(73, write.BitsWritten);
             var data = write.ToArray();
-            var reader = new BitBuffer();
+            var reader = new BitBufferRead();
             reader.FromArray(data);
             
             Assert.Equal(0, reader.BitsRead);
