@@ -198,8 +198,6 @@ namespace NetStack.Serialization
             return value;
         }
 
-
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float ReadFloat()
         {
@@ -271,13 +269,13 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void ReadByteArray(ref byte[] outValue) => ReadByteArray(ref outValue, out var length, 0);
+        public void ReadByteArray(byte[] outValue) => ReadByteArray(outValue, out var length, 0);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void ReadByteArray(ref byte[] outValue, out int length) => ReadByteArray(ref outValue, out length, 0);
+        public void ReadByteArray(byte[] outValue, out int length) => ReadByteArray(outValue, out length, 0);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void ReadByteArray(ref byte[] outValue, out int length, int offset)
+        public void ReadByteArray(byte[] outValue, out int length, int offset)
         {
             // may throw here consider array to be non one or couple of elements, but larger - not hot path
             Debug.Assert(outValue != null, "Supplied bytearray is null");

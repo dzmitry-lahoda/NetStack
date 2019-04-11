@@ -14,7 +14,7 @@ using BitOperations = System.Numerics.BitOperations;
 
 namespace NetStack.Serialization
 {
-    public class BitBufferOptions
+    public sealed class BitBufferOptions
     {
         private const int defaultByteArrLengthBits = 9;
 

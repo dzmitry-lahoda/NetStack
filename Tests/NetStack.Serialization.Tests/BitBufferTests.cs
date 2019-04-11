@@ -172,7 +172,7 @@ namespace NetStack.Serialization
             var reader = new BitBuffer(allocated.Length);
             reader.FromArray(allocated);
             var output = new byte[5];
-            reader.ReadByteArray(ref output, out var length);
+            reader.ReadByteArray(output, out var length);
             Assert.Equal(input, output);
         }
 
