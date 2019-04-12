@@ -21,7 +21,7 @@ namespace NetStack.Serialization
         private const float SmallestThreePack = 1f / SmallestThreeUnpack;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void AddQuaternion(this BitBufferWrite self, Quaternion quaternion, int bitsPerComponent = 12)
+        public static void AddQuaternion(this BitBufferWriter self, Quaternion quaternion, int bitsPerComponent = 12)
         {
             float halfrangeFloat = (1 << bitsPerComponent - 1);
             float packer = SmallestThreePack * halfrangeFloat;
@@ -119,10 +119,10 @@ namespace NetStack.Serialization
                 c = (uint)((cflt * packer) + halfrangeFloat);
             }
 
-            self.AddRaw(m, 2);
-            self.AddRaw(a, bitsPerComponent);
-            self.AddRaw(b, bitsPerComponent);
-            self.AddRaw(c, bitsPerComponent);
+            self.raw(m, 2);
+            self.raw(a, bitsPerComponent);
+            self.raw(b, bitsPerComponent);
+            self.raw(c, bitsPerComponent);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

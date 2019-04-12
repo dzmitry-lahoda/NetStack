@@ -11,76 +11,74 @@ namespace NetStack.Serialization
         [Fact]
         public void PeekBool()
         {
-            var buffer = new BitBufferWrite();
-            buffer.AddBool(true);
-            var data = buffer.ToArray();
+            var writer = new BitBufferWriter();
+            writer.b(true);
+            var data = writer.ToArray();
             var reader = new BitBufferReader();
             reader.FromArray(data);
             Assert.True(reader.PeekBool());
-            Assert.True(reader.@bool());
+            Assert.True(reader.b());
         }
 
         [Fact]
         public void BoolWritePeekRead1024()
         {
-            var buffer = new BitBufferWrite();
+            var write = new BitBufferWriter();
             for (int i = 0; i < 1024; i++)
             {
-                buffer.AddBool(true);
+                write.b(true);
             }
 
-            var data = buffer.ToArray();
+            var data = write.ToArray();
             var reader = new BitBufferReader();
             reader.FromArray(data);
             for (int i = 0; i < 1024; i++)
             {
                 Assert.True(reader.PeekBool());
-                Assert.True(reader.@bool());
+                Assert.True(reader.b());
             }
         }
 
         [Fact]
         public void BoolWritePeek128()
         {
-            var buffer = new BitBufferWrite();
-            buffer.AddBool(true);
-            var data = buffer.ToArray();
+            var writer = new BitBufferWriter();
+            writer.b(true);
+            var data = writer.ToArray();
             var reader = new BitBufferReader();
             reader.FromArray(data);
             for (int i = 0; i < 128; i++)
-            {
                 Assert.True(reader.PeekBool());
-            }
         }
 
         [Fact]
         public void BoolReadWrite()
         {
-            var buffer = new BitBufferWrite();
-            buffer.AddBool(true);
-            buffer.Finish();
+            var writer = new BitBufferWriter();
+            writer.b(true);
+            writer.Finish();
             var allocated = new byte[ushort.MaxValue];
-            buffer.ToArray(allocated);
+            writer.ToArray(allocated);
             var reader = new BitBufferReader(allocated.Length);
             reader.FromArray(allocated);
-            Assert.True(reader.@bool());
+            Assert.True(reader.b());
         }
 
         [Fact]
         public void TrueFalseTrueReadWrite()
         {
-            var buffer = new BitBufferWrite();
-            buffer.AddBool(true);
-            buffer.AddBool(false);
-            buffer.AddBool(true);
-            buffer.Finish();
+            var writer = new BitBufferWriter();
+            writer.b(true);
+            writer.b(false);
+            writer.b(true);
+            writer.Finish();
             var allocated = new byte[ushort.MaxValue];
-            buffer.ToArray(allocated);
+            writer.ToArray(allocated);
             var reader = new BitBufferReader(allocated.Length);
             reader.FromArray(allocated);
-            Assert.True(reader.@bool());
-            Assert.False(reader.@bool());
-            Assert.True(reader.@bool());
+            Assert.True(reader.b());
+            Assert.False(reader.b());
+            Assert.True(reader.b());
         }
     }
 }

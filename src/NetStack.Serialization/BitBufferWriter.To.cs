@@ -2,6 +2,17 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
+using static System.Except;
+using i8 = System.SByte;
+using i16 = System.Int16;
+using i32 = System.Int32;
+using i64 = System.Int64;
+using u8 = System.Byte;
+using u16 = System.UInt16;
+using u32 = System.UInt32;
+using u64 = System.UInt64;
+using f32 = System.Single;
+using f64 = System.Double;
 using System.Buffers;
 #if !(ENABLE_MONO || ENABLE_IL2CPP)
 using System.Diagnostics;
@@ -15,7 +26,7 @@ using BitOperations = System.Numerics.BitOperations;
 
 namespace NetStack.Serialization
 {
-    public partial class BitBufferWrite
+    public partial class BitBufferWriter
     {
         /// <summary>
         /// Dot not use for production. GC allocated array.
@@ -59,7 +70,7 @@ namespace NetStack.Serialization
             if (position < 0)
                 throw new ArgumentException("Should be non negative", nameof(position));
             var step = Unsafe.SizeOf<uint>();
-            AddRaw(1, 1);
+            raw(1, 1);
             var bitsPassed = BitsWritten;
 
             Finish();
@@ -94,7 +105,7 @@ namespace NetStack.Serialization
         {
             // may throw here as not hot path, check span length
 
-            AddRaw(1, 1);
+            raw(1, 1);
             var bitsPassed = BitsWritten;
             Finish();
 

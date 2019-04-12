@@ -30,7 +30,7 @@ namespace NetStack.Serialization
         /// <typeparam name="T">Any struct with no references to managed heap.</typeparam>
         /// <param name="value">The value.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void AddUnsafe<T>(this BitBufferWrite self, in T value)
+        public static void block<T>(this BitBufferWriter self, in T value)
             where T : unmanaged
         {
             var size = Unsafe.SizeOf<T>();
@@ -60,7 +60,7 @@ namespace NetStack.Serialization
             }
         }
 
-        private static void WriteSmallUnmanaged(this BitBufferWrite self, ref byte value, int size)
+        private static void WriteSmallUnmanaged(this BitBufferWriter self, ref byte value, int size)
         {
             if (size == 1)
             {
@@ -69,12 +69,12 @@ namespace NetStack.Serialization
             else if (size == 2)
             {
                 ref var reinterpretedValue = ref Unsafe.As<byte, ushort>(ref value);
-                self.AddUShort(reinterpretedValue);
+                self.u16(reinterpretedValue);
             }
             else if (size == 3)
             {
                 ref var reinterpretedValue1 = ref Unsafe.As<byte, ushort>(ref value);
-                self.AddUShort(reinterpretedValue1);
+                self.u16(reinterpretedValue1);
                 ref var reinterpretedValue2 = ref Unsafe.Add(ref value, 2);
                 self.u8(reinterpretedValue2);
             }
@@ -90,7 +90,7 @@ namespace NetStack.Serialization
         /// </summary>
         /// <typeparam name="T">Element with predefined size.</typeparam>
         /// <returns>The value.</returns>
-        public static T ReadUnsafe<T>(this BitBufferReader self)
+        public static T block<T>(this BitBufferReader self)
            where T : unmanaged
         {
             var size = Unsafe.SizeOf<T>();
@@ -132,12 +132,12 @@ namespace NetStack.Serialization
             else if (size == 2)
             {
                 ref var reinterpretedValue = ref Unsafe.As<byte, ushort>(ref value);
-                reinterpretedValue = self.ReadUShort();
+                reinterpretedValue = self.u16();
             }
             else if (size == 3)
             {
                 ref var reinterpretedValue1 = ref Unsafe.As<byte, ushort>(ref value);
-                reinterpretedValue1 = self.ReadUShort();
+                reinterpretedValue1 = self.u16();
                 ref var reinterpretedValue2 = ref Unsafe.Add(ref value, 2);
                 reinterpretedValue2 = self.u8();
             } 

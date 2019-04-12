@@ -28,8 +28,47 @@ namespace NetStack.Serialization
     /// <summary>
     /// Bit level compression by ranged values.
     /// </summary>
-    public partial class BitBufferReader : BitBuffer
+    public partial struct GenricBitBufferWriter<T> 
     {
+                public static int BitsRequired(int min, int max) =>
+            (min == max) ? 1 : BitOperations.Log2((uint)(max - min)) + 1;
+
+        public static int BitsRequired(uint min, uint max) =>
+            (min == max) ? 1 : BitOperations.Log2(max - min) + 1;
+
+        private uint[] chunks;        
+        private int totalNumChunks;        
+        private int totalNumberBits;  
+        private uint[] Chunks
+        {
+            set 
+            {
+                chunks = value;
+                totalNumChunks = chunks.Length;
+                totalNumberBits = totalNumChunks * 8 * Unsafe.SizeOf<uint>();   
+            }
+        }
+
+
+        // bit index onto current head
+        private int chunkIndex;
+        private int scratchUsedBits;
+        
+        // last partially read value
+        private ulong scratch;
+
+        /// <summary>
+        /// Sets buffer cursor to zero. Can start writing again.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Clear()
+        {            
+            chunkIndex = 0;
+            scratch = 0;
+            scratchUsedBits = 0;
+        }
+
+
         private BitBufferOptions config;
 
         public BitBufferOptions Options => config;
@@ -42,8 +81,8 @@ namespace NetStack.Serialization
         /// Call <see cref="FromArray"/> to reinitialize with copy of data.
         /// </summary>
         /// <param name="capacity">Count of 4 byte integers used as internal buffer.</param>
-        public BitBufferReader(int capacity = DefaultCapacityUInt, BitBufferOptions config = default)
-        : this(new uint[capacity], config)
+        public GenricBitBufferWriter(i32 capacity = DefaultCapacityUInt, BitBufferOptions config = default)
+        : this(new u32[capacity], config)
         {
         }
 
@@ -51,17 +90,21 @@ namespace NetStack.Serialization
         /// Creates new instance with its own buffer. 
         /// </summary>
         /// <param name="buffer">Custom buffer.</param>
-        public BitBufferReader(uint[] buffer, BitBufferOptions config = default)
+        public GenricBitBufferWriter(u32[] buffer, BitBufferOptions config = default)
         {
             // TODO: try inline config as struct to improve access perfromance? Test it via benchmark
             this.config = config ?? defaultConfig;
             // not performance critical path so fine to check and throw
             if (buffer == null || buffer.Length == 0)
-                throw new ArgumentException("Buffer should be non null or empty", nameof(buffer));
+                throw Argument("Buffer should be non null or empty", nameof(buffer));
 
-            builder = new StringBuilder(this.config.StringLengthMax);
-            Chunks = buffer;
-            Clear();
+                chunks = buffer;
+                totalNumChunks = chunks.Length;
+                totalNumberBits = totalNumChunks * 8 * Unsafe.SizeOf<uint>();   
+
+            chunkIndex = 0;
+            scratch = 0;
+            scratchUsedBits = 0;
         }
     }
 }

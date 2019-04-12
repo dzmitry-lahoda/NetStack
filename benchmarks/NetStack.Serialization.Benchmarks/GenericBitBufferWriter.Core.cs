@@ -21,7 +21,47 @@ using UnityEngine;
 #endif
 namespace NetStack.Serialization
 {
-    partial class BitBufferWriter
+    public interface IRaw
+    {
+        void raw(uint value, int numberOfBits);
+    }
+
+    public interface ICompression<T> where T:struct, IRaw
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        void u32(T b, u32 value); 
+    }
+
+    public struct SevenBit: ICompression<GenricBitBufferWriter<SevenBit>>
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void u32(GenricBitBufferWriter<SevenBit> b, u32 value)
+        {
+            do
+            {
+                var buffer = value & 0b0111_1111u;
+                value >>= 7;
+
+                if (value > 0)
+                    buffer |= 0b1000_0000u;
+
+                b.raw(buffer, 8);
+            }
+            while (value > 0);
+        }
+    }
+
+    public struct NoEncoding: ICompression<GenricBitBufferWriter<NoEncoding>>
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void u32(GenricBitBufferWriter<NoEncoding> b, u32 value)
+        {
+            b.raw(value, 32);
+        }
+    }    
+
+
+    partial struct GenricBitBufferWriter<T>: IRaw where T:unmanaged, ICompression<GenricBitBufferWriter<T>>
     {
         // true if has not capacity to write numberOfBits
         public bool CannotAdd(int numberOfBits) => BitsWritten + numberOfBits > totalNumberBits;
@@ -86,7 +126,7 @@ namespace NetStack.Serialization
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void internalRaw(uint value, int numberOfBits)
+        public void internalRaw(uint value, int numberOfBits)
         {
             value &= (uint)((1ul << numberOfBits) - 1);
 
@@ -137,17 +177,8 @@ namespace NetStack.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void u32(uint value)
         {
-            do
-            {
-                var buffer = value & 0b0111_1111u;
-                value >>= 7;
-
-                if (value > 0)
-                    buffer |= 0b1000_0000u;
-
-                raw(buffer, 8);
-            }
-            while (value > 0);
+            T encoder = default;
+            encoder.u32(this, value);
         }
 
         /// <summary>

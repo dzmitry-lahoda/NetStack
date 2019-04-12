@@ -9,38 +9,38 @@ namespace NetStack.Serialization
         [Fact]
         public void BoolIsBit7()
         {
-            var buffer = new BitBufferWrite();
-            buffer.AddBool(true);
-            buffer.AddBool(true);
-            buffer.AddBool(true);
-            buffer.AddBool(true);
-            buffer.AddBool(true);
-            buffer.AddBool(true);
-            buffer.AddBool(true);
+            var buffer = new BitBufferWriter();
+            buffer.b(true);
+            buffer.b(true);
+            buffer.b(true);
+            buffer.b(true);
+            buffer.b(true);
+            buffer.b(true);
+            buffer.b(true);
             Assert.Equal(1, buffer.LengthWritten);
         }
 
         [Fact]
         public void BoolIsBit9()
         {
-            var buffer = new BitBufferWrite();
-            buffer.AddBool(true);
-            buffer.AddBool(true);
-            buffer.AddBool(true);
-            buffer.AddBool(true);
-            buffer.AddBool(true);
-            buffer.AddBool(true);
-            buffer.AddBool(true);
-            buffer.AddBool(true);
+            var buffer = new BitBufferWriter();
+            buffer.b(true);
+            buffer.b(true);
+            buffer.b(true);
+            buffer.b(true);
+            buffer.b(true);
+            buffer.b(true);
+            buffer.b(true);
+            buffer.b(true);
 
-            buffer.AddBool(true);
+            buffer.b(true);
             Assert.Equal(2, buffer.LengthWritten);
         }
 
         [Fact]
         public void ByteMax3()
         {
-            var buffer = new BitBufferWrite();
+            var buffer = new BitBufferWriter();
             buffer.u8(byte.MaxValue);
             buffer.u8(byte.MaxValue);
             buffer.u8(byte.MaxValue);
@@ -50,7 +50,7 @@ namespace NetStack.Serialization
         [Fact]
         public void ByteMin3()
         {
-            var buffer = new BitBufferWrite();
+            var buffer = new BitBufferWriter();
             buffer.u8(byte.MinValue);
             buffer.u8(byte.MinValue);
             buffer.u8(byte.MinValue);
@@ -60,7 +60,7 @@ namespace NetStack.Serialization
         [Fact]
         public void ByteMin8()
         {
-            var buffer = new BitBufferWrite();
+            var buffer = new BitBufferWriter();
             buffer.u8(byte.MinValue);
             buffer.u8(byte.MinValue);
             buffer.u8(byte.MinValue);
@@ -75,7 +75,7 @@ namespace NetStack.Serialization
         [Fact]
         public void ByteRangeMin8()
         {
-            var buffer = new BitBufferWrite();
+            var buffer = new BitBufferWriter();
             buffer.u8(byte.MinValue, 0, (byte)sbyte.MaxValue);
             buffer.u8(byte.MinValue, 0, (byte)sbyte.MaxValue);
             buffer.u8(byte.MinValue, 0, (byte)sbyte.MaxValue);
@@ -90,7 +90,7 @@ namespace NetStack.Serialization
         [Fact]
         public void ByteRangeMin8Max10()
         {
-            var buffer = new BitBufferWrite();
+            var buffer = new BitBufferWriter();
             buffer.u8(byte.MinValue, 0, 10);
             buffer.u8(byte.MinValue, 0, 10);
             buffer.u8(byte.MinValue, 0, 10);
@@ -105,7 +105,7 @@ namespace NetStack.Serialization
         [Fact]
         public void ByteHalf()
         {
-            var buffer = new BitBufferWrite();
+            var buffer = new BitBufferWriter();
             buffer.u8(byte.MaxValue / 2);
             buffer.u8(byte.MaxValue / 2);
             buffer.u8(byte.MaxValue / 2);
@@ -121,7 +121,7 @@ namespace NetStack.Serialization
         [Fact]
         public void ByteShortMin4()
         {
-            var buffer = new BitBufferWrite();
+            var buffer = new BitBufferWriter();
             buffer.i16(short.MinValue);
             buffer.i16(short.MinValue);
             buffer.i16(short.MinValue);
@@ -132,7 +132,7 @@ namespace NetStack.Serialization
         [Fact]
         public void ByteShort0()
         {
-            var buffer = new BitBufferWrite();
+            var buffer = new BitBufferWriter();
             buffer.i16(0);
             buffer.i16(0);
             buffer.i16(0);
@@ -143,7 +143,7 @@ namespace NetStack.Serialization
         [Fact]
         public void ShortMinMax4()
         {
-            var buffer = new BitBufferWrite();
+            var buffer = new BitBufferWriter();
             buffer.i16(short.MaxValue, short.MinValue, short.MaxValue);
             buffer.i16(short.MaxValue, short.MinValue, short.MaxValue);
             buffer.i16(short.MaxValue, short.MinValue, short.MaxValue);
@@ -154,7 +154,7 @@ namespace NetStack.Serialization
         [Fact]
         public void UIntMax()
         {
-            var buffer = new BitBufferWrite();
+            var buffer = new BitBufferWriter();
             buffer.u32(uint.MaxValue);
             Assert.Equal(5, buffer.LengthWritten);
         }
@@ -162,102 +162,102 @@ namespace NetStack.Serialization
         [Fact]
         public void UIntMin()
         {
-            var buffer = new BitBufferWrite();
-            buffer.u32(uint.MinValue);
-            Assert.Equal(1, buffer.LengthWritten);
+            var writer = new BitBufferWriter();
+            writer.u32(uint.MinValue);
+            Assert.Equal(1, writer.LengthWritten);
         }
 
         [Fact]
         public void IntMaxValue4()
         {
-            var buffer = new BitBufferWrite();
-            buffer.i32(int.MaxValue);
-            buffer.i32(int.MaxValue);
-            buffer.i32(int.MaxValue);
-            buffer.i32(int.MaxValue);
-            Assert.Equal(20, buffer.LengthWritten);
+            var writer = new BitBufferWriter();
+            writer.i32(int.MaxValue);
+            writer.i32(int.MaxValue);
+            writer.i32(int.MaxValue);
+            writer.i32(int.MaxValue);
+            Assert.Equal(20, writer.LengthWritten);
         }
 
         [Fact]
         public void IntZeroMaxValue4()
         {
-            var buffer = new BitBufferWrite();
-            buffer.i32(int.MaxValue, 0, int.MaxValue);
-            buffer.i32(int.MaxValue, 0, int.MaxValue);
-            buffer.i32(int.MaxValue, 0, int.MaxValue);
-            buffer.i32(int.MaxValue, 0, int.MaxValue);
-            Assert.Equal(16, buffer.LengthWritten);
+            var writer = new BitBufferWriter();
+            writer.i32(int.MaxValue, 0, int.MaxValue);
+            writer.i32(int.MaxValue, 0, int.MaxValue);
+            writer.i32(int.MaxValue, 0, int.MaxValue);
+            writer.i32(int.MaxValue, 0, int.MaxValue);
+            Assert.Equal(16, writer.LengthWritten);
         }
 
         [Fact]
         public void ShortMax4Divided()
         {
-            var buffer = new BitBufferWrite();
+            var writer = new BitBufferWriter();
             for (var i=0; i< 8;i++)
-                buffer.i16(short.MaxValue/3);
+                writer.i16(short.MaxValue/3);
                                   
-            Assert.Equal(24, buffer.LengthWritten);
+            Assert.Equal(24, writer.LengthWritten);
         }
 
         [Fact]
         public void IntOfShortMax4Divided()
         {
-            var buffer = new BitBufferWrite();
+            var writer = new BitBufferWriter();
             for (var i=0; i< 8;i++)
-                buffer.i32(short.MaxValue/3);
-            Assert.Equal(24, buffer.LengthWritten);
+                writer.i32(short.MaxValue/3);
+            Assert.Equal(24, writer.LengthWritten);
         }
 
         [Fact]
         public void ShortZeroMax4()
         {
-            var buffer = new BitBufferWrite();
-            buffer.i16(short.MaxValue, 0, short.MaxValue);
-            buffer.i16(short.MaxValue, 0, short.MaxValue);
-            buffer.i16(short.MaxValue, 0, short.MaxValue);
-            buffer.i16(short.MaxValue, 0, short.MaxValue);
-            Assert.Equal(8, buffer.LengthWritten);
+            var writer = new BitBufferWriter();
+            writer.i16(short.MaxValue, 0, short.MaxValue);
+            writer.i16(short.MaxValue, 0, short.MaxValue);
+            writer.i16(short.MaxValue, 0, short.MaxValue);
+            writer.i16(short.MaxValue, 0, short.MaxValue);
+            Assert.Equal(8, writer.LengthWritten);
         }
 
         [Fact]
         public void SByte0()
         {
-            var buffer = new BitBufferWrite();
-            buffer.i8(0);
-            buffer.i8(0);
-            buffer.i8(0);
-            buffer.i8(0);
-            Assert.Equal(4, buffer.LengthWritten);
+            var writer = new BitBufferWriter();
+            writer.i8(0);
+            writer.i8(0);
+            writer.i8(0);
+            writer.i8(0);
+            Assert.Equal(4, writer.LengthWritten);
         }
 
         [Fact]
         public void SbyteMax4()
         {
-            var buffer = new BitBufferWrite();
-            buffer.i8(sbyte.MaxValue);
-            buffer.i8(sbyte.MaxValue);
-            buffer.i8(sbyte.MaxValue);
-            buffer.i8(sbyte.MaxValue);
-            buffer.i8(sbyte.MaxValue);
-            buffer.i8(sbyte.MaxValue);
-            buffer.i8(sbyte.MaxValue);
-            buffer.i8(sbyte.MaxValue);
-            Assert.Equal(8, buffer.LengthWritten);
+            var writer = new BitBufferWriter();
+            writer.i8(sbyte.MaxValue);
+            writer.i8(sbyte.MaxValue);
+            writer.i8(sbyte.MaxValue);
+            writer.i8(sbyte.MaxValue);
+            writer.i8(sbyte.MaxValue);
+            writer.i8(sbyte.MaxValue);
+            writer.i8(sbyte.MaxValue);
+            writer.i8(sbyte.MaxValue);
+            Assert.Equal(8, writer.LengthWritten);
         }
 
         [Fact]
         public void SByteZeroMax4()
         {
-            var buffer = new BitBufferWrite();
-            buffer.i8(sbyte.MaxValue, 0, sbyte.MaxValue);
-            buffer.i8(sbyte.MaxValue, 0, sbyte.MaxValue);
-            buffer.i8(sbyte.MaxValue, 0, sbyte.MaxValue);
-            buffer.i8(sbyte.MaxValue, 0, sbyte.MaxValue);
-            buffer.i8(sbyte.MaxValue, 0, sbyte.MaxValue);
-            buffer.i8(sbyte.MaxValue, 0, sbyte.MaxValue);
-            buffer.i8(sbyte.MaxValue, 0, sbyte.MaxValue);
-            buffer.i8(sbyte.MaxValue, 0, sbyte.MaxValue);
-            Assert.Equal(7, buffer.LengthWritten);
+            var writer = new BitBufferWriter();
+            writer.i8(sbyte.MaxValue, 0, sbyte.MaxValue);
+            writer.i8(sbyte.MaxValue, 0, sbyte.MaxValue);
+            writer.i8(sbyte.MaxValue, 0, sbyte.MaxValue);
+            writer.i8(sbyte.MaxValue, 0, sbyte.MaxValue);
+            writer.i8(sbyte.MaxValue, 0, sbyte.MaxValue);
+            writer.i8(sbyte.MaxValue, 0, sbyte.MaxValue);
+            writer.i8(sbyte.MaxValue, 0, sbyte.MaxValue);
+            writer.i8(sbyte.MaxValue, 0, sbyte.MaxValue);
+            Assert.Equal(7, writer.LengthWritten);
         }
     }
 }

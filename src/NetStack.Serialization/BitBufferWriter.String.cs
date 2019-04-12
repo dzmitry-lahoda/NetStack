@@ -2,6 +2,17 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
+using static System.Except;
+using i8 = System.SByte;
+using i16 = System.Int16;
+using i32 = System.Int32;
+using i64 = System.Int64;
+using u8 = System.Byte;
+using u16 = System.UInt16;
+using u32 = System.UInt32;
+using u64 = System.UInt64;
+using f32 = System.Single;
+using f64 = System.Double;
 #if !(ENABLE_MONO || ENABLE_IL2CPP)
 using System.Diagnostics;
 using System.Numerics;
@@ -12,10 +23,10 @@ using UnityEngine;
 namespace NetStack.Serialization
 {
     // GC allocated String stuff
-    partial class BitBufferWrite
+    partial class BitBufferWriter
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddString(string value)
+        public void String(string value)
         {
             // non critical path (until string is one or couple of chars), so may consider throw
             Debug.Assert(value != null, "String is null");
@@ -50,27 +61,27 @@ namespace NetStack.Serialization
                 }
             }
 
-            AddRaw((uint)codePage, codePageBitsRequried);
-            AddRaw((uint)length, config.StringLengthBits);
+            raw((uint)codePage, codePageBitsRequried);
+            raw((uint)length, config.StringLengthBits);
 
             switch (codePage)
             {
                 case CodePage.Ascii:
                     for (int i = 0; i < length; i++)
                     {
-                        AddRaw(value[i], bitsASCII);
+                        raw(value[i], bitsASCII);
                     }
                     break;
                 case CodePage.Latin1:
                     for (int i = 0; i < length; i++)
                     {
-                        AddRaw(value[i], bitsLATIN1);
+                        raw(value[i], bitsLATIN1);
                     }
                     break;
                 case CodePage.LatinExtended:
                     for (int i = 0; i < length; i++)
                     {
-                        AddRaw(value[i], bitsLATINEXT);
+                        raw(value[i], bitsLATINEXT);
                     }
                     break;
                 default:
@@ -78,13 +89,13 @@ namespace NetStack.Serialization
                     {
                         if (value[i] > 127)
                         {
-                            AddRaw(1, 1);
-                            AddRaw(value[i], bitsUTF16);
+                            raw(1, 1);
+                            raw(value[i], bitsUTF16);
                         }
                         else
                         {
-                            AddRaw(0, 1);
-                            AddRaw(value[i], bitsASCII);
+                            raw(0, 1);
+                            raw(value[i], bitsASCII);
                         }
                     }
                     break;

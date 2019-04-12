@@ -2,6 +2,17 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
+using static System.Except;
+using i8 = System.SByte;
+using i16 = System.Int16;
+using i32 = System.Int32;
+using i64 = System.Int64;
+using u8 = System.Byte;
+using u16 = System.UInt16;
+using u32 = System.UInt32;
+using u64 = System.UInt64;
+using f32 = System.Single;
+using f64 = System.Double;
 #if !(ENABLE_MONO || ENABLE_IL2CPP)
 using System.Diagnostics;
 using System.Numerics;
@@ -11,152 +22,148 @@ using UnityEngine;
 
 namespace NetStack.Serialization
 {
-    partial class BitBufferWrite
+    partial class BitBufferWriter
     {
         /// <summary>
         /// Adds int value.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void i32(int value, int min, int max)
+        public void i32(i32 value, i32 min, i32 max)
         {
-            Debug.Assert(min < max, "minus is not lower than max");
-            Debug.Assert(value >= min, "value is lower than minimal");
-            Debug.Assert(value <= max, "value is higher than maximal");
+#if DEBUG || NETSTACK_VALIDATE
+            if (min >= max) throw Argument("min should be lower than max");
+            if (value < min || value > max) throw ArgumentOutOfRange(nameof(value), $"Value should be withing provided {min} and {max} range");
+#endif
+
             int bits = BitsRequired(min, max);
-            AddRaw((uint)(value - min), bits);            
+            raw((uint)(value - min), bits);            
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void u8(u8 value) => raw(value, 8);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void u8(byte value) => AddRaw(value, 8);
+        public void u8(u8 value, int numberOfBits) => u32(value, numberOfBits);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void u8(byte value, int numberOfBits) => AddUInt(value, numberOfBits);
+        public void u8(u8 value, u8 min, u8 max) => u32(value, min, max);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void u8(byte value, byte min, byte max) => AddUInt(value, min, max);
+        public void i8(i8 value) => i32(value, 8);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void i8(sbyte value) => i32(value, 8);
+        public void i8(i8 value, int numberOfBits) => i32(value, numberOfBits);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void i8(sbyte value, int numberOfBits) => i32(value, numberOfBits);
+        public void i8(i8 value, i8 min, i8 max) => i32(value, min, max);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void i8(sbyte value, sbyte min, sbyte max) => i32(value, min, max);
+        public void i16(i16 value) => i32(value);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void i16(short value) => i32(value);
+        public void i16(i16 value, int numberOfBits) => i32(value, numberOfBits);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void i16(short value, int numberOfBits) => i32(value, numberOfBits);
+        public void i16(i16 value, i16 min, i16 max) => i32(value, min, max);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void i16(short value, short min, short max) => i32(value, min, max);
+        public void u16(u16 value) => u32(value);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddUShort(ushort value) => u32(value);
+        public void u16(u16 value, int numberOfBits) => u32(value, numberOfBits);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddUShort(ushort value, int numberOfBits) => AddUInt(value, numberOfBits);
+        public void u16(u16 value, u16 min, u16 max) => u32(value, min, max);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddUShort(ushort value, ushort min, ushort max) => AddUInt(value, min, max);
-
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddUInt(uint value, int numberOfBits) => AddRaw(value, numberOfBits);
+        public void u32(u32 value, int numberOfBits) => raw(value, numberOfBits);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddUInt(uint value, uint min, uint max)
+        public void u32(u32 value, u32 min, u32 max)
         {
-            Debug.Assert(min < max, "minus is not lower than max");
-            Debug.Assert(value >= min, "value is lower than minimal");
-            Debug.Assert(value <= max, "value is higher than maximal");
+#if DEBUG || NETSTACK_VALIDATE
+            if (min >= max) throw Argument("min should be lower than max");
+            if (value < min || value > max) throw ArgumentOutOfRange(nameof(value), $"Value should be withing provided {min} and {max} range");
+#endif
             int bits = BitsRequired(min, max);
-            AddRaw(value - min, bits);
+            raw(value - min, bits);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddLong(long value)
+        public void i64(i64 value)
         {
-            i32((int)(value & uint.MaxValue));
-            i32((int)(value >> 32));
+            i32((i32)(value & uint.MaxValue));
+            i32((i32)(value >> 32));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddULong(ulong value)
+        public void u64(u64 value)
         {
-            u32((uint)(value & uint.MaxValue));
-            u32((uint)(value >> 32));
+            u32((u32)(value & uint.MaxValue));
+            u32((u32)(value >> 32));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddFloat(in float value)
+        public void f32(f32 value)
         {
-            uint reinterpreted = Unsafe.As<float, uint>(ref Unsafe.AsRef<float>(in value));
-            AddRaw(reinterpreted, 32);
+            u32 reinterpreted = Unsafe.As<f32, u32>(ref Unsafe.AsRef<f32>(in value));
+            raw(reinterpreted, 32);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddFloat(float value, float min, float max, float precision)
+        public void f32(f32 value, f32 min, f32 max, f32 precision)
         {
+#if DEBUG || NETSTACK_VALIDATE
+            if (min >= max) throw Argument("min should be lower than max");
+            if (value < min || value > max) throw ArgumentOutOfRange(nameof(value), $"Value should be withing provided {min} and {max} range");
+#endif            
             float range = max - min;
             float invPrecision = 1.0f / precision;
             float maxVal = range * invPrecision;
-            int numberOfBits = BitOperations.Log2((uint)(maxVal + 0.5f)) + 1;
+            int numberOfBits = BitOperations.Log2((u32)(maxVal + 0.5f)) + 1;
             float adjusted = (value - min) * invPrecision;
-            AddRaw((uint)(adjusted + 0.5f), numberOfBits);
+            raw((u32)(adjusted + 0.5f), numberOfBits);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddFloat(float value, float min, float max, int numberOfBits)
+        public void f32(f32 value, f32 min, f32 max, i32 numberOfBits)
         {
+#if DEBUG || NETSTACK_VALIDATE
+            if (min >= max) throw Argument("min should be lower than max");
+            if (value < min || value > max) throw ArgumentOutOfRange(nameof(value), $"Value should be withing provided {min} and {max} range");
+#endif                    
             var maxvalue = (1 << numberOfBits) - 1;
-
             float range = max - min;
             var precision = range / maxvalue;
             var invPrecision = 1.0f / precision;
-
-            float adjusted = (value - min) * invPrecision;
-
-            AddRaw((uint)(adjusted + 0.5f), numberOfBits);
+            f32 adjusted = (value - min) * invPrecision;
+            raw((u32)(adjusted + 0.5f), numberOfBits);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddDouble(in double value)
+        public void f64(f64 value)
         {
-            ulong reinterpreted = Unsafe.As<double, ulong>(ref Unsafe.AsRef<double>(in value));
-            AddULong(reinterpreted);
-        }
-
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddByteArray(byte[] value)
-        {
-            AddByteArray(value, 0, value.Length);            
+            u64 reinterpreted = Unsafe.As<f64, u64>(ref Unsafe.AsRef<f64>(in value));
+            u64(reinterpreted);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddByteArray(byte[] value, int length) => AddByteArray(value, 0, length);
+        public void AddByteArray(u8[] value) => AddByteArray(value, 0, value.Length);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddByteArray(byte[] value, int offset, int length)
+        public void AddByteArray(u8[] value, int length) => AddByteArray(value, 0, length);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void AddByteArray(u8[] value, int offset, int length)
         {
             Debug.Assert(value != null, "Supplied bytearray is null");
             Debug.Assert(length <= config.ByteArrLengthMax, $"Byte array too big, raise the {nameof(config.ByteArrLengthBits)} value or split the array.");
-
             if (length > config.ByteArrLengthMax)
                 length = config.ByteArrLengthMax;
-
             Debug.Assert(length + 9 <= (totalNumberBits - BitsWritten), "Byte array too big for buffer.");
-
-            AddRaw((uint)length, config.ByteArrLengthBits);
-
+            raw((uint)length, config.ByteArrLengthBits);
             for (var index = offset; index < length; index++)
-            {
                 u8(value[index]);
-            }
         }        
     }
 }

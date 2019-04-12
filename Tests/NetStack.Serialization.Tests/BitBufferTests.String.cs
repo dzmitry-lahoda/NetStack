@@ -11,8 +11,8 @@ namespace NetStack.Serialization
         public void CodePagesBitsRequited()
         {
             var bits = BitBuffer.BitsRequired("0",1);
-            var bitBuffer = new BitBufferWrite();
-            bitBuffer.AddString("0");
+            var bitBuffer = new BitBufferWriter();
+            bitBuffer.String("0");
             Assert.Equal(bits, bitBuffer.BitsWritten);
             var result = bitBuffer.ToArray();
         }
@@ -21,8 +21,8 @@ namespace NetStack.Serialization
         public void ЁBitsRequited()
         {
             var bits = BitBuffer.BitsRequired("Ё",1);
-            var bitBuffer = new BitBufferWrite();
-            bitBuffer.AddString("Ё");
+            var bitBuffer = new BitBufferWriter();
+            bitBuffer.String("Ё");
             Assert.Equal(bits, bitBuffer.BitsWritten);
             var result = bitBuffer.ToArray();
         }
@@ -38,26 +38,26 @@ namespace NetStack.Serialization
         [Fact]
         public void AnsiStringWriteRead()
         {
-            var buffer = new BitBufferWrite();
-            buffer.AddString("123456789");
-            buffer.Finish();
+            var writer = new BitBufferWriter();
+            writer.String("123456789");
+            writer.Finish();
             var allocated = new byte[ushort.MaxValue];
-            buffer.ToArray(allocated);
+            writer.ToArray(allocated);
             var reader = new BitBufferReader(allocated.Length);
             reader.FromArray(allocated);
-            Assert.Equal("123456789", reader.ReadString());
+            Assert.Equal("123456789", reader.String());
         }
 
         [Fact]
         public void StringWriteRead()
         {
-            var buffer = new BitBufferWrite();
-            buffer.AddString("lahoda.prо/минск");
+            var writer = new BitBufferWriter();
+            writer.String("lahoda.prо/минск");
             var allocated = new byte[ushort.MaxValue];
-            buffer.ToArray(allocated);
+            writer.ToArray(allocated);
             var reader = new BitBufferReader(allocated.Length);
             reader.FromArray(allocated);
-            Assert.Equal("lahoda.prо/минск", reader.ReadString());
+            Assert.Equal("lahoda.prо/минск", reader.String());
         }
     }
 }

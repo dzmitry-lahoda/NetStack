@@ -9,41 +9,41 @@ namespace NetStack.Serialization
         [Fact]
         public void Capacity()
         {
-            var buffer = new BitBufferWrite(100);
-            Assert.Equal(0, buffer.LengthWritten);
+            var writer = new BitBufferWriter(100);
+            Assert.Equal(0, writer.LengthWritten);
             var received = new byte[2000];
             var reader = new BitBufferReader();
             reader.FromArray(received);
-            Assert.Equal(0, buffer.LengthWritten);
+            Assert.Equal(0, writer.LengthWritten);
         }
 
-       [Fact]
+        [Fact]
         public void BitsRead()
         {
-            var write = new BitBufferWrite();
-            
-            Assert.Equal(0, write.BitsWritten);
-            write.AddBool(true);
-            Assert.Equal(1, write.BitsWritten);
-            write.u8(123);
-            Assert.Equal(9, write.BitsWritten);
-            write.i16(12345);
-            Assert.Equal(33, write.BitsWritten);
-            write.i32(1234567890);
-            Assert.Equal(73, write.BitsWritten);
-            var data = write.ToArray();
+            var writer = new BitBufferWriter();
+
+            Assert.Equal(0, writer.BitsWritten);
+            writer.b(true);
+            Assert.Equal(1, writer.BitsWritten);
+            writer.u8(123);
+            Assert.Equal(9, writer.BitsWritten);
+            writer.i16(12345);
+            Assert.Equal(33, writer.BitsWritten);
+            writer.i32(1234567890);
+            Assert.Equal(73, writer.BitsWritten);
+            var data = writer.ToArray();
             var reader = new BitBufferReader();
             reader.FromArray(data);
-            
+
             Assert.Equal(0, reader.BitsRead);
-            reader.@bool();
+            reader.b();
             Assert.Equal(1, reader.BitsRead);
             reader.u8();
             Assert.Equal(9, reader.BitsRead);
-            reader.ReadShort();
+            reader.i16();
             Assert.Equal(33, reader.BitsRead);
             reader.i32();
             Assert.Equal(73, reader.BitsRead);
-        }        
+        }
     }
 }

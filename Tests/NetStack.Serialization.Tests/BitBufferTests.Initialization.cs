@@ -1,6 +1,16 @@
 using System;
 using System.Numerics;
 using Xunit;
+using i8 = System.SByte;
+using i16 = System.Int16;
+using i32 = System.Int32;
+using i64 = System.Int64;
+using u8 = System.Byte;
+using u16 = System.UInt16;
+using u32 = System.UInt32;
+using u64 = System.UInt64;
+using f32 = System.Single;
+using f64 = System.Double;
 
 namespace NetStack.Serialization
 {
@@ -9,68 +19,68 @@ namespace NetStack.Serialization
         [Fact]
         public void RandomManyTimes()
         {
-            var buffer = new BitBufferWrite();
+            var writer = new BitBufferWriter();
             var reader = new BitBufferReader();
             var random = new Random(42);
-            for (var i = 0; i < short.MaxValue; i++)
+            for (var i = 0; i < i16.MaxValue; i++)
             {
                 for (var j = 0; j < BitBufferLimits.MtuIeee802; j++)
                 {
                     if (random.Next() % 11 == 0)
-                        buffer.AddLong(long.MaxValue);
+                        writer.i64(long.MaxValue);
                     if (random.Next() % 7 == 0)
-                        buffer.i32(int.MaxValue);
+                        writer.i32(int.MaxValue);
                     if (random.Next() % 5 == 0)
-                        buffer.i16(short.MaxValue);
+                        writer.i16(i16.MaxValue);
                     if (random.Next() % 3 == 0)
-                        buffer.AddBool(true);                        
+                        writer.b(true);                        
                 }
 
 
-                var result = buffer.ToArray();
+                var result = writer.ToArray();
                 reader.FromArray(result);
-                buffer.Clear();
+                writer.Clear();
             }
         }
 
         [Fact]
         public void ToArrayFromFrom()
         {
-            var buffer = new BitBufferWrite(100);
-            buffer.AddLong(long.MaxValue);
-            buffer.i32(int.MaxValue);
-            buffer.i16(short.MaxValue);
-            var result = buffer.ToArray();
+            var writer = new BitBufferWriter(100);
+            writer.i64(i64.MaxValue);
+            writer.i32(i32.MaxValue);
+            writer.i16(i16.MaxValue);
+            var result = writer.ToArray();
             var reader = new BitBufferReader();
             reader.FromArray(result);
-            Assert.Equal(long.MaxValue, reader.ReadLong());
-            Assert.Equal(int.MaxValue, reader.i32());
-            Assert.Equal(short.MaxValue, reader.ReadShort());
+            Assert.Equal(i64.MaxValue, reader.i64());
+            Assert.Equal(i32.MaxValue, reader.i32());
+            Assert.Equal(i16.MaxValue, reader.i16());
             reader.FromArray(result);
-            Assert.Equal(long.MaxValue, reader.ReadLong());
-            Assert.Equal(int.MaxValue, reader.i32());
-            Assert.Equal(short.MaxValue, reader.ReadShort());
+            Assert.Equal(i64.MaxValue, reader.i64());
+            Assert.Equal(i32.MaxValue, reader.i32());
+            Assert.Equal(i16.MaxValue, reader.i16());
         }
 
         [Fact]
         public void ToSpanFromFrom()
         {
-            var buffer = new BitBufferWrite(100);
-            buffer.AddLong(long.MaxValue);
-            buffer.i32(int.MaxValue);
-            buffer.i16(short.MaxValue);
-            Span<byte> span = new byte[buffer.LengthWritten];
+            var writer = new BitBufferWriter(100);
+            writer.i64(i64.MaxValue);
+            writer.i32(i32.MaxValue);
+            writer.i16(i16.MaxValue);
+            Span<byte> span = new byte[writer.LengthWritten];
             ReadOnlySpan<byte> read = span;
-            buffer.ToSpan(span);
+            writer.ToSpan(span);
             var reader = new BitBufferReader();            
             reader.FromSpan(read);
-            Assert.Equal(long.MaxValue, reader.ReadLong());
-            Assert.Equal(int.MaxValue, reader.i32());
-            Assert.Equal(short.MaxValue, reader.ReadShort());
+            Assert.Equal(i64.MaxValue, reader.i64());
+            Assert.Equal(i32.MaxValue, reader.i32());
+            Assert.Equal(i16.MaxValue, reader.i16());
             reader.FromSpan(read);
-            Assert.Equal(long.MaxValue, reader.ReadLong());
-            Assert.Equal(int.MaxValue, reader.i32());
-            Assert.Equal(short.MaxValue, reader.ReadShort());
+            Assert.Equal(i64.MaxValue, reader.i64());
+            Assert.Equal(i32.MaxValue, reader.i32());
+            Assert.Equal(i16.MaxValue, reader.i16());
         }
     }
 }
