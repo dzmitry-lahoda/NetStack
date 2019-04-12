@@ -21,12 +21,12 @@ using UnityEngine;
 
 namespace NetStack.Serialization
 {
-    public interface IRaw
+    public interface IRawWriter
     {
         void raw(uint value, int numberOfBits);
     }
 
-    public interface IRaw2
+    public interface IRawReader
     {
         uint raw(int numberOfBits);
     }

@@ -38,6 +38,9 @@ namespace NetStack.Serialization
             }
             while (value > 0);
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public uint zigzag(int value) => (uint)((value << 1) ^ (value >> 31));        
     }
 
     public struct NoEncoding2: ICompression<GenricBitBufferWriter<NoEncoding2>>
@@ -47,10 +50,11 @@ namespace NetStack.Serialization
         {
             b.raw(value, 32);
         }
-    }    
 
+        public uint zigzag(int value) => (uint)value;
+    }
 
-    partial struct GenricBitBufferWriter<T>: IRaw where T:unmanaged, ICompression<GenricBitBufferWriter<T>>
+    partial struct GenricBitBufferWriter<T>: IRawWriter where T:unmanaged, ICompression<GenricBitBufferWriter<T>>
     {
         // true if has not capacity to write numberOfBits
         public bool CannotAdd(int numberOfBits) => BitsWritten + numberOfBits > totalNumberBits;

@@ -14,5 +14,8 @@ namespace NetStack.Serialization
         {
             b.raw(value, 32);
         }
+       
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public uint zigzag(int value) => (uint)value;
     }
 }

@@ -27,6 +27,9 @@ namespace NetStack.Serialization
             }
             while (value > 0);
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public uint zigzag(int value) => (uint)((value << 1) ^ (value >> 31));
     }
 
     public struct SevenBitRe : IDecompression<BitBufferReader<SevenBitRe>>

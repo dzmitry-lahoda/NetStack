@@ -28,25 +28,25 @@ namespace NetStack.Serialization
         {
             for (int i = 0; i < N; i++)
             {
-                buffer2.u32(666);buffer2.u32(666);buffer2.u32(666);buffer2.u32(666);                        
-                buffer2.u32(666);buffer2.u32(666);buffer2.u32(666);buffer2.u32(666);
-                buffer2.u32(666);buffer2.u32(666);buffer2.u32(666);buffer2.u32(666);
-                buffer2.u32(666);buffer2.u32(666);buffer2.u32(666);buffer2.u32(666);
+                buffer2.i32(666);buffer2.i32(666);buffer2.i32(666);buffer2.i32(666);                        
+                buffer2.i32(666);buffer2.i32(666);buffer2.i32(666);buffer2.i32(666);
+                buffer2.i32(666);buffer2.i32(666);buffer2.i32(666);buffer2.i32(666);
+                buffer2.i32(666);buffer2.i32(666);buffer2.i32(666);buffer2.i32(666);
 
-                buffer2.u32(666);buffer2.u32(666);buffer2.u32(666);buffer2.u32(666);
-                buffer2.u32(666);buffer2.u32(666);buffer2.u32(666);buffer2.u32(666);
-                buffer2.u32(666);buffer2.u32(666);buffer2.u32(666);buffer2.u32(666);
-                buffer2.u32(666);buffer2.u32(666);buffer2.u32(666);buffer2.u32(666);
+                buffer2.i32(666);buffer2.i32(666);buffer2.i32(666);buffer2.i32(666);
+                buffer2.i32(666);buffer2.i32(666);buffer2.i32(666);buffer2.i32(666);
+                buffer2.i32(666);buffer2.i32(666);buffer2.i32(666);buffer2.i32(666);
+                buffer2.i32(666);buffer2.i32(666);buffer2.i32(666);buffer2.i32(666);
 
-                buffer2.u32(666);buffer2.u32(666);buffer2.u32(666);buffer2.u32(666);
-                buffer2.u32(666);buffer2.u32(666);buffer2.u32(666);buffer2.u32(666);
-                buffer2.u32(666);buffer2.u32(666);buffer2.u32(666);buffer2.u32(666);
-                buffer2.u32(666);buffer2.u32(666);buffer2.u32(666);buffer2.u32(666);
+                buffer2.i32(666);buffer2.i32(666);buffer2.i32(666);buffer2.i32(666);
+                buffer2.i32(666);buffer2.i32(666);buffer2.i32(666);buffer2.i32(666);
+                buffer2.i32(666);buffer2.i32(666);buffer2.i32(666);buffer2.i32(666);
+                buffer2.i32(666);buffer2.i32(666);buffer2.i32(666);buffer2.i32(666);
 
-                buffer2.u32(666);buffer2.u32(666);buffer2.u32(666);buffer2.u32(666);
-                buffer2.u32(666);buffer2.u32(666);buffer2.u32(666);buffer2.u32(666);
-                buffer2.u32(666);buffer2.u32(666);buffer2.u32(666);buffer2.u32(666);
-                buffer2.u32(666);buffer2.u32(666);buffer2.u32(666);buffer2.u32(666);                                
+                buffer2.i32(666);buffer2.i32(666);buffer2.i32(666);buffer2.i32(666);
+                buffer2.i32(666);buffer2.i32(666);buffer2.i32(666);buffer2.i32(666);
+                buffer2.i32(666);buffer2.i32(666);buffer2.i32(666);buffer2.i32(666);
+                buffer2.i32(666);buffer2.i32(666);buffer2.i32(666);buffer2.i32(666);                                
             }
         }
                 
@@ -56,25 +56,25 @@ namespace NetStack.Serialization
         {
             for (int i = 0; i < N; i++)
             {
-                buffer1.u32(666);buffer1.u32(666);buffer1.u32(666);buffer1.u32(666);                        
-                buffer1.u32(666);buffer1.u32(666);buffer1.u32(666);buffer1.u32(666);
-                buffer1.u32(666);buffer1.u32(666);buffer1.u32(666);buffer1.u32(666);
-                buffer1.u32(666);buffer1.u32(666);buffer1.u32(666);buffer1.u32(666);
+                buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);                        
+                buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);
+                buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);
+                buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);
 
-                buffer1.u32(666);buffer1.u32(666);buffer1.u32(666);buffer1.u32(666);
-                buffer1.u32(666);buffer1.u32(666);buffer1.u32(666);buffer1.u32(666);
-                buffer1.u32(666);buffer1.u32(666);buffer1.u32(666);buffer1.u32(666);
-                buffer1.u32(666);buffer1.u32(666);buffer1.u32(666);buffer1.u32(666);
+                buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);
+                buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);
+                buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);
+                buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);
 
-                buffer1.u32(666);buffer1.u32(666);buffer1.u32(666);buffer1.u32(666);
-                buffer1.u32(666);buffer1.u32(666);buffer1.u32(666);buffer1.u32(666);
-                buffer1.u32(666);buffer1.u32(666);buffer1.u32(666);buffer1.u32(666);
-                buffer1.u32(666);buffer1.u32(666);buffer1.u32(666);buffer1.u32(666);
+                buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);
+                buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);
+                buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);
+                buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);
 
-                buffer1.u32(666);buffer1.u32(666);buffer1.u32(666);buffer1.u32(666);
-                buffer1.u32(666);buffer1.u32(666);buffer1.u32(666);buffer1.u32(666);
-                buffer1.u32(666);buffer1.u32(666);buffer1.u32(666);buffer1.u32(666);
-                buffer1.u32(666);buffer1.u32(666);buffer1.u32(666);buffer1.u32(666);                                
+                buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);
+                buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);
+                buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);
+                buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);                                
             }
         }      
 
@@ -83,25 +83,25 @@ namespace NetStack.Serialization
         {
             for (int i = 0; i < N; i++)
             {
-                buffer3.u32(666);buffer3.u32(666);buffer3.u32(666);buffer3.u32(666);                        
-                buffer3.u32(666);buffer3.u32(666);buffer3.u32(666);buffer3.u32(666);
-                buffer3.u32(666);buffer3.u32(666);buffer3.u32(666);buffer3.u32(666);
-                buffer3.u32(666);buffer3.u32(666);buffer3.u32(666);buffer3.u32(666);
+                buffer3.i32(666);buffer3.i32(666);buffer3.i32(666);buffer3.i32(666);                        
+                buffer3.i32(666);buffer3.i32(666);buffer3.i32(666);buffer3.i32(666);
+                buffer3.i32(666);buffer3.i32(666);buffer3.i32(666);buffer3.i32(666);
+                buffer3.i32(666);buffer3.i32(666);buffer3.i32(666);buffer3.i32(666);
 
-                buffer3.u32(666);buffer3.u32(666);buffer3.u32(666);buffer3.u32(666);
-                buffer3.u32(666);buffer3.u32(666);buffer3.u32(666);buffer3.u32(666);
-                buffer3.u32(666);buffer3.u32(666);buffer3.u32(666);buffer3.u32(666);
-                buffer3.u32(666);buffer3.u32(666);buffer3.u32(666);buffer3.u32(666);
+                buffer3.i32(666);buffer3.i32(666);buffer3.i32(666);buffer3.i32(666);
+                buffer3.i32(666);buffer3.i32(666);buffer3.i32(666);buffer3.i32(666);
+                buffer3.i32(666);buffer3.i32(666);buffer3.i32(666);buffer3.i32(666);
+                buffer3.i32(666);buffer3.i32(666);buffer3.i32(666);buffer3.i32(666);
 
-                buffer3.u32(666);buffer3.u32(666);buffer3.u32(666);buffer3.u32(666);
-                buffer3.u32(666);buffer3.u32(666);buffer3.u32(666);buffer3.u32(666);
-                buffer3.u32(666);buffer3.u32(666);buffer3.u32(666);buffer3.u32(666);
-                buffer3.u32(666);buffer3.u32(666);buffer3.u32(666);buffer3.u32(666);
+                buffer3.i32(666);buffer3.i32(666);buffer3.i32(666);buffer3.i32(666);
+                buffer3.i32(666);buffer3.i32(666);buffer3.i32(666);buffer3.i32(666);
+                buffer3.i32(666);buffer3.i32(666);buffer3.i32(666);buffer3.i32(666);
+                buffer3.i32(666);buffer3.i32(666);buffer3.i32(666);buffer3.i32(666);
 
-                buffer3.u32(666);buffer3.u32(666);buffer3.u32(666);buffer3.u32(666);
-                buffer3.u32(666);buffer3.u32(666);buffer3.u32(666);buffer3.u32(666);
-                buffer3.u32(666);buffer3.u32(666);buffer3.u32(666);buffer3.u32(666);
-                buffer3.u32(666);buffer3.u32(666);buffer3.u32(666);buffer3.u32(666);                                
+                buffer3.i32(666);buffer3.i32(666);buffer3.i32(666);buffer3.i32(666);
+                buffer3.i32(666);buffer3.i32(666);buffer3.i32(666);buffer3.i32(666);
+                buffer3.i32(666);buffer3.i32(666);buffer3.i32(666);buffer3.i32(666);
+                buffer3.i32(666);buffer3.i32(666);buffer3.i32(666);buffer3.i32(666);                                
             }
         }            
     }

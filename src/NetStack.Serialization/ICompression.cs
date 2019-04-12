@@ -7,13 +7,16 @@ using UnityEngine;
 
 namespace NetStack.Serialization
 {
-    public interface ICompression<T> where T: IRaw
+    public interface ICompression<T> where T: IRawWriter
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         void u32(T b, u32 value); 
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        uint zigzag(int value);
     }
 
-    public interface IDecompression<T> where T: IRaw2
+    public interface IDecompression<T> where T: IRawReader
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         u32 u32(T b); 

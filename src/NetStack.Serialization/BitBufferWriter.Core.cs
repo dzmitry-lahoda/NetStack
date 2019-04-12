@@ -21,7 +21,7 @@ using UnityEngine;
 #endif
 namespace NetStack.Serialization
 {
-    partial class BitBufferWriter<T> : IRaw where T:unmanaged, ICompression<BitBufferWriter<T>> 
+    partial class BitBufferWriter<T> : IRawWriter where T:unmanaged, ICompression<BitBufferWriter<T>> 
     {
         // true if has not capacity to write numberOfBits
         public bool CannotAdd(int numberOfBits) => BitsWritten + numberOfBits > totalNumberBits;
@@ -147,8 +147,8 @@ namespace NetStack.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void i32(int value)
         {
-            uint zigzag = (uint)((value << 1) ^ (value >> 31));
-            u32(zigzag);
+            T encoder = default;
+            u32(encoder.zigzag(value));
         }
 
         /// <summary>
@@ -157,8 +157,8 @@ namespace NetStack.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void i32(int value, int numberOfBits)
         {
-            uint zigzag = (uint)((value << 1) ^ (value >> 31));
-            raw(zigzag, numberOfBits);
+            T encoder = default;
+            raw(encoder.zigzag(value), numberOfBits);
         }
     }
 }
