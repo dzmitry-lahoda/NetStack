@@ -22,7 +22,7 @@ namespace NetStack.Serialization
         [Fact]
         public void u8WriteRead()
         {
-            var writer = new BitBufferWriter();
+            var writer = new BitBufferWriter<SevenBit>();
             writer.u8(u8.MaxValue);
             writer.Finish();
             var allocated = new u8[ushort.MaxValue];
@@ -35,7 +35,7 @@ namespace NetStack.Serialization
         [Fact]
         public void u8MinMaxRequired()
         {
-            var buffer = new BitBufferWriter();
+            var buffer = new BitBufferWriter<SevenBit>();
             buffer.u8(123, 0, 201);
             buffer.u8(1);
             buffer.u8(42, 1, 43);
@@ -58,7 +58,7 @@ namespace NetStack.Serialization
         [Fact]
         public void u8MaxValueWritePeek()
         {
-            var writer = new BitBufferWriter();
+            var writer = new BitBufferWriter<SevenBit>();
             writer.u8(u8.MaxValue);
             var data = writer.ToArray();
             var reader = new BitBufferReader();
@@ -68,7 +68,7 @@ namespace NetStack.Serialization
         
         public void u8MaxValueWritePeek1024()
         {
-            var writer = new BitBufferWriter();
+            var writer = new BitBufferWriter<SevenBit>();
             writer.u8(u8.MaxValue);
             var data = writer.ToArray();
             var reader = new BitBufferReader();
@@ -82,7 +82,7 @@ namespace NetStack.Serialization
         [Fact]
         public void u8WritePeekRead256()
         {
-            var writer = new BitBufferWriter(1000);
+            var writer = new BitBufferWriter<SevenBit>(1000);
             for (int i = 0; i < 513; i++)
             {
                 //buffer.Addu8(i % 2 == 0 ? u8.MaxValue : (u8)0);
@@ -107,7 +107,7 @@ namespace NetStack.Serialization
         [Fact]
         public void u8WriteOutOfRange()
         {
-            var writer = new BitBufferWriter();
+            var writer = new BitBufferWriter<SevenBit>();
             Assert.Throws<ArgumentOutOfRangeException>(()=> writer.u8(125, 0, 123));
             Assert.Throws<ArgumentOutOfRangeException>(()=> writer.u8(1, 2, 123));
             Assert.Throws<ArgumentException>(()=> writer.u8(123, 2));

@@ -21,7 +21,7 @@ namespace NetStack.Serialization
         private const float SmallestThreePack = 1f / SmallestThreeUnpack;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void AddQuaternion(this BitBufferWriter self, Quaternion quaternion, int bitsPerComponent = 12)
+        public static void AddQuaternion(this BitBufferWriter<SevenBit> self, Quaternion quaternion, int bitsPerComponent = 12)
         {
             float halfrangeFloat = (1 << bitsPerComponent - 1);
             float packer = SmallestThreePack * halfrangeFloat;

@@ -9,7 +9,6 @@ using i32 = System.Int32;
 using i64 = System.Int64;
 using u8 = System.Byte;
 using u16 = System.UInt16;
-using u32 = System.UInt32;
 using u64 = System.UInt64;
 using f32 = System.Single;
 using f64 = System.Double;
@@ -22,6 +21,7 @@ using UnityEngine;
 
 namespace NetStack.Serialization
 {
+
     // core untyped data specific part of bit buffer
     public abstract partial class BitBuffer
     {

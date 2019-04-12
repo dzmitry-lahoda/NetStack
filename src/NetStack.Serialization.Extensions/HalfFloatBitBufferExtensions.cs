@@ -18,7 +18,7 @@ namespace NetStack.Serialization
     public static class HalfFloatBitBufferExtensions
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void AddHalfFloat(this BitBufferWriter self, float value)
+        public static void AddHalfFloat(this BitBufferWriter<SevenBit> self, float value)
         {
             self.raw(HalfPrecision.Compress(value), 16);
         }

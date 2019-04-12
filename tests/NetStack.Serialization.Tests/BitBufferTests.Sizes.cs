@@ -9,7 +9,7 @@ namespace NetStack.Serialization
         [Fact]
         public void Capacity()
         {
-            var writer = new BitBufferWriter(100);
+            var writer = new BitBufferWriter<SevenBit>(100);
             Assert.Equal(0, writer.LengthWritten);
             var received = new byte[2000];
             var reader = new BitBufferReader();
@@ -20,7 +20,7 @@ namespace NetStack.Serialization
         [Fact]
         public void BitsRead()
         {
-            var writer = new BitBufferWriter();
+            var writer = new BitBufferWriter<SevenBit>();
 
             Assert.Equal(0, writer.BitsWritten);
             writer.b(true);

@@ -9,7 +9,7 @@ namespace NetStack.Serialization
         [Fact]
         public void AngleHalf()
         {
-            var buffer = new BitBufferWriter();
+            var buffer = new BitBufferWriter<SevenBit>();
             var angle = 359.1f;
             buffer.AddHalfFloat(angle);
             Assert.Equal(16, buffer.BitsWritten);
@@ -23,7 +23,7 @@ namespace NetStack.Serialization
         [Fact]
         public void AngleLimitsAndTwoPrecision()
         {
-            var buffer = new BitBufferWriter();
+            var buffer = new BitBufferWriter<SevenBit>();
             var angle = 359.01f;
             buffer.f32(angle, 0f, 360f, 0.01f);
             Assert.Equal(16, buffer.BitsWritten);
@@ -37,7 +37,7 @@ namespace NetStack.Serialization
         [Fact]
         public void AngleZero()
         {
-            var buffer = new BitBufferWriter();
+            var buffer = new BitBufferWriter<SevenBit>();
             var angle = 0f;
             buffer.f32(angle);
             Assert.Equal(32, buffer.BitsWritten);
@@ -51,7 +51,7 @@ namespace NetStack.Serialization
         [Fact]
         public void AngleQuantization()
         {
-            var buffer = new BitBufferWriter();
+            var buffer = new BitBufferWriter<SevenBit>();
             var angle = 35901u;
             buffer.u32(angle, 0, 36000);
             Assert.Equal(16, buffer.BitsWritten);

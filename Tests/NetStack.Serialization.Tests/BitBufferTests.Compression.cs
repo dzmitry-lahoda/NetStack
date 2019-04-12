@@ -9,7 +9,7 @@ namespace NetStack.Serialization
         [Fact]
         public void BoolIsBit7()
         {
-            var buffer = new BitBufferWriter();
+            var buffer = new BitBufferWriter<SevenBit>();
             buffer.b(true);
             buffer.b(true);
             buffer.b(true);
@@ -23,7 +23,7 @@ namespace NetStack.Serialization
         [Fact]
         public void BoolIsBit9()
         {
-            var buffer = new BitBufferWriter();
+            var buffer = new BitBufferWriter<SevenBit>();
             buffer.b(true);
             buffer.b(true);
             buffer.b(true);
@@ -40,7 +40,7 @@ namespace NetStack.Serialization
         [Fact]
         public void ByteMax3()
         {
-            var buffer = new BitBufferWriter();
+            var buffer = new BitBufferWriter<SevenBit>();
             buffer.u8(byte.MaxValue);
             buffer.u8(byte.MaxValue);
             buffer.u8(byte.MaxValue);
@@ -50,7 +50,7 @@ namespace NetStack.Serialization
         [Fact]
         public void ByteMin3()
         {
-            var buffer = new BitBufferWriter();
+            var buffer = new BitBufferWriter<SevenBit>();
             buffer.u8(byte.MinValue);
             buffer.u8(byte.MinValue);
             buffer.u8(byte.MinValue);
@@ -60,7 +60,7 @@ namespace NetStack.Serialization
         [Fact]
         public void ByteMin8()
         {
-            var buffer = new BitBufferWriter();
+            var buffer = new BitBufferWriter<SevenBit>();
             buffer.u8(byte.MinValue);
             buffer.u8(byte.MinValue);
             buffer.u8(byte.MinValue);
@@ -75,7 +75,7 @@ namespace NetStack.Serialization
         [Fact]
         public void ByteRangeMin8()
         {
-            var buffer = new BitBufferWriter();
+            var buffer = new BitBufferWriter<SevenBit>();
             buffer.u8(byte.MinValue, 0, (byte)sbyte.MaxValue);
             buffer.u8(byte.MinValue, 0, (byte)sbyte.MaxValue);
             buffer.u8(byte.MinValue, 0, (byte)sbyte.MaxValue);
@@ -90,7 +90,7 @@ namespace NetStack.Serialization
         [Fact]
         public void ByteRangeMin8Max10()
         {
-            var buffer = new BitBufferWriter();
+            var buffer = new BitBufferWriter<SevenBit>();
             buffer.u8(byte.MinValue, 0, 10);
             buffer.u8(byte.MinValue, 0, 10);
             buffer.u8(byte.MinValue, 0, 10);
@@ -105,7 +105,7 @@ namespace NetStack.Serialization
         [Fact]
         public void ByteHalf()
         {
-            var buffer = new BitBufferWriter();
+            var buffer = new BitBufferWriter<SevenBit>();
             buffer.u8(byte.MaxValue / 2);
             buffer.u8(byte.MaxValue / 2);
             buffer.u8(byte.MaxValue / 2);
@@ -121,7 +121,7 @@ namespace NetStack.Serialization
         [Fact]
         public void ByteShortMin4()
         {
-            var buffer = new BitBufferWriter();
+            var buffer = new BitBufferWriter<SevenBit>();
             buffer.i16(short.MinValue);
             buffer.i16(short.MinValue);
             buffer.i16(short.MinValue);
@@ -132,7 +132,7 @@ namespace NetStack.Serialization
         [Fact]
         public void ByteShort0()
         {
-            var buffer = new BitBufferWriter();
+            var buffer = new BitBufferWriter<SevenBit>();
             buffer.i16(0);
             buffer.i16(0);
             buffer.i16(0);
@@ -143,7 +143,7 @@ namespace NetStack.Serialization
         [Fact]
         public void ShortMinMax4()
         {
-            var buffer = new BitBufferWriter();
+            var buffer = new BitBufferWriter<SevenBit>();
             buffer.i16(short.MaxValue, short.MinValue, short.MaxValue);
             buffer.i16(short.MaxValue, short.MinValue, short.MaxValue);
             buffer.i16(short.MaxValue, short.MinValue, short.MaxValue);
@@ -154,7 +154,7 @@ namespace NetStack.Serialization
         [Fact]
         public void UIntMax()
         {
-            var buffer = new BitBufferWriter();
+            var buffer = new BitBufferWriter<SevenBit>();
             buffer.u32(uint.MaxValue);
             Assert.Equal(5, buffer.LengthWritten);
         }
@@ -162,7 +162,7 @@ namespace NetStack.Serialization
         [Fact]
         public void UIntMin()
         {
-            var writer = new BitBufferWriter();
+            var writer = new BitBufferWriter<SevenBit>();
             writer.u32(uint.MinValue);
             Assert.Equal(1, writer.LengthWritten);
         }
@@ -170,7 +170,7 @@ namespace NetStack.Serialization
         [Fact]
         public void IntMaxValue4()
         {
-            var writer = new BitBufferWriter();
+            var writer = new BitBufferWriter<SevenBit>();
             writer.i32(int.MaxValue);
             writer.i32(int.MaxValue);
             writer.i32(int.MaxValue);
@@ -181,7 +181,7 @@ namespace NetStack.Serialization
         [Fact]
         public void IntZeroMaxValue4()
         {
-            var writer = new BitBufferWriter();
+            var writer = new BitBufferWriter<SevenBit>();
             writer.i32(int.MaxValue, 0, int.MaxValue);
             writer.i32(int.MaxValue, 0, int.MaxValue);
             writer.i32(int.MaxValue, 0, int.MaxValue);
@@ -192,7 +192,7 @@ namespace NetStack.Serialization
         [Fact]
         public void ShortMax4Divided()
         {
-            var writer = new BitBufferWriter();
+            var writer = new BitBufferWriter<SevenBit>();
             for (var i=0; i< 8;i++)
                 writer.i16(short.MaxValue/3);
                                   
@@ -202,7 +202,7 @@ namespace NetStack.Serialization
         [Fact]
         public void IntOfShortMax4Divided()
         {
-            var writer = new BitBufferWriter();
+            var writer = new BitBufferWriter<SevenBit>();
             for (var i=0; i< 8;i++)
                 writer.i32(short.MaxValue/3);
             Assert.Equal(24, writer.LengthWritten);
@@ -211,7 +211,7 @@ namespace NetStack.Serialization
         [Fact]
         public void ShortZeroMax4()
         {
-            var writer = new BitBufferWriter();
+            var writer = new BitBufferWriter<SevenBit>();
             writer.i16(short.MaxValue, 0, short.MaxValue);
             writer.i16(short.MaxValue, 0, short.MaxValue);
             writer.i16(short.MaxValue, 0, short.MaxValue);
@@ -222,7 +222,7 @@ namespace NetStack.Serialization
         [Fact]
         public void SByte0()
         {
-            var writer = new BitBufferWriter();
+            var writer = new BitBufferWriter<SevenBit>();
             writer.i8(0);
             writer.i8(0);
             writer.i8(0);
@@ -233,7 +233,7 @@ namespace NetStack.Serialization
         [Fact]
         public void SbyteMax4()
         {
-            var writer = new BitBufferWriter();
+            var writer = new BitBufferWriter<SevenBit>();
             writer.i8(sbyte.MaxValue);
             writer.i8(sbyte.MaxValue);
             writer.i8(sbyte.MaxValue);
@@ -248,7 +248,7 @@ namespace NetStack.Serialization
         [Fact]
         public void SByteZeroMax4()
         {
-            var writer = new BitBufferWriter();
+            var writer = new BitBufferWriter<SevenBit>();
             writer.i8(sbyte.MaxValue, 0, sbyte.MaxValue);
             writer.i8(sbyte.MaxValue, 0, sbyte.MaxValue);
             writer.i8(sbyte.MaxValue, 0, sbyte.MaxValue);

@@ -19,7 +19,7 @@ namespace NetStack.Serialization
         [Fact]
         public void ByteArrayWriteRead()
         {
-            var buffer = new BitBufferWriter();
+            var buffer = new BitBufferWriter<SevenBit>();
             var input = new byte[] { 1, 2, 3, 4, 5 };
             buffer.AddByteArray(input);
             buffer.Finish();
@@ -35,7 +35,7 @@ namespace NetStack.Serialization
         [Fact]
         public void ByteArrayMaxWriteRead()
         {
-            var buffer = new BitBufferWriter();
+            var buffer = new BitBufferWriter<SevenBit>();
             var input = new byte[buffer.Options.ByteArrLengthMax];
             buffer.AddByteArray(input);
             buffer.Finish();
@@ -49,7 +49,7 @@ namespace NetStack.Serialization
         [Fact]
         public void ToFromArrayPosition()
         {
-            var buffer = new BitBufferWriter();
+            var buffer = new BitBufferWriter<SevenBit>();
             var input = new byte[buffer.Options.ByteArrLengthMax];
             buffer.u8(13);
             buffer.i64(i64.MaxValue);

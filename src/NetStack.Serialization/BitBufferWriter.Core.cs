@@ -21,7 +21,7 @@ using UnityEngine;
 #endif
 namespace NetStack.Serialization
 {
-    partial class BitBufferWriter
+    partial class BitBufferWriter<T> : IRaw where T:unmanaged, ICompression<BitBufferWriter<T>> 
     {
         // true if has not capacity to write numberOfBits
         public bool CannotAdd(int numberOfBits) => BitsWritten + numberOfBits > totalNumberBits;
@@ -137,17 +137,8 @@ namespace NetStack.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void u32(uint value)
         {
-            do
-            {
-                var buffer = value & 0b0111_1111u;
-                value >>= 7;
-
-                if (value > 0)
-                    buffer |= 0b1000_0000u;
-
-                raw(buffer, 8);
-            }
-            while (value > 0);
+            T encoder = default;
+            encoder.u32(this, value);
         }
 
         /// <summary>

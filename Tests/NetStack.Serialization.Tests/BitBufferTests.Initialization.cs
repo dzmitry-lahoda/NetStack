@@ -19,7 +19,7 @@ namespace NetStack.Serialization
         [Fact]
         public void RandomManyTimes()
         {
-            var writer = new BitBufferWriter();
+            var writer = new BitBufferWriter<SevenBit>();
             var reader = new BitBufferReader();
             var random = new Random(42);
             for (var i = 0; i < i16.MaxValue; i++)
@@ -46,7 +46,7 @@ namespace NetStack.Serialization
         [Fact]
         public void ToArrayFromFrom()
         {
-            var writer = new BitBufferWriter(100);
+            var writer = new BitBufferWriter<SevenBit>(100);
             writer.i64(i64.MaxValue);
             writer.i32(i32.MaxValue);
             writer.i16(i16.MaxValue);
@@ -65,7 +65,7 @@ namespace NetStack.Serialization
         [Fact]
         public void ToSpanFromFrom()
         {
-            var writer = new BitBufferWriter(100);
+            var writer = new BitBufferWriter<SevenBit>(100);
             writer.i64(i64.MaxValue);
             writer.i32(i32.MaxValue);
             writer.i16(i16.MaxValue);

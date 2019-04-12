@@ -20,7 +20,7 @@ namespace NetStack.Serialization
         [Fact]
         public void i8ReadWrite()
         {
-            var writer = new BitBufferWriter();
+            var writer = new BitBufferWriter<SevenBit>();
             writer.i8(i8.MinValue);
             writer.i8(i8.MaxValue / 2);
             writer.i8(i8.MaxValue);
@@ -36,7 +36,7 @@ namespace NetStack.Serialization
         [Fact]
         public void i8ReadWriteLimits()
         {
-            var writer = new BitBufferWriter();
+            var writer = new BitBufferWriter<SevenBit>();
             writer.i8(13, 0, 14);
             writer.i8(2, 4);
             var bitsWritten = writer.BitsWritten;

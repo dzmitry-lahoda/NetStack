@@ -19,7 +19,7 @@ namespace NetStack.Serialization
         [Fact]
         public void u16ReadWrite()
         {
-            var writer = new BitBufferWriter();
+            var writer = new BitBufferWriter<SevenBit>();
             writer.u16(u16.MinValue);
             writer.u16(u16.MaxValue / 2);
             writer.u16(u16.MaxValue);
@@ -36,7 +36,7 @@ namespace NetStack.Serialization
         [Fact]
         public void u16ReadWriteLimits()
         {
-            var writer = new BitBufferWriter();
+            var writer = new BitBufferWriter<SevenBit>();
             writer.u16(2, 0, 10);
             writer.u16(1, 3);
             var data =writer.ToArray();

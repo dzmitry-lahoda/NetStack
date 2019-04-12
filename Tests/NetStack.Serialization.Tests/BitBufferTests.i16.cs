@@ -20,7 +20,7 @@ namespace NetStack.Serialization
         [Fact]
         public void i16ReadWrite()
         {
-            var writer = new BitBufferWriter();
+            var writer = new BitBufferWriter<SevenBit>();
             writer.i16(i16.MinValue);
             writer.i16(i16.MinValue / 2);
             writer.i16(0);
@@ -42,7 +42,7 @@ namespace NetStack.Serialization
         [Fact]
         public void i16ReadWriteLimits()
         {
-            var writer = new BitBufferWriter();
+            var writer = new BitBufferWriter<SevenBit>();
             writer.i16(-1, -2, 2);
             writer.i16(-1, 4);
             var allocated = new byte[i16.MaxValue];

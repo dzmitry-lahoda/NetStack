@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Numerics;
 using Xunit;
 using i8 = System.SByte;
@@ -12,20 +12,20 @@ using u64 = System.UInt64;
 using f32 = System.Single;
 using f64 = System.Double;
 
-
 namespace NetStack.Serialization
 {
     partial class BitBufferTests
     {
         [Fact]
-        public void f64ReadWrite()
+        public void Encodings()
         {
-            var writer = new BitBufferWriter<SevenBit>();
-            writer.f64(f64.MaxValue);
-            var data = writer.ToArray();
-            var reader = new BitBufferReader();
-            reader.FromArray(data);
-            Assert.Equal(f64.MaxValue, reader.f64());
+            var writer1 = new BitBufferWriter<SevenBit>();
+            var writer2 = new BitBufferWriter<NoEncoding>();
+            writer1.i32(i32.MaxValue);
+            writer2.i32(i32.MaxValue);
+            Assert.Equal(40, writer1.BitsWritten);
+            Assert.Equal(32, writer2.BitsWritten);
         }
+
     }
 }

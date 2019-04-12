@@ -11,7 +11,7 @@ namespace NetStack.Serialization
         [Fact]
         public void PeekBool()
         {
-            var writer = new BitBufferWriter();
+            var writer = new BitBufferWriter<SevenBit>();
             writer.b(true);
             var data = writer.ToArray();
             var reader = new BitBufferReader();
@@ -23,7 +23,7 @@ namespace NetStack.Serialization
         [Fact]
         public void BoolWritePeekRead1024()
         {
-            var write = new BitBufferWriter();
+            var write = new BitBufferWriter<SevenBit>();
             for (int i = 0; i < 1024; i++)
             {
                 write.b(true);
@@ -42,7 +42,7 @@ namespace NetStack.Serialization
         [Fact]
         public void BoolWritePeek128()
         {
-            var writer = new BitBufferWriter();
+            var writer = new BitBufferWriter<SevenBit>();
             writer.b(true);
             var data = writer.ToArray();
             var reader = new BitBufferReader();
@@ -54,7 +54,7 @@ namespace NetStack.Serialization
         [Fact]
         public void BoolReadWrite()
         {
-            var writer = new BitBufferWriter();
+            var writer = new BitBufferWriter<SevenBit>();
             writer.b(true);
             writer.Finish();
             var allocated = new byte[ushort.MaxValue];
@@ -67,7 +67,7 @@ namespace NetStack.Serialization
         [Fact]
         public void TrueFalseTrueReadWrite()
         {
-            var writer = new BitBufferWriter();
+            var writer = new BitBufferWriter<SevenBit>();
             writer.b(true);
             writer.b(false);
             writer.b(true);

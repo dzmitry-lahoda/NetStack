@@ -22,7 +22,7 @@ using UnityEngine;
 
 namespace NetStack.Serialization
 {
-    partial class BitBufferWriter
+    partial class BitBufferWriter<T>
     {
         /// <summary>
         /// Adds int value.
