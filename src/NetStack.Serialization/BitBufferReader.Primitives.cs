@@ -21,7 +21,7 @@ using UnityEngine;
 #endif
 namespace NetStack.Serialization
 {
-    partial class BitBufferReader
+    partial class BitBufferReader<T>
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool PeekBool()

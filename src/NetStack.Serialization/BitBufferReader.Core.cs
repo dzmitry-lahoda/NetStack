@@ -22,7 +22,8 @@ using UnityEngine;
 
 namespace NetStack.Serialization
 {
-    partial class BitBufferReader
+    partial class BitBufferReader<T> : IRaw2
+         where T:unmanaged, IDecompression<BitBufferReader<T>> 
     {        
         public bool CanReadMore => totalNumberBits > BitsRead;
     

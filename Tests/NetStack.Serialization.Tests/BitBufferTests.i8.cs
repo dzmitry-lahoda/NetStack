@@ -25,7 +25,7 @@ namespace NetStack.Serialization
             writer.i8(i8.MaxValue / 2);
             writer.i8(i8.MaxValue);
             var data = writer.ToArray();
-            var reader = new BitBufferReader();
+            var reader = new BitBufferReader<SevenBitRe>();
             reader.FromArray(data);
             Assert.Equal(i8.MinValue, reader.i8());
             i8 half = i8.MaxValue / 2;
@@ -41,7 +41,7 @@ namespace NetStack.Serialization
             writer.i8(2, 4);
             var bitsWritten = writer.BitsWritten;
             var data = writer.ToArray();
-            var reader = new BitBufferReader();
+            var reader = new BitBufferReader<SevenBitRe>();
             reader.FromArray(data);
             Assert.Equal(13, reader.i8(0, 14));
             Assert.Equal(2, reader.i8(4));

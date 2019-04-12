@@ -24,11 +24,11 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static float ReadHalfFloat(this BitBufferReader self) =>
+        public static float ReadHalfFloat(this BitBufferReader<SevenBitRe> self) =>
             HalfPrecision.Decompress((ushort)self.raw(16));        
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static float PeekHalfFloat(this BitBufferReader self) =>
+        public static float PeekHalfFloat(this BitBufferReader<SevenBitRe> self) =>
             HalfPrecision.Decompress((ushort)self.raw(16));
     }
 }

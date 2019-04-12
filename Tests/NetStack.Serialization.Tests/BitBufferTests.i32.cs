@@ -26,7 +26,7 @@ namespace NetStack.Serialization
             writer.Finish();
             var allocated = new byte[ushort.MaxValue];
             writer.ToArray(allocated);
-            var reader = new BitBufferReader(allocated.Length);
+            var reader = new BitBufferReader<SevenBitRe>(allocated.Length);
             reader.FromArray(allocated);
             Assert.Equal(int.MinValue, reader.i32());
             Assert.Equal(0, reader.i32());
@@ -45,7 +45,7 @@ namespace NetStack.Serialization
             writer.i32(0);
             var bitsWritten = writer.BitsWritten;
             var data = writer.ToArray();
-            var reader = new BitBufferReader();
+            var reader = new BitBufferReader<SevenBitRe>();
             reader.FromArray(data);
             Assert.Equal(12345, reader.i32(0, 123456));
             Assert.Equal(1, reader.i32());
@@ -69,7 +69,7 @@ namespace NetStack.Serialization
         [Fact]
         public void i32ReadOutOfRange()
         {
-            var reader = new BitBufferReader();
+            var reader = new BitBufferReader<SevenBitRe>();
             reader.FromArray(new u8[666]);
             Assert.Throws<ArgumentException>(()=> reader.i32(666, 123));
             Assert.Throws<ArgumentOutOfRangeException>(()=> reader.i32(-1));
@@ -79,7 +79,7 @@ namespace NetStack.Serialization
         [Fact]
         public void int32VerySmallReader()
         {
-            var smallReader = new BitBufferReader(1);
+            var smallReader = new BitBufferReader<SevenBitRe>(1);
             smallReader.FromArray(new u8[4]);
             smallReader.i32(i32.MinValue, i32.MaxValue);
             Assert.True(smallReader.BitsRead > 0);

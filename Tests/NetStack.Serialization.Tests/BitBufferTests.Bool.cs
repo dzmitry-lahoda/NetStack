@@ -14,7 +14,7 @@ namespace NetStack.Serialization
             var writer = new BitBufferWriter<SevenBit>();
             writer.b(true);
             var data = writer.ToArray();
-            var reader = new BitBufferReader();
+            var reader = new BitBufferReader<SevenBitRe>();
             reader.FromArray(data);
             Assert.True(reader.PeekBool());
             Assert.True(reader.b());
@@ -30,7 +30,7 @@ namespace NetStack.Serialization
             }
 
             var data = write.ToArray();
-            var reader = new BitBufferReader();
+            var reader = new BitBufferReader<SevenBitRe>();
             reader.FromArray(data);
             for (int i = 0; i < 1024; i++)
             {
@@ -45,7 +45,7 @@ namespace NetStack.Serialization
             var writer = new BitBufferWriter<SevenBit>();
             writer.b(true);
             var data = writer.ToArray();
-            var reader = new BitBufferReader();
+            var reader = new BitBufferReader<SevenBitRe>();
             reader.FromArray(data);
             for (int i = 0; i < 128; i++)
                 Assert.True(reader.PeekBool());
@@ -59,7 +59,7 @@ namespace NetStack.Serialization
             writer.Finish();
             var allocated = new byte[ushort.MaxValue];
             writer.ToArray(allocated);
-            var reader = new BitBufferReader(allocated.Length);
+            var reader = new BitBufferReader<SevenBitRe>(allocated.Length);
             reader.FromArray(allocated);
             Assert.True(reader.b());
         }
@@ -74,7 +74,7 @@ namespace NetStack.Serialization
             writer.Finish();
             var allocated = new byte[ushort.MaxValue];
             writer.ToArray(allocated);
-            var reader = new BitBufferReader(allocated.Length);
+            var reader = new BitBufferReader<SevenBitRe>(allocated.Length);
             reader.FromArray(allocated);
             Assert.True(reader.b());
             Assert.False(reader.b());

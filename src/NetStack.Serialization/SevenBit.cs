@@ -28,4 +28,26 @@ namespace NetStack.Serialization
             while (value > 0);
         }
     }
+
+    public struct SevenBitRe : IDecompression<BitBufferReader<SevenBitRe>>
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public u32 u32(BitBufferReader<SevenBitRe> b)
+        {
+            u32 buffer = 0x0u;
+            u32 value = 0x0u;
+            int shift = 0;
+
+            do
+            {
+                buffer = b.raw(8);
+
+                value |= (buffer & 0b0111_1111u) << shift;
+                shift += 7;
+            }
+            while ((buffer & 0b1000_0000u) > 0);
+
+            return value;
+        }
+    }
 }

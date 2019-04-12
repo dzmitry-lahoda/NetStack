@@ -21,21 +21,10 @@ using UnityEngine;
 #endif
 namespace NetStack.Serialization
 {
-    public interface IRaw
-    {
-        void raw(uint value, int numberOfBits);
-    }
-
-    public interface ICompression<T> where T:struct, IRaw
+    public struct SevenBit2: ICompression<GenricBitBufferWriter<SevenBit2>>
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        void u32(T b, u32 value); 
-    }
-
-    public struct SevenBit: ICompression<GenricBitBufferWriter<SevenBit>>
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void u32(GenricBitBufferWriter<SevenBit> b, u32 value)
+        public void u32(GenricBitBufferWriter<SevenBit2> b, u32 value)
         {
             do
             {
@@ -51,10 +40,10 @@ namespace NetStack.Serialization
         }
     }
 
-    public struct NoEncoding: ICompression<GenricBitBufferWriter<NoEncoding>>
+    public struct NoEncoding2: ICompression<GenricBitBufferWriter<NoEncoding2>>
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void u32(GenricBitBufferWriter<NoEncoding> b, u32 value)
+        public void u32(GenricBitBufferWriter<NoEncoding2> b, u32 value)
         {
             b.raw(value, 32);
         }

@@ -12,7 +12,7 @@ namespace NetStack.Serialization
             var writer = new BitBufferWriter<SevenBit>(100);
             Assert.Equal(0, writer.LengthWritten);
             var received = new byte[2000];
-            var reader = new BitBufferReader();
+            var reader = new BitBufferReader<SevenBitRe>();
             reader.FromArray(received);
             Assert.Equal(0, writer.LengthWritten);
         }
@@ -32,7 +32,7 @@ namespace NetStack.Serialization
             writer.i32(1234567890);
             Assert.Equal(73, writer.BitsWritten);
             var data = writer.ToArray();
-            var reader = new BitBufferReader();
+            var reader = new BitBufferReader<SevenBitRe>();
             reader.FromArray(data);
 
             Assert.Equal(0, reader.BitsRead);

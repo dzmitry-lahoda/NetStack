@@ -23,7 +23,7 @@ namespace NetStack.Serialization
             writer.u32(u32.MinValue);
             writer.u32(u32.MaxValue);
             var data = writer.ToArray();
-            var reader = new BitBufferReader();
+            var reader = new BitBufferReader<SevenBitRe>();
             reader.FromArray(data);
             Assert.Equal(u32.MinValue, reader.u32());
             Assert.Equal(u32.MaxValue, reader.u32());
@@ -36,7 +36,7 @@ namespace NetStack.Serialization
             writer.u32(123123, 0, 13213123);
             writer.u32(123, 20);
             var data =writer.ToArray();
-            var reader = new BitBufferReader();
+            var reader = new BitBufferReader<SevenBitRe>();
             reader.FromArray(data);
             Assert.Equal(123123u, reader.u32(0, 13213123));
             Assert.Equal(123u, reader.u32(20));

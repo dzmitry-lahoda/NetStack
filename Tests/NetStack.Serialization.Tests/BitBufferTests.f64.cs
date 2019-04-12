@@ -23,7 +23,7 @@ namespace NetStack.Serialization
             var writer = new BitBufferWriter<SevenBit>();
             writer.f64(f64.MaxValue);
             var data = writer.ToArray();
-            var reader = new BitBufferReader();
+            var reader = new BitBufferReader<SevenBitRe>();
             reader.FromArray(data);
             Assert.Equal(f64.MaxValue, reader.f64());
         }

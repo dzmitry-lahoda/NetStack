@@ -29,7 +29,7 @@ namespace NetStack.Serialization
             writer.Finish();
             var allocated = new byte[i16.MaxValue];
             writer.ToArray(allocated);
-            var reader = new BitBufferReader(allocated.Length);
+            var reader = new BitBufferReader<SevenBitRe>(allocated.Length);
             reader.FromArray(allocated);
             Assert.Equal(i16.MinValue, reader.i16());
             Assert.Equal(i16.MinValue / 2, reader.i16());
@@ -47,7 +47,7 @@ namespace NetStack.Serialization
             writer.i16(-1, 4);
             var allocated = new byte[i16.MaxValue];
             writer.ToArray(allocated);
-            var reader = new BitBufferReader(allocated.Length);
+            var reader = new BitBufferReader<SevenBitRe>(allocated.Length);
             reader.FromArray(allocated);
             Assert.Equal(-1, reader.i16(-2, 2));
             Assert.Equal(-1, reader.i16(4));

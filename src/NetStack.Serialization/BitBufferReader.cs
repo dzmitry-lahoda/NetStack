@@ -28,7 +28,7 @@ namespace NetStack.Serialization
     /// <summary>
     /// Bit level compression by ranged values.
     /// </summary>
-    public partial class BitBufferReader : BitBuffer
+    public partial class BitBufferReader<T> : BitBuffer
     {
         private BitBufferOptions config;
 

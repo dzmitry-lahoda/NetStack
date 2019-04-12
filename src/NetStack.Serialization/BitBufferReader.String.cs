@@ -23,7 +23,7 @@ using UnityEngine;
 namespace NetStack.Serialization
 {
     // GC allocated String stuff
-    partial class BitBufferReader
+    partial class BitBufferReader<T>
     {
       
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

@@ -43,7 +43,7 @@ namespace NetStack.Serialization
             writer.Finish();
             var allocated = new byte[ushort.MaxValue];
             writer.ToArray(allocated);
-            var reader = new BitBufferReader(allocated.Length);
+            var reader = new BitBufferReader<SevenBitRe>(allocated.Length);
             reader.FromArray(allocated);
             Assert.Equal("123456789", reader.String());
         }
@@ -55,7 +55,7 @@ namespace NetStack.Serialization
             writer.String("lahoda.prо/минск");
             var allocated = new byte[ushort.MaxValue];
             writer.ToArray(allocated);
-            var reader = new BitBufferReader(allocated.Length);
+            var reader = new BitBufferReader<SevenBitRe>(allocated.Length);
             reader.FromArray(allocated);
             Assert.Equal("lahoda.prо/минск", reader.String());
         }

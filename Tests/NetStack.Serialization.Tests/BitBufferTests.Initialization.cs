@@ -20,7 +20,7 @@ namespace NetStack.Serialization
         public void RandomManyTimes()
         {
             var writer = new BitBufferWriter<SevenBit>();
-            var reader = new BitBufferReader();
+            var reader = new BitBufferReader<SevenBitRe>();
             var random = new Random(42);
             for (var i = 0; i < i16.MaxValue; i++)
             {
@@ -51,7 +51,7 @@ namespace NetStack.Serialization
             writer.i32(i32.MaxValue);
             writer.i16(i16.MaxValue);
             var result = writer.ToArray();
-            var reader = new BitBufferReader();
+            var reader = new BitBufferReader<SevenBitRe>();
             reader.FromArray(result);
             Assert.Equal(i64.MaxValue, reader.i64());
             Assert.Equal(i32.MaxValue, reader.i32());
@@ -72,7 +72,7 @@ namespace NetStack.Serialization
             Span<byte> span = new byte[writer.LengthWritten];
             ReadOnlySpan<byte> read = span;
             writer.ToSpan(span);
-            var reader = new BitBufferReader();            
+            var reader = new BitBufferReader<SevenBitRe>();            
             reader.FromSpan(read);
             Assert.Equal(i64.MaxValue, reader.i64());
             Assert.Equal(i32.MaxValue, reader.i32());

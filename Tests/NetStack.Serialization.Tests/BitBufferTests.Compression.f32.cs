@@ -14,7 +14,7 @@ namespace NetStack.Serialization
             buffer.AddHalfFloat(angle);
             Assert.Equal(16, buffer.BitsWritten);
             var data = buffer.ToArray();
-            var reader = new BitBufferReader();
+            var reader = new BitBufferReader<SevenBitRe>();
             reader.FromArray(data);
             var result = reader.ReadHalfFloat();
             Assert.Equal(359, result);
@@ -28,7 +28,7 @@ namespace NetStack.Serialization
             buffer.f32(angle, 0f, 360f, 0.01f);
             Assert.Equal(16, buffer.BitsWritten);
             var data = buffer.ToArray();
-            var reader = new BitBufferReader();
+            var reader = new BitBufferReader<SevenBitRe>();
             reader.FromArray(data);
             var result = reader.f32(0f, 360f, 0.01f);
             Assert.Equal(359.01f, result, 2);
@@ -42,7 +42,7 @@ namespace NetStack.Serialization
             buffer.f32(angle);
             Assert.Equal(32, buffer.BitsWritten);
             var data = buffer.ToArray();
-            var reader = new BitBufferReader();
+            var reader = new BitBufferReader<SevenBitRe>();
             reader.FromArray(data);
             var result = reader.f32();
             Assert.Equal(0f, result, 1);
@@ -56,7 +56,7 @@ namespace NetStack.Serialization
             buffer.u32(angle, 0, 36000);
             Assert.Equal(16, buffer.BitsWritten);
             var data = buffer.ToArray();
-            var reader = new BitBufferReader();
+            var reader = new BitBufferReader<SevenBitRe>();
             reader.FromArray(data);
             var result = reader.f32(0f, 360f, 0.01f);
             Assert.Equal(359.01f, result, 2);

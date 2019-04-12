@@ -25,4 +25,9 @@ namespace NetStack.Serialization
     {
         void raw(uint value, int numberOfBits);
     }
+
+    public interface IRaw2
+    {
+        uint raw(int numberOfBits);
+    }
 }
