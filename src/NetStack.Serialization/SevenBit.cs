@@ -52,5 +52,8 @@ namespace NetStack.Serialization
 
             return value;
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public int zagzig(uint value) => (int)((value >> 1) ^ (-(int)(value & 1)));
     }
 }

@@ -20,5 +20,9 @@ namespace NetStack.Serialization
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         u32 u32(T b); 
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+
+        int zagzig(uint  value);
     }    
 }

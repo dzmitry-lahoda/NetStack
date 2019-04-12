@@ -27,5 +27,14 @@ namespace NetStack.Serialization
             Assert.Equal(32, writer2.BitsWritten);
         }
 
+        [Fact]
+        public void NoEncodings()
+        {
+            var writer = new BitBufferWriter<NoEncoding>();
+            writer.i32(i32.MaxValue);
+            var data = writer.ToArray();
+            var value = BitConverter.ToInt32(data, 0);
+            Assert.Equal(i32.MaxValue, value);
+        }        
     }
 }

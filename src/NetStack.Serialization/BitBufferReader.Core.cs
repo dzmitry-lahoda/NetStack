@@ -142,36 +142,24 @@ namespace NetStack.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public uint u32()
         {
-            uint buffer = 0x0u;
-            uint value = 0x0u;
-            int shift = 0;
-
-            do
-            {
-                buffer = raw(8);
-
-                value |= (buffer & 0b0111_1111u) << shift;
-                shift += 7;
-            }
-            while ((buffer & 0b1000_0000u) > 0);
-
-            return value;
+            T encoder = default;
+            return encoder.u32(this);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int i32()
         {
+            T encoder = default;
             uint value = u32();
-            int zagzig = (int)((value >> 1) ^ (-(int)(value & 1)));
-            return zagzig;
+            return encoder.zagzig(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int i32(int numberOfBits)
         {
+            T encoder = default;
             uint value = raw(numberOfBits);
-            int zagzig = (int)((value >> 1) ^ (-(int)(value & 1)));
-            return zagzig;
+            return encoder.zagzig(value);
         }
 
         // TODO: change API to be more safe on bit buffer operations (protect from misuse)
