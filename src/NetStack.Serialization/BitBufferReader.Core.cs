@@ -107,7 +107,7 @@ namespace NetStack.Serialization
         {
             T encoder = default;
             uint value = u32Peek();
-            return encoder.zagzig(value);
+            return encoder.decode(value);
         }
 
         /// <summary>
@@ -129,7 +129,7 @@ namespace NetStack.Serialization
         {
             T encoder = default;
             uint value = raw(numberOfBits);            
-            return encoder.zagzig(value);
+            return encoder.decode(value);
         }
 
         /// <summary>
@@ -147,7 +147,7 @@ namespace NetStack.Serialization
         {
             T encoder = default;
             uint value = u32();
-            return encoder.zagzig(value);
+            return encoder.decode(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -155,7 +155,7 @@ namespace NetStack.Serialization
         {
             T encoder = default;
             uint value = raw(numberOfBits);
-            return encoder.zagzig(value);
+            return encoder.decode(value);
         }
 
         // TODO: change API to be more safe on bit buffer operations (protect from misuse)

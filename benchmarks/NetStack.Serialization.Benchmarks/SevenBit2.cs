@@ -28,17 +28,15 @@ namespace NetStack.Serialization
     // circular constrained generics work on .NET Core as fast as manual code (even slightly faster on .NET Core 2.2 x86-64 if container is class)
     // Unity FPS samples has usage of constrained generic (and IL2CPP does LLVM) indicates these should work there to
     // going container to be struct seems to be more complex and permaturely (will wait C# 8)
-    public struct SevenBitEncoding : ICompression<BitBufferWriter<SevenBitEncoding>>
+    public struct SevenBitEncoding2 : ICompression<GenericBitBufferWriter<SevenBitEncoding2>>
     {
-        public void i32(BitBufferWriter<SevenBitEncoding> b, i32 value)
+        public void i32(GenericBitBufferWriter<SevenBitEncoding2> b, i32 value)
         {
-            // have tried to have only encode, with no i32 method, 
-            // but double layer of constrained generics does not propagate on .NET Core and leads to loss of performance
-            u32(b, encode(value));
+            u32(b, zigzag(value));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void u32(BitBufferWriter<SevenBitEncoding> b, u32 value)
+        public void u32(GenericBitBufferWriter<SevenBitEncoding2> b, u32 value)
         {
             do
             {
@@ -53,33 +51,8 @@ namespace NetStack.Serialization
             while (value > 0);
         }
 
-        // zig zag encoding 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public uint encode(i32 value) => (u32)((value << 1) ^ (value >> 31));
+        public uint zigzag(i32 value) => (u32)((value << 1) ^ (value >> 31));
     }
 
-    public struct SevenBitDecoding : IDecompression<BitBufferReader<SevenBitDecoding>>
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public u32 u32(BitBufferReader<SevenBitDecoding> b)
-        {
-            u32 buffer = 0x0u;
-            u32 value = 0x0u;
-            i32 shift = 0;
-
-            do
-            {
-                buffer = b.raw(8);
-
-                value |= (buffer & 0b0111_1111u) << shift;
-                shift += 7;
-            }
-            while ((buffer & 0b1000_0000u) > 0);
-
-            return value;
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public i32 decode(u32 value) => (i32)((value >> 1) ^ (-(i32)(value & 1)));
-    }
 }

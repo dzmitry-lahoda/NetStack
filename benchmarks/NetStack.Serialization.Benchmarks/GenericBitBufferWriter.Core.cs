@@ -21,40 +21,9 @@ using UnityEngine;
 #endif
 namespace NetStack.Serialization
 {
-    public struct SevenBit2: ICompression<GenricBitBufferWriter<SevenBit2>>
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void u32(GenricBitBufferWriter<SevenBit2> b, u32 value)
-        {
-            do
-            {
-                var buffer = value & 0b0111_1111u;
-                value >>= 7;
 
-                if (value > 0)
-                    buffer |= 0b1000_0000u;
 
-                b.raw(buffer, 8);
-            }
-            while (value > 0);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public uint zigzag(int value) => (uint)((value << 1) ^ (value >> 31));        
-    }
-
-    public struct NoEncoding2: ICompression<GenricBitBufferWriter<NoEncoding2>>
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void u32(GenricBitBufferWriter<NoEncoding2> b, u32 value)
-        {
-            b.raw(value, 32);
-        }
-
-        public uint zigzag(int value) => (uint)value;
-    }
-
-    partial struct GenricBitBufferWriter<T>: IRawWriter where T:unmanaged, ICompression<GenricBitBufferWriter<T>>
+    partial struct GenericBitBufferWriter<T>: IRawWriter where T:unmanaged, ICompression<GenericBitBufferWriter<T>>
     {
         // true if has not capacity to write numberOfBits
         public bool CannotAdd(int numberOfBits) => BitsWritten + numberOfBits > totalNumberBits;

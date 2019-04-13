@@ -9,6 +9,7 @@ using i32 = System.Int32;
 using i64 = System.Int64;
 using u8 = System.Byte;
 using u16 = System.UInt16;
+using u32 = System.UInt32;
 using u64 = System.UInt64;
 using f32 = System.Single;
 using f64 = System.Double;
@@ -25,15 +26,15 @@ namespace NetStack.Serialization
     // core untyped data specific part of bit buffer
     public abstract partial class BitBuffer
     {
-        public static int BitsRequired(int min, int max) =>
+        public static i32 BitsRequired(i32 min, i32 max) =>
             (min == max) ? 1 : BitOperations.Log2((uint)(max - min)) + 1;
 
-        public static int BitsRequired(uint min, uint max) =>
+        public static i32 BitsRequired(u32 min, u32 max) =>
             (min == max) ? 1 : BitOperations.Log2(max - min) + 1;
 
         protected uint[] chunks;        
-        protected int totalNumChunks;        
-        protected int totalNumberBits;  
+        protected i32 totalNumChunks;        
+        protected i32 totalNumberBits;  
         protected uint[] Chunks
         {
             set 
@@ -46,8 +47,8 @@ namespace NetStack.Serialization
 
 
         // bit index onto current head
-        protected int chunkIndex;
-        protected int scratchUsedBits;
+        protected i32 chunkIndex;
+        protected i32 scratchUsedBits;
         
         // last partially read value
         protected ulong scratch;
@@ -67,14 +68,14 @@ namespace NetStack.Serialization
         {
             var toStringBuilder = new StringBuilder(chunks.Length * 8);
 
-            for (int i = chunks.Length - 1; i >= 0; i--)
+            for (i32 i = chunks.Length - 1; i >= 0; i--)
             {
                 toStringBuilder.Append(Convert.ToString(chunks[i], 2).PadLeft(32, '0'));
             }
 
             var spaced = new StringBuilder();
 
-            for (int i = 0; i < toStringBuilder.Length; i++)
+            for (i32 i = 0; i < toStringBuilder.Length; i++)
             {
                 spaced.Append(toStringBuilder[i]);
 

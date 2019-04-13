@@ -28,7 +28,7 @@ namespace NetStack.Serialization
     /// <summary>
     /// Bit level compression by ranged values.
     /// </summary>
-    public partial struct GenricBitBufferWriter<T> 
+    public partial struct GenericBitBufferWriter<T> 
     {
                 public static int BitsRequired(int min, int max) =>
             (min == max) ? 1 : BitOperations.Log2((uint)(max - min)) + 1;
@@ -81,7 +81,7 @@ namespace NetStack.Serialization
         /// Call <see cref="FromArray"/> to reinitialize with copy of data.
         /// </summary>
         /// <param name="capacity">Count of 4 byte integers used as internal buffer.</param>
-        public GenricBitBufferWriter(i32 capacity = DefaultCapacityUInt, BitBufferOptions config = default)
+        public GenericBitBufferWriter(i32 capacity = DefaultCapacityUInt, BitBufferOptions config = default)
         : this(new u32[capacity], config)
         {
         }
@@ -90,7 +90,7 @@ namespace NetStack.Serialization
         /// Creates new instance with its own buffer. 
         /// </summary>
         /// <param name="buffer">Custom buffer.</param>
-        public GenricBitBufferWriter(u32[] buffer, BitBufferOptions config = default)
+        public GenericBitBufferWriter(u32[] buffer, BitBufferOptions config = default)
         {
             // TODO: try inline config as struct to improve access perfromance? Test it via benchmark
             this.config = config ?? defaultConfig;

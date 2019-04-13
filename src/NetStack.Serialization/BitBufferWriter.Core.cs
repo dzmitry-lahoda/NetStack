@@ -152,7 +152,7 @@ namespace NetStack.Serialization
         public void i32(int value)
         {
             T encoder = default;
-            u32(encoder.zigzag(value));
+            encoder.i32(this, value);
         }
 
         /// <summary>
@@ -162,7 +162,7 @@ namespace NetStack.Serialization
         public void i32(int value, int numberOfBits)
         {
             T encoder = default;
-            raw(encoder.zigzag(value), numberOfBits);
+            raw(encoder.encode(value), numberOfBits);
         }
     }
 }
