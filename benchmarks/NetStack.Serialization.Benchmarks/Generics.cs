@@ -24,7 +24,7 @@ namespace NetStack.Serialization
         }
 
         [Benchmark]
-        public void Generic()
+        public void SimpleGenericFastAsManual()
         {
             for (int i = 0; i < N; i++)
             {
@@ -52,7 +52,7 @@ namespace NetStack.Serialization
                 
 
         [Benchmark]
-        public void Concrete()
+        public void Generic7Bit()
         {
             for (int i = 0; i < N; i++)
             {

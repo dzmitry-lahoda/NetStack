@@ -139,7 +139,7 @@ namespace NetStack.Serialization
         /// Store seven right bits, if more than 8 with 1, then set 1 to continue.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void u32(uint value)
+        public void u32(u32 value)
         {
             T encoder = default;
             encoder.u32(this, value);

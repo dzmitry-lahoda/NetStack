@@ -1,9 +1,27 @@
+using System;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using System.Text;
+using static System.Except;
+using i8 = System.SByte;
+using i16 = System.Int16;
+using i32 = System.Int32;
+using i64 = System.Int64;
+using u8 = System.Byte;
+using u16 = System.UInt16;
 using u32 = System.UInt32;
+using u64 = System.UInt64;
+using f32 = System.Single;
+using f64 = System.Double;
 #if !(ENABLE_MONO || ENABLE_IL2CPP)
+using System.Diagnostics;
+using System.Numerics;
 #else
 using UnityEngine;
 #endif
+
+// Until migration to .NET Standard 2.1
+using BitOperations = System.Numerics.BitOperations;
 
 namespace NetStack.Serialization
 {
@@ -29,7 +47,7 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public uint zigzag(int value) => (uint)((value << 1) ^ (value >> 31));
+        public uint zigzag(i32 value) => (u32)((value << 1) ^ (value >> 31));
     }
 
     public struct SevenBitDecoding : IDecompression<BitBufferReader<SevenBitDecoding>>
@@ -39,7 +57,7 @@ namespace NetStack.Serialization
         {
             u32 buffer = 0x0u;
             u32 value = 0x0u;
-            int shift = 0;
+            i32 shift = 0;
 
             do
             {
@@ -54,6 +72,6 @@ namespace NetStack.Serialization
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public int zagzig(uint value) => (int)((value >> 1) ^ (-(int)(value & 1)));
+        public i32 zagzig(u32 value) => (i32)((value >> 1) ^ (-(i32)(value & 1)));
     }
 }
