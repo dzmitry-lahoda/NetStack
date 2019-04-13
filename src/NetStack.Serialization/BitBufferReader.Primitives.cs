@@ -37,21 +37,21 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public byte u8() => (byte)raw(8);
+        public u8 u8() => (u8)raw(8);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public byte u8(int numberOfBits) => (byte)u32(numberOfBits);
+        public u8 u8(int numberOfBits) => (u8)u32(numberOfBits);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public u8 u8(u8 min, u8 max) => (u8)u32(min, max);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public byte u8Peek()
+        public u8 u8Peek()
         {
             var tmp = scratch;
             var tmp2 = scratchUsedBits;
             var tmp3 = chunkIndex;
-            var result = (byte)raw(8);
+            var result = (u8)raw(8);
             tmp = scratch;
             tmp2 = scratchUsedBits;
             tmp3 = chunkIndex;
@@ -59,10 +59,10 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public byte u8Peek(i32 numberOfBits) => (byte)u32Peek(numberOfBits);
+        public u8 u8Peek(i32 numberOfBits) => (u8)u32Peek(numberOfBits);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public byte u8Peek(byte min, byte max) => (byte)u32Peek(min, max);
+        public u8 u8Peek(u8 min, u8 max) => (u8)u32Peek(min, max);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public sbyte i8() => (sbyte)i32(8);
@@ -138,16 +138,20 @@ namespace NetStack.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int PeekInt(int min, int max)
         {
-            Debug.Assert(min < max, "minus is not lower than max");
+#if DEBUG || NETSTACK_VALIDATE
+            if (min > max) throw Argument("min should not be not lower than max");
+#endif
 
             int bits = BitsRequired(min, max);
-            Debug.Assert(bits < totalNumberBits, "reading too many bits for requested range");
+ #if DEBUG || NETSTACK_VALIDATE
+            if (BitsRead + bits > totalNumberBits) throw ArgumentOutOfRange("Reading too many bits for requested range");
+#endif     
 
             return (int)(raw(bits) + min);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public uint u32(int numberOfBits) => raw(numberOfBits);
+        public u32 u32(int numberOfBits) => raw(numberOfBits);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public u32 u32(u32 min, u32 max)
@@ -168,10 +172,14 @@ namespace NetStack.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public u32 u32Peek(u32 min, u32 max)
         {
-            Debug.Assert(min < max, "minus is not lower than max");
+#if DEBUG || NETSTACK_VALIDATE
+            if (min > max) throw Argument("min should not be not lower than max");
+#endif
 
             int bits = BitsRequired(min, max);
-            Debug.Assert(bits < totalNumberBits, "reading too many bits for requested range");
+#if DEBUG || NETSTACK_VALIDATE
+            if (BitsRead + bits > totalNumberBits) throw ArgumentOutOfRange("Reading too many bits for requested range");
+#endif     
 
             return (raw(bits) + min);
         }
@@ -182,7 +190,7 @@ namespace NetStack.Serialization
             int low = i32();
             int high = i32();
             long value = high;
-            return value << 32 | (uint)low;
+            return value << 32 | (u32)low;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -195,8 +203,8 @@ namespace NetStack.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public ulong u64()
         {
-            uint low = u32();
-            uint high = u32();
+            u32 low = u32();
+            u32 high = u32();
             return (ulong)high << 32 | low;
         }
 
@@ -208,76 +216,76 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public float f32()
+        public f32 f32()
         {
             var value = raw(32);
-            return Unsafe.As<uint, float>(ref value);
+            return Unsafe.As<u32, f32>(ref value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public float f32(float min, float max, float precision)
+        public f32 f32(f32 min, f32 max, f32 precision)
         {
-            float range = max - min;
-            float invPrecision = 1.0f / precision;
-            float maxVal = range * invPrecision;
-            int numberOfBits = BitOperations.Log2((uint)(maxVal + 0.5f)) + 1;
+            f32 range = max - min;
+            f32 invPrecision = 1.0f / precision;
+            f32 maxVal = range * invPrecision;
+            int numberOfBits = BitOperations.Log2((u32)(maxVal + 0.5f)) + 1;
 
             return raw(numberOfBits) * precision + min;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public float f32(float min, float max, int numberOfBits)
+        public f32 f32(f32 min, f32 max, int numberOfBits)
         {
             var maxvalue = (1 << numberOfBits) - 1;
-            float range = max - min;
+            f32 range = max - min;
             var precision = range / maxvalue;
 
             return raw(numberOfBits) * precision + min;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public float PeekFloat(float min, float max, float precision)
+        public f32 f32Peek(f32 min, f32 max, f32 precision)
         {
-            float range = max - min;
-            float invPrecision = 1.0f / precision;
-            float maxVal = range * invPrecision;
-            int numberOfBits = BitOperations.Log2((uint)(maxVal + 0.5f)) + 1;
+            f32 range = max - min;
+            f32 invPrecision = 1.0f / precision;
+            f32 maxVal = range * invPrecision;
+            int numberOfBits = BitOperations.Log2((u32)(maxVal + 0.5f)) + 1;
 
             return raw(numberOfBits) * precision + min;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public float PeekFloat(float min, float max, int numberOfBits)
+        public f32 f32Peek(f32 min, f32 max, int numberOfBits)
         {
             var maxvalue = (1 << numberOfBits) - 1;
-            float range = max - min;
+            f32 range = max - min;
             var precision = range / maxvalue;
 
             return raw(numberOfBits) * precision + min;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public float PeekFloat()
+        public f32 f32Peek()
         {
             var value = raw(32);
-            return Unsafe.As<uint, float>(ref value);
+            return Unsafe.As<u32, f32>(ref value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public double f64()
+        public f64 f64()
         {
             var value = u64();
-            return Unsafe.As<ulong, double>(ref value);
+            return Unsafe.As<ulong, f64>(ref value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public double PeekDouble()
+        public f64 f64Peek()
         {
             var value = PeekULong();
-            return Unsafe.As<ulong, double>(ref value);
+            return Unsafe.As<ulong, f64>(ref value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public int PeekByteArrayLength() => (i32)raw(config.ByteArrLengthBits);
+        public int u8ArrayLengthPeek() => (i32)raw(config.ByteArrLengthBits);
     }
 }

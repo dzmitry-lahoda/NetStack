@@ -20,10 +20,10 @@ namespace NetStack.Serialization
         [Fact]
         public void f64ReadWrite()
         {
-            var writer = new BitBufferWriter<SevenBit>();
+            var writer = new BitBufferWriter<SevenBitEncoding>();
             writer.f64(f64.MaxValue);
             var data = writer.ToArray();
-            var reader = new BitBufferReader<SevenBitRe>();
+            var reader = new BitBufferReader<SevenBitDecoding>();
             reader.FromArray(data);
             Assert.Equal(f64.MaxValue, reader.f64());
         }

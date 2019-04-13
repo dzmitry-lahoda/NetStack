@@ -50,7 +50,9 @@ namespace NetStack.Serialization
         {
             if (scratchUsedBits != 0)
             {
-                Debug.Assert(chunkIndex < totalNumChunks, "buffer overflow when trying to finalize stream");
+                #if DEBUG || NETSTACK_VALIDATE
+                if (chunkIndex >= totalNumChunks) throw new IndexOutOfRangeException("buffer overflow when trying to finalize stream");
+                #endif
                 chunks[chunkIndex] = (uint)(scratch & 0xFFFFFFFF);
                 scratch >>= 32;
                 scratchUsedBits -= 32;
@@ -97,7 +99,9 @@ namespace NetStack.Serialization
 
             if (scratchUsedBits >= 32)
             {
-                Debug.Assert(chunkIndex < totalNumChunks, "Pushing failed, buffer is full.");
+                #if DEBUG || NETSTACK_VALIDATE
+                    if (chunkIndex >= totalNumChunks) throw new IndexOutOfRangeException("Pushing failed, buffer is full.");
+                #endif                
                 // TODO: how much it will cost to cast ref byte into ref uint and set scratch (to allow FromArray with no copy)
                 chunks[chunkIndex] = (uint)(scratch);
                 scratch >>= 32;

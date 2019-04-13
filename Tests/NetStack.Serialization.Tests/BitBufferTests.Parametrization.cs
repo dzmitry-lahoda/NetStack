@@ -19,7 +19,7 @@ namespace NetStack.Serialization
         [Fact]
         public void Encodings()
         {
-            var writer1 = new BitBufferWriter<SevenBit>();
+            var writer1 = new BitBufferWriter<SevenBitEncoding>();
             var writer2 = new BitBufferWriter<NoEncoding>();
             writer1.i32(i32.MaxValue);
             writer2.i32(i32.MaxValue);

@@ -27,7 +27,7 @@ namespace NetStack.Serialization
 {
     public partial class BitBufferReader<T>
     {
-        public void FromArray(byte[] data)
+        public void FromArray(u8[] data)
         {
             int length = data.Length;
             FromArray(data, 0, length);
@@ -36,7 +36,7 @@ namespace NetStack.Serialization
         /// <summary>
         /// Copies data from array.
         /// </summary>
-        public void FromArray(byte[] data, int position, int length)
+        public void FromArray(u8[] data, int position, int length)
         {
             // may throw here as not hot path
             if (length <= 0)
@@ -46,26 +46,21 @@ namespace NetStack.Serialization
 
             Clear();
 
-            var step = Unsafe.SizeOf<uint>();
+            var step = Unsafe.SizeOf<u32>();
             int numChunks = ((length - position) / step) + 1;
 
             if (chunks.Length < numChunks)
             {
-                Chunks = new uint[numChunks]; // call it once to stay expanded forever
+                Chunks = new u32[numChunks]; 
             }
 
             
-            // data must be 4 or 8 bytes long because 32 and 64 machines https://gafferongames.com/post/reading_and_writing_packets/
-            // TODO: possible to optimize to avoid copy? some kind of unsafe cast?
-            // TODO: try ulong for performance as most of devices will be 64 bit?
-            // https://github.com/nxrighthere/NetStack/issues/1#issuecomment-475212246
-            for (int i = 0; i < numChunks; i++)
-            {
-                int dataIdx = i * step;
-                uint chunk = 0;
 
-                // may optimize by calculating variable her and doing zero init of remaining blocks
-                // may reintepret unsafe as uint, and then if less than 3 then only read last as 1 2 3
+            for (var i = 0; i < numChunks; i++)
+            {
+                i32 dataIdx = i * step;
+                u32 chunk = 0;
+
                 if (dataIdx < length)
                     chunk = (uint)data[position + dataIdx];
 
@@ -81,9 +76,9 @@ namespace NetStack.Serialization
                 chunks[i] = chunk;
             }
         }
-        public void FromSpan(ReadOnlySpan<byte> data) => FromSpan(data, data.Length);
+        public void FromSpan(ReadOnlySpan<u8> data) => FromSpan(data, data.Length);
 
-        public void FromSpan(ReadOnlySpan<byte> data, int length)
+        public void FromSpan(ReadOnlySpan<u8> data, i32 length)
         {
             // may throw here as not hot path
             if (length <= 0)
@@ -97,14 +92,20 @@ namespace NetStack.Serialization
 
             if (chunks.Length < numChunks)
             {
-                Chunks = new uint[numChunks];
+                Chunks = new uint[numChunks]; // call it once to stay expanded forever
             }
 
+            // data must be 4 or 8 bytes long because 32 and 64 machines https://gafferongames.com/post/reading_and_writing_packets/
+            // TODO: possible to optimize to avoid copy? some kind of unsafe cast?
+            // TODO: try ulong for performance as most of devices will be 64 bit?
+            // https://github.com/nxrighthere/NetStack/issues/1#issuecomment-475212246
             for (int i = 0; i < numChunks; i++)
             {
                 int dataIdx = i * step;
                 uint chunk = 0;
                 // TODO: ref into data and do block copy of all 4bytes, copy only last 3 bytes by hand
+                // may optimize by calculating variable her and doing zero init of remaining blocks
+                // may reintepret unsafe as uint, and then if less than 3 then only read last as 1 2 3
                 if (dataIdx < length)
                     chunk = (uint)data[dataIdx];
 

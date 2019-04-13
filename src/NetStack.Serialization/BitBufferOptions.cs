@@ -25,27 +25,29 @@ using BitOperations = System.Numerics.BitOperations;
 
 namespace NetStack.Serialization
 {
-    public sealed class BitBufferOptions
+    public class  BitBufferOptions
     {
+        public static readonly BitBufferOptions Default = new BitBufferOptions(stringLengthBits: DefaultStringLengthBits, byteArrLengthBits: defaultByteArrLengthBits);
+
         private const int defaultByteArrLengthBits = 9;
 
         public const int DefaultStringLengthBits = 8;
 
-        private int byteArrLengthMax;
+        private readonly int byteArrLengthMax;
 
         public int ByteArrLengthMax => byteArrLengthMax;
 
         public int StringLengthMax => stringLengthMax;
 
-        private int byteArrLengthBits;
+        private readonly int byteArrLengthBits;
 
         public int ByteArrLengthBits => byteArrLengthBits;
 
-        private int stringLengthBits;
+        private readonly int stringLengthBits;
 
         public int StringLengthBits => stringLengthBits;
 
-        private int stringLengthMax;
+        private readonly int stringLengthMax;
 
         /// <summary>
         /// Creates new instance with its own buffer. 

@@ -22,21 +22,13 @@ using UnityEngine;
 
 namespace NetStack.Serialization
 {
-    // GC allocated String stuff
     partial class BitBufferReader<T>
     {
-      
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public string String()
-        {
-            builder.Length = 0;
-
-            String(builder);
-
-            return builder.ToString();
-        }
-
-        private void String(StringBuilder outVal)
+        /// <summary>
+        /// Reads string.`
+        /// </summary>
+        /// <param name="outVal">Span to fill</param>
+        public uint chars(Span<char> outVal)
         {
             uint codePage = raw(2);
             uint length = raw(config.StringLengthBits);
@@ -46,19 +38,19 @@ namespace NetStack.Serialization
                 case 0:
                     for (int i = 0; i < length; i++)
                     {
-                        outVal.Append((char)raw(bitsASCII));
+                        outVal[i] = (char)raw(bitsASCII);
                     }
                     break;
                 case 1:
                     for (int i = 0; i < length; i++)
                     {
-                        outVal.Append((char)raw(bitsLATIN1));
+                        outVal[i] = (char)raw(bitsLATIN1);
                     }
                     break;
                 case 2:
                     for (int i = 0; i < length; i++)
                     {
-                        outVal.Append((char)raw(bitsLATINEXT));
+                        outVal[i] = (char)raw(bitsLATINEXT);
                     }
                     break;
                 default:
@@ -66,12 +58,14 @@ namespace NetStack.Serialization
                     {
                         var needs16 = raw(1);
                         if (needs16 == 1)
-                            outVal.Append((char)raw(bitsUTF16));
+                           outVal[i] = (char)raw(bitsUTF16);
                         else
-                            outVal.Append((char)raw(bitsASCII));
+                           outVal[i] = (char)raw(bitsASCII);
                     }
                     break;
             }
+
+            return length;
         }
     }
 }

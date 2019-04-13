@@ -54,12 +54,11 @@ namespace NetStack.Serialization
         public BitBufferReader(uint[] buffer, BitBufferOptions config = default)
         {
             // TODO: try inline config as struct to improve access perfromance? Test it via benchmark
-            this.config = config ?? defaultConfig;
+            this.config = config == null  ? BitBufferOptions.Default : config;
             // not performance critical path so fine to check and throw
             if (buffer == null || buffer.Length == 0)
                 throw new ArgumentException("Buffer should be non null or empty", nameof(buffer));
 
-            builder = new StringBuilder(this.config.StringLengthMax);
             Chunks = buffer;
             Clear();
         }

@@ -22,6 +22,13 @@ namespace System
         public static ArgumentOutOfRangeException ArgumentOutOfRange(string message, Exception innerException) => 
             new ArgumentOutOfRangeException(message, innerException);
 
+        public static IndexOutOfRangeException IndexOutOfRange() => new IndexOutOfRangeException();
+
+        public static IndexOutOfRangeException IndexOutOfRange(string message) => 
+            new IndexOutOfRangeException(message);
+        public static IndexOutOfRangeException IndexOutOfRange(string message, Exception innerException) => 
+            new IndexOutOfRangeException(message, innerException);            
+
         public static ArgumentOutOfRangeException ArgumentOutOfRange(string paramName, string message) => 
             new ArgumentOutOfRangeException(paramName, message);            
 

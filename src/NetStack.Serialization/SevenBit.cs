@@ -10,10 +10,10 @@ namespace NetStack.Serialization
     // circular constrained generics work on .NET Core as fast as manual code (even slightly faster on .NET Core 2.2 x86-64 if container is class)
     // Unity FPS samples has usage of constrained generic (and IL2CPP does LLVM) indicates these should work there to
     // going container to be struct seems to be more complex and permaturely (will wait C# 8)
-    public struct SevenBit : ICompression<BitBufferWriter<SevenBit>>
+    public struct SevenBitEncoding : ICompression<BitBufferWriter<SevenBitEncoding>>
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void u32(BitBufferWriter<SevenBit> b, u32 value)
+        public void u32(BitBufferWriter<SevenBitEncoding> b, u32 value)
         {
             do
             {
@@ -32,10 +32,10 @@ namespace NetStack.Serialization
         public uint zigzag(int value) => (uint)((value << 1) ^ (value >> 31));
     }
 
-    public struct SevenBitRe : IDecompression<BitBufferReader<SevenBitRe>>
+    public struct SevenBitDecoding : IDecompression<BitBufferReader<SevenBitDecoding>>
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public u32 u32(BitBufferReader<SevenBitRe> b)
+        public u32 u32(BitBufferReader<SevenBitDecoding> b)
         {
             u32 buffer = 0x0u;
             u32 value = 0x0u;

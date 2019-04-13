@@ -11,14 +11,14 @@ namespace NetStack.Serialization
     {
         [Params(10000)]
         public int N;
-        private BitBufferWriter<SevenBit> buffer1;
+        private BitBufferWriter<SevenBitEncoding> buffer1;
         private GenricBitBufferWriter<SevenBit2> buffer2;
         private BitBufferWriter<NoEncoding> buffer3;
 
         [IterationSetup]
         public void GlobalSetup()
         {
-            buffer1 = new BitBufferWriter<SevenBit>(2_000_000);
+            buffer1 = new BitBufferWriter<SevenBitEncoding>(2_000_000);
             buffer2 = new GenricBitBufferWriter<SevenBit2>(2_000_000);
             buffer3 = new BitBufferWriter<NoEncoding>(2_000_000);
         }

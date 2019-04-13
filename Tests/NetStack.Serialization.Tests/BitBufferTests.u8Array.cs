@@ -19,13 +19,13 @@ namespace NetStack.Serialization
         [Fact]
         public void u8ArrayWriteRead()
         {
-            var writer = new BitBufferWriter<SevenBit>();
+            var writer = new BitBufferWriter<SevenBitEncoding>();
             var input = new byte[] { 1, 2, 3, 4, 5 };
             writer.u8(input);
             writer.Finish();
             var allocated = new u8[ushort.MaxValue];
             writer.ToArray(allocated);
-            var reader = new BitBufferReader<SevenBitRe>(allocated.Length);
+            var reader = new BitBufferReader<SevenBitDecoding>(allocated.Length);
             reader.FromArray(allocated);
             var output = new byte[5];
             var length = reader.u8(output);
@@ -35,31 +35,36 @@ namespace NetStack.Serialization
         [Fact]
         public void u8ArrayMaxWriteRead()
         {
-            var writer = new BitBufferWriter<SevenBit>();
+            var writer = new BitBufferWriter<SevenBitEncoding>();
             var input = new byte[writer.Options.ByteArrLengthMax];
             writer.u8(input);
-            writer.Finish();
             var allocated = new byte[ushort.MaxValue];
             writer.ToArray(allocated);
-            var reader = new BitBufferReader<SevenBitRe>(allocated.Length);
+            var reader = new BitBufferReader<SevenBitDecoding>(allocated.Length);
             reader.FromArray(allocated);
-            Assert.Equal(writer.Options.ByteArrLengthMax, reader.PeekByteArrayLength());
+            Assert.Equal(writer.Options.ByteArrLengthMax, reader.u8ArrayLengthPeek());
         }
 
         [Fact]
-        public void ToFromArrayPosition()
+        public void u8ArrayWriteLimit()
         {
-            var writer = new BitBufferWriter<SevenBit>();
+            var writer = new BitBufferWriter<SevenBitEncoding>();
+            var input = new byte[writer.Options.ByteArrLengthMax + 1];
+            Assert.Throws<ArgumentException>(()=> writer.u8(input));
+        }
+
+        [Fact]
+        public void u8ArrayReadLimit()
+        {
+            var writer = new BitBufferWriter<SevenBitEncoding>();
             var input = new byte[writer.Options.ByteArrLengthMax];
-            writer.u8(13);
-            writer.i64(i64.MaxValue);
-            writer.Finish();
-            var allocated = new byte[ushort.MaxValue];
-            writer.ToArray(allocated, 10, 100);
-            var reader = new BitBufferReader<SevenBitRe>(allocated.Length);
-            reader.FromArray(allocated, 10, 100);
-            Assert.Equal(13, reader.u8());
-            Assert.Equal(long.MaxValue, reader.i64());
+            writer.u8(input);
+            var data = writer.ToArray();
+            var reader = new BitBufferReader<SevenBitDecoding>();
+            reader.FromArray(data);
+            
+            Assert.Throws<ArgumentException>(()=> reader.u8(new byte[1]));
+            Assert.Throws<ArgumentException>(()=> reader.u8(new byte[writer.Options.ByteArrLengthMax], writer.Options.ByteArrLengthMax + 1 ));
         }
     }
 }

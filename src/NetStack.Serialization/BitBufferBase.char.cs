@@ -29,10 +29,7 @@ namespace NetStack.Serialization
         protected const int bitsLATIN1 = 8;
         protected const int bitsLATINEXT = 9;
         protected const int bitsUTF16 = 16;
-
-        protected StringBuilder builder;
-
-
+        
         internal enum CodePage : byte
         {
             Ascii = 0,
@@ -43,14 +40,11 @@ namespace NetStack.Serialization
 
         protected const int codePageBitsRequried = 2;
 
-        public static int BitsRequired(string value, int length, int bitLength = BitBufferOptions.DefaultStringLengthBits)
+        public static int BitsRequired(ReadOnlySpan<char> value, int length, int bitLength = BitBufferOptions.DefaultStringLengthBits)
         {
-#if DEBUG || NETSTACK_VALIDATE
-    if (value == null)
-    {
-        throw new ArgumentNullException(nameof(value));
-    }
-#endif
+            if (value.Length == 0)
+                return bitLength;
+                
             var codePage = CodePage.Ascii; 
             for (int i = 0; i < length; i++)
             {

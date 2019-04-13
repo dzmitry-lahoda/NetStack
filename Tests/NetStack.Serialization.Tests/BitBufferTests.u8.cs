@@ -22,12 +22,12 @@ namespace NetStack.Serialization
         [Fact]
         public void u8WriteRead()
         {
-            var writer = new BitBufferWriter<SevenBit>();
+            var writer = new BitBufferWriter<SevenBitEncoding>();
             writer.u8(u8.MaxValue);
             writer.Finish();
             var allocated = new u8[ushort.MaxValue];
             writer.ToArray(allocated);
-            var reader = new BitBufferReader<SevenBitRe>(allocated.Length);
+            var reader = new BitBufferReader<SevenBitDecoding>(allocated.Length);
             reader.FromArray(allocated);
             Assert.Equal(u8.MaxValue, reader.u8());
         }
@@ -35,7 +35,7 @@ namespace NetStack.Serialization
         [Fact]
         public void u8MinMaxRequired()
         {
-            var buffer = new BitBufferWriter<SevenBit>();
+            var buffer = new BitBufferWriter<SevenBitEncoding>();
             buffer.u8(123, 0, 201);
             buffer.u8(1);
             buffer.u8(42, 1, 43);
@@ -44,7 +44,7 @@ namespace NetStack.Serialization
             buffer.u8(0);
             var bitsWritten = buffer.BitsWritten;
             var data = buffer.ToArray();
-            var reader = new BitBufferReader<SevenBitRe>();
+            var reader = new BitBufferReader<SevenBitDecoding>();
             reader.FromArray(data);
             Assert.Equal(123, reader.u8(0, 201));
             Assert.Equal(1, reader.u8());
@@ -58,20 +58,20 @@ namespace NetStack.Serialization
         [Fact]
         public void u8MaxValueWritePeek()
         {
-            var writer = new BitBufferWriter<SevenBit>();
+            var writer = new BitBufferWriter<SevenBitEncoding>();
             writer.u8(u8.MaxValue);
             var data = writer.ToArray();
-            var reader = new BitBufferReader<SevenBitRe>();
+            var reader = new BitBufferReader<SevenBitDecoding>();
             reader.FromArray(data);
             Assert.Equal(u8.MaxValue, reader.u8Peek());
         }
         
         public void u8MaxValueWritePeek1024()
         {
-            var writer = new BitBufferWriter<SevenBit>();
+            var writer = new BitBufferWriter<SevenBitEncoding>();
             writer.u8(u8.MaxValue);
             var data = writer.ToArray();
-            var reader = new BitBufferReader<SevenBitRe>();
+            var reader = new BitBufferReader<SevenBitDecoding>();
             reader.FromArray(data);
             for (int i = 0; i < 1024; i++)
             {
@@ -82,7 +82,7 @@ namespace NetStack.Serialization
         [Fact]
         public void u8WritePeekRead256()
         {
-            var writer = new BitBufferWriter<SevenBit>(1000);
+            var writer = new BitBufferWriter<SevenBitEncoding>(1000);
             for (int i = 0; i < 513; i++)
             {
                 //buffer.Addu8(i % 2 == 0 ? u8.MaxValue : (u8)0);
@@ -90,7 +90,7 @@ namespace NetStack.Serialization
             }
 
             var data = writer.ToArray();
-            var reader = new BitBufferReader<SevenBitRe>();
+            var reader = new BitBufferReader<SevenBitDecoding>();
             reader.FromArray(data);
             for (int i = 0; i < 513; i++)
             {
@@ -107,7 +107,7 @@ namespace NetStack.Serialization
         [Fact]
         public void u8WriteOutOfRange()
         {
-            var writer = new BitBufferWriter<SevenBit>();
+            var writer = new BitBufferWriter<SevenBitEncoding>();
             Assert.Throws<ArgumentOutOfRangeException>(()=> writer.u8(125, 0, 123));
             Assert.Throws<ArgumentOutOfRangeException>(()=> writer.u8(1, 2, 123));
             Assert.Throws<ArgumentException>(()=> writer.u8(123, 2));
@@ -117,7 +117,7 @@ namespace NetStack.Serialization
         [Fact]
         public void u8ReadOutOfRange()
         {
-            var reader = new BitBufferReader<SevenBitRe>();
+            var reader = new BitBufferReader<SevenBitDecoding>();
             reader.FromArray(new u8[666]);
             Assert.Throws<ArgumentException>(()=> reader.u8(255, 123));
             Assert.Throws<ArgumentOutOfRangeException>(()=> reader.u8(-1));
@@ -127,7 +127,7 @@ namespace NetStack.Serialization
         [Fact]
         public void u8VerySmallReader()
         {
-            var smallReader = new BitBufferReader<SevenBitRe>(1);
+            var smallReader = new BitBufferReader<SevenBitDecoding>(1);
             smallReader.FromArray(new u8[4]);
             smallReader.u8(u8.MinValue, u8.MaxValue);
             Assert.True(smallReader.BitsRead > 0);

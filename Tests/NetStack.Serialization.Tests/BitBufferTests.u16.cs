@@ -19,13 +19,13 @@ namespace NetStack.Serialization
         [Fact]
         public void u16ReadWrite()
         {
-            var writer = new BitBufferWriter<SevenBit>();
+            var writer = new BitBufferWriter<SevenBitEncoding>();
             writer.u16(u16.MinValue);
             writer.u16(u16.MaxValue / 2);
             writer.u16(u16.MaxValue);
             var data = writer.ToArray();
             writer.ToArray();
-            var reader = new BitBufferReader<SevenBitRe>();
+            var reader = new BitBufferReader<SevenBitDecoding>();
             reader.FromArray(data);
             Assert.Equal(u16.MinValue, reader.u16());
             var half = u16.MaxValue / 2;
@@ -36,11 +36,11 @@ namespace NetStack.Serialization
         [Fact]
         public void u16ReadWriteLimits()
         {
-            var writer = new BitBufferWriter<SevenBit>();
+            var writer = new BitBufferWriter<SevenBitEncoding>();
             writer.u16(2, 0, 10);
             writer.u16(1, 3);
             var data =writer.ToArray();
-            var reader = new BitBufferReader<SevenBitRe>();
+            var reader = new BitBufferReader<SevenBitDecoding>();
             reader.FromArray(data);
             Assert.Equal(2, reader.i16(0, 10));
             Assert.Equal(1, reader.u16(3));

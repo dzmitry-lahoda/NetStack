@@ -24,22 +24,28 @@ namespace NetStack.Serialization
     partial class BitBufferReader<T>
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public int u8(byte[] outValue) => u8(outValue, 0);
+        public int u8(Span<u8> outValue) => u8(outValue, 0);
 
+        /// <summary>
+        /// Reads length prefixed array from buffer.
+        /// </summary>
+        /// <param name="outValue">Array to write into.</param>
+        /// <param name="offset">Byte offset of output array to start write</param>
+        /// <returns>Length of read array.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public int u8(byte[] outValue, int offset)
+        public int u8(Span<u8> outValue, int offset)
         {
-            outValue.NotNull();
-
             var length = (int)raw(config.ByteArrLengthBits);        
             if (totalNumberBits - BitsRead < length * 8)
                   throw InvalidOperation("The length for this read is bigger than bitbuffer");
 
-            if (length > outValue.Length + offset) 
+            // 1                    1        0   OK
+            // 1                    1        1   FAIL    
+             if (length > outValue.Length - offset) 
                 throw Argument(nameof(outValue), "The supplied byte array is too small for requested read");
 
             for (int index = offset; index < length; index++)
-                outValue[index] = u8(); // TODO: faste way to read?
+                outValue[index] = u8(); // TODO: can read faster if read by 4 bytes?
  
             return length;
         }  

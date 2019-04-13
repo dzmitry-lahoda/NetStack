@@ -19,8 +19,8 @@ namespace NetStack.Serialization
         [Fact]
         public void RandomManyTimes()
         {
-            var writer = new BitBufferWriter<SevenBit>();
-            var reader = new BitBufferReader<SevenBitRe>();
+            var writer = new BitBufferWriter<SevenBitEncoding>();
+            var reader = new BitBufferReader<SevenBitDecoding>();
             var random = new Random(42);
             for (var i = 0; i < i16.MaxValue; i++)
             {
@@ -46,12 +46,12 @@ namespace NetStack.Serialization
         [Fact]
         public void ToArrayFromFrom()
         {
-            var writer = new BitBufferWriter<SevenBit>(100);
+            var writer = new BitBufferWriter<SevenBitEncoding>(100);
             writer.i64(i64.MaxValue);
             writer.i32(i32.MaxValue);
             writer.i16(i16.MaxValue);
             var result = writer.ToArray();
-            var reader = new BitBufferReader<SevenBitRe>();
+            var reader = new BitBufferReader<SevenBitDecoding>();
             reader.FromArray(result);
             Assert.Equal(i64.MaxValue, reader.i64());
             Assert.Equal(i32.MaxValue, reader.i32());
@@ -65,14 +65,14 @@ namespace NetStack.Serialization
         [Fact]
         public void ToSpanFromFrom()
         {
-            var writer = new BitBufferWriter<SevenBit>(100);
+            var writer = new BitBufferWriter<SevenBitEncoding>(100);
             writer.i64(i64.MaxValue);
             writer.i32(i32.MaxValue);
             writer.i16(i16.MaxValue);
             Span<byte> span = new byte[writer.LengthWritten];
             ReadOnlySpan<byte> read = span;
             writer.ToSpan(span);
-            var reader = new BitBufferReader<SevenBitRe>();            
+            var reader = new BitBufferReader<SevenBitDecoding>();            
             reader.FromSpan(read);
             Assert.Equal(i64.MaxValue, reader.i64());
             Assert.Equal(i32.MaxValue, reader.i32());
@@ -82,5 +82,20 @@ namespace NetStack.Serialization
             Assert.Equal(i32.MaxValue, reader.i32());
             Assert.Equal(i16.MaxValue, reader.i16());
         }
+
+        [Fact]
+        public void ToFromArrayPosition()
+        {
+            var writer = new BitBufferWriter<SevenBitEncoding>();
+            writer.u8(13);
+            writer.i64(i64.MaxValue);
+            writer.Finish();
+            var allocated = new byte[ushort.MaxValue];
+            writer.ToArray(allocated, 10, 100);
+            var reader = new BitBufferReader<SevenBitDecoding>(allocated.Length);
+            reader.FromArray(allocated, 10, 100);
+            Assert.Equal(13, reader.u8());
+            Assert.Equal(long.MaxValue, reader.i64());
+        }        
     }
 }

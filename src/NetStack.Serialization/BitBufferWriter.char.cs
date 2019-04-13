@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Buffers;
 using static System.Except;
 using i8 = System.SByte;
 using i16 = System.Int16;
@@ -26,24 +27,21 @@ namespace NetStack.Serialization
     partial class BitBufferWriter<T>
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void String(string value)
+        public void chars(ReadOnlySpan<char> value)
         {
-            // non critical path (until string is one or couple of chars), so may consider throw
-            Debug.Assert(value != null, "String is null");
-            Debug.Assert(value.Length <= config.StringLengthMax, $"String too long, raise the {nameof(config.StringLengthBits)} value or split the string.");
+            if (value.Length > config.StringLengthMax)
+                        throw ArgumentOutOfRange($"String too long, raise the {nameof(config.StringLengthBits)} value or split the string.");
 
             int length = value.Length;
-            if (length > config.StringLengthMax)
-                length = config.StringLengthMax;
 
             if (length * 17 + 10 > (totalNumberBits - BitsWritten)) // possible overflow
             {
                 if (BitsRequired(value, length) > (totalNumberBits - BitsWritten))
-                    throw new ArgumentOutOfRangeException("String would not fit in bitstream.");
+                    throw ArgumentOutOfRange("String would not fit in bitstream.");
             }
 
             var codePage = CodePage.Ascii;
-            for (int i = 0; i < length; i++)
+            for (var i = 0; i < length; i++)
             {
                 var val = value[i];
                 if (val > 127)
@@ -61,31 +59,31 @@ namespace NetStack.Serialization
                 }
             }
 
-            raw((uint)codePage, codePageBitsRequried);
-            raw((uint)length, config.StringLengthBits);
+            raw((u32)codePage, codePageBitsRequried);
+            raw((u32)length, config.StringLengthBits);
 
             switch (codePage)
             {
                 case CodePage.Ascii:
-                    for (int i = 0; i < length; i++)
+                    for (var i = 0; i < length; i++)
                     {
                         raw(value[i], bitsASCII);
                     }
                     break;
                 case CodePage.Latin1:
-                    for (int i = 0; i < length; i++)
+                    for (var i = 0; i < length; i++)
                     {
                         raw(value[i], bitsLATIN1);
                     }
                     break;
                 case CodePage.LatinExtended:
-                    for (int i = 0; i < length; i++)
+                    for (var i = 0; i < length; i++)
                     {
                         raw(value[i], bitsLATINEXT);
                     }
                     break;
                 default:
-                    for (int i = 0; i < length; i++)
+                    for (var i = 0; i < length; i++)
                     {
                         if (value[i] > 127)
                         {

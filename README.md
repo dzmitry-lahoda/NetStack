@@ -33,7 +33,8 @@ All validation and exception are behind `#if DEBUG || NETSTACK_VALIDATE`.
     - TODO: add delta methods with small vs big delimeter 
     - TODO: allow plug custom compressor instead of 7bit encoding like (huffman Unity FPSSample in learning and ready alphabet encodings)
     - TODO: add custom visualizer or custom to string (to 01 to to hex)
-	- TODO: Given possible do delta of prediction. Should prediction API be part of serializer?
+  	- TODO: Given possible do delta of prediction. Should prediction API be part of serializer?
+	  - TODO: NETSTACK_ZEROSHARP to compile with not GC objects usage 
     - No Fluent interface as it gives performance overhead and does not improves override. May still accept it as pull of separate project.
 
 ### Optimization priorities
