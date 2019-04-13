@@ -41,7 +41,7 @@ namespace NetStack.Serialization
             var length = data.Length;
             Clear();
             var step = Unsafe.SizeOf<uint>();
-            int numChunks = (length / step) + 1;
+            i32 numChunks = (length / step) + 1;
 
             if (chunks.Length < numChunks)
             {
@@ -52,9 +52,9 @@ namespace NetStack.Serialization
             // TODO: possible to optimize to avoid copy? some kind of unsafe cast?
             // TODO: try ulong for performance as most of devices will be 64 bit?
             // https://github.com/nxrighthere/NetStack/issues/1#issuecomment-475212246
-            for (int i = 0; i < numChunks; i++)
+            for (i32 i = 0; i < numChunks; i++)
             {
-                int dataIdx = i * step;
+                i32 dataIdx = i * step;
                 u32 chunk = 0;
                 // TODO: ref into data and do block copy of all 4bytes, copy only last 3 bytes by hand
                 // may optimize by calculating variable her and doing zero init of remaining blocks

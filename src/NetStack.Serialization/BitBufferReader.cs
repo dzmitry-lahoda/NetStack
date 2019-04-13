@@ -35,14 +35,14 @@ namespace NetStack.Serialization
         public BitBufferOptions Options => config;
 
         private static BitBufferOptions defaultConfig = new BitBufferOptions();
-        public const int DefaultCapacityUInt = BitBufferLimits.MtuIeee802Dot3 / 4;
+        public const i32 DefaultCapacityUInt = BitBufferLimits.MtuIeee802Dot3 / 4;
 
         /// <summary>
         /// Creates new instance with its own buffer. Create once and reuse to avoid GC.
         /// Call <see cref="FromArray"/> to reinitialize with copy of data.
         /// </summary>
         /// <param name="capacity">Count of 4 byte integers used as internal buffer.</param>
-        public BitBufferReader(int capacity = DefaultCapacityUInt, BitBufferOptions config = default)
+        public BitBufferReader(i32 capacity = DefaultCapacityUInt, BitBufferOptions config = default)
         : this(new uint[capacity], config)
         {
         }

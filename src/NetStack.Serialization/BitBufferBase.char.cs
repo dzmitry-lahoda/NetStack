@@ -40,7 +40,7 @@ namespace NetStack.Serialization
 
         protected const i32 codePageBitsRequired = 2;
 
-        public static i32 BitsRequired(ReadOnlySpan<char> value, i32 length, i32 bitLength = BitBufferOptions.DefaultStringLengthBits)
+        public static i32 BitsRequired(ReadOnlySpan<char> value, i32 length, i32 bitLength = BitBufferOptions.DefaultCharSpanLengthBits)
         {
             if (value.Length == 0)
                 return bitLength;

@@ -24,15 +24,15 @@ namespace NetStack.Serialization
     partial class BitBufferWriter<T> : IRawWriter where T:unmanaged, ICompression<BitBufferWriter<T>> 
     {
         // true if has not capacity to write numberOfBits
-        public bool CannotAdd(int numberOfBits) => BitsWritten + numberOfBits > totalNumberBits;
+        public bool CannotAdd(i32 numberOfBits) => BitsWritten + numberOfBits > totalNumberBits;
 
         /// <summary>
         /// Count of written bytes.
         /// </summary>
-        public int LengthWritten => ((BitsWritten - 1) >> 3) + 1;
+        public i32 LengthWritten => ((BitsWritten - 1) >> 3) + 1;
 
         // total count of used bits since buffer start
-        public int BitsWritten
+        public i32 BitsWritten
         {
             get
             {
@@ -63,13 +63,13 @@ namespace NetStack.Serialization
         /// <summary>
         /// Hom much bits can be yet written into buffer before it <see cref="IsReadFinished"/>.
         /// </summary>
-        public int BitsAvailable => totalNumberBits - BitsWritten;
+        public i32 BitsAvailable => totalNumberBits - BitsWritten;
 
         /// <summary>
         /// Store value in specified number of bits.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void raw(u32 value, int numberOfBits)
+        public void raw(u32 value, i32 numberOfBits)
         {
 #if DEBUG || NETSTACK_VALIDATE
             if (numberOfBits <= 0)
@@ -88,7 +88,7 @@ namespace NetStack.Serialization
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void internalRaw(u32 value, int numberOfBits)
+        private void internalRaw(u32 value, i32 numberOfBits)
         {
             value &= (u32)((1ul << numberOfBits) - 1);
 
@@ -149,7 +149,7 @@ namespace NetStack.Serialization
         /// Store value ZigZag and 7 bits encoded.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void i32(int value)
+        public void i32(i32 value)
         {
             T encoder = default;
             encoder.i32(this, value);
@@ -159,7 +159,7 @@ namespace NetStack.Serialization
         /// Store value ZigZag encoded in number of bits.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void i32(int value, int numberOfBits)
+        public void i32(i32 value, i32 numberOfBits)
         {
             T encoder = default;
             raw(encoder.encode(value), numberOfBits);

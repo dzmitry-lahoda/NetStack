@@ -28,7 +28,7 @@ namespace NetStack.Serialization
         public bool CanReadMore => totalNumberBits > BitsRead;
     
         // total count of used bits since buffer start
-        public int BitsRead 
+        public i32 BitsRead 
         {
             get 
             {
@@ -70,7 +70,7 @@ namespace NetStack.Serialization
         /// Reads raw data.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public u32 raw(int numberOfBits)
+        public u32 raw(i32 numberOfBits)
         {
 #if DEBUG || NETSTACK_VALIDATE
             if (numberOfBits <= 0 || numberOfBits > 32) throw new ArgumentOutOfRangeException(nameof(numberOfBits), $"Should read from 1 to 32. Cannot read {numberOfBits}"); 
@@ -103,7 +103,7 @@ namespace NetStack.Serialization
         /// Reads int, but does not move cursor.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public int i32Peek()
+        public i32 i32Peek()
         {
             T encoder = default;
             u32 value = u32Peek();
@@ -122,10 +122,10 @@ namespace NetStack.Serialization
         }
 
         /// <summary>
-        /// Reads int value without progressing bits position.
+        /// Reads i32 value without progressing bits position.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public int i32Peek(int numberOfBits)
+        public i32 i32Peek(i32 numberOfBits)
         {
             T encoder = default;
             u32 value = raw(numberOfBits);            
@@ -143,7 +143,7 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public int i32()
+        public i32 i32()
         {
             T encoder = default;
             u32 value = u32();
@@ -151,7 +151,7 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public int i32(int numberOfBits)
+        public i32 i32(i32 numberOfBits)
         {
             T encoder = default;
             u32 value = raw(numberOfBits);
@@ -160,7 +160,7 @@ namespace NetStack.Serialization
 
         // TODO: change API to be more safe on bit buffer operations (protect from misuse)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void SetReadPosition(int bitsRead)
+        public void SetReadPosition(i32 bitsRead)
         {
 #if DEBUG || NETSTACK_VALIDATE        
         if (bitsRead < 0) throw new ArgumentException("Pushing negative bits", nameof(bitsRead));

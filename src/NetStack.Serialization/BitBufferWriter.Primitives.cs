@@ -25,7 +25,7 @@ namespace NetStack.Serialization
     partial class BitBufferWriter<T>
     {
         /// <summary>
-        /// Adds int value.
+        /// Adds i32 value.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void i32(i32 value, i32 min, i32 max)
@@ -70,13 +70,13 @@ namespace NetStack.Serialization
         public void u16(u16 value) => u32(value);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void u16(u16 value, int numberOfBits) => u32(value, numberOfBits);
+        public void u16(u16 value, i32 numberOfBits) => u32(value, numberOfBits);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void u16(u16 value, u16 min, u16 max) => u32(value, min, max);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void u32(u32 value, int numberOfBits) => raw(value, numberOfBits);
+        public void u32(u32 value, i32 numberOfBits) => raw(value, numberOfBits);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void u32(u32 value, u32 min, u32 max)
@@ -85,7 +85,7 @@ namespace NetStack.Serialization
             if (min >= max) throw Argument("min should be lower than max");
             if (value < min || value > max) throw ArgumentOutOfRange(nameof(value), $"Value should be withing provided {min} and {max} range");
 #endif
-            int bits = BitsRequired(min, max);
+            i32 bits = BitsRequired(min, max);
             raw(value - min, bits);
         }
 
@@ -120,7 +120,7 @@ namespace NetStack.Serialization
             float range = max - min;
             float invPrecision = 1.0f / precision;
             float maxVal = range * invPrecision;
-            int numberOfBits = BitOperations.Log2((u32)(maxVal + 0.5f)) + 1;
+            i32 numberOfBits = BitOperations.Log2((u32)(maxVal + 0.5f)) + 1;
             float adjusted = (value - min) * invPrecision;
             raw((u32)(adjusted + 0.5f), numberOfBits);
         }

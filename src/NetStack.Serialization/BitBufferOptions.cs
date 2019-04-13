@@ -27,11 +27,11 @@ namespace NetStack.Serialization
 {
     public class  BitBufferOptions
     {
-        public static readonly BitBufferOptions Default = new BitBufferOptions(stringLengthBits: DefaultStringLengthBits, byteArrLengthBits: defaultByteArrLengthBits);
+        public static readonly BitBufferOptions Default = new BitBufferOptions(stringLengthBits: DefaultCharSpanLengthBits, byteArrLengthBits: DefaultU8SpanLengthBits);
 
-        private const i32 defaultByteArrLengthBits = 9;
+        public const i32 DefaultU8SpanLengthBits = 9;
 
-        public const i32 DefaultStringLengthBits = 8;
+        public const i32 DefaultCharSpanLengthBits = 8;
 
         private readonly i32 byteArrLengthMax;
 
@@ -54,7 +54,7 @@ namespace NetStack.Serialization
         /// </summary>
         /// <param name="stringLengthBits">Bits used to store length of strings.</param>
         /// <param name="byteArrLengthBits">Bits used to store length of byte arrays.</param>
-        public BitBufferOptions(i32 stringLengthBits = DefaultStringLengthBits, i32 byteArrLengthBits = defaultByteArrLengthBits)
+        public BitBufferOptions(i32 stringLengthBits = DefaultCharSpanLengthBits, i32 byteArrLengthBits = DefaultU8SpanLengthBits)
         {
             if (stringLengthBits <= 0)
                 throw Argument("Should be positive", nameof(stringLengthBits));

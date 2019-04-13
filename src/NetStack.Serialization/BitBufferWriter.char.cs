@@ -32,7 +32,7 @@ namespace NetStack.Serialization
             if (value.Length > config.StringLengthMax)
                         throw ArgumentOutOfRange($"String too long, raise the {nameof(config.StringLengthBits)} value or split the string.");
 
-            int length = value.Length;
+            i32 length = value.Length;
 
             if (length * 17 + 10 > (totalNumberBits - BitsWritten)) // possible overflow
             {

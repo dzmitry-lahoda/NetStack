@@ -29,6 +29,6 @@ namespace NetStack.Serialization
 
     public interface IRawReader
     {
-        u32 raw(int numberOfBits);
+        u32 raw(i32 numberOfBits);
     }
 }
