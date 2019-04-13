@@ -27,7 +27,7 @@ namespace NetStack.Serialization
     public abstract partial class BitBuffer
     {
         public static i32 BitsRequired(i32 min, i32 max) =>
-            (min == max) ? 1 : BitOperations.Log2((uint)(max - min)) + 1;
+            (min == max) ? 1 : BitOperations.Log2((u32)(max - min)) + 1;
 
         public static i32 BitsRequired(u32 min, u32 max) =>
             (min == max) ? 1 : BitOperations.Log2(max - min) + 1;

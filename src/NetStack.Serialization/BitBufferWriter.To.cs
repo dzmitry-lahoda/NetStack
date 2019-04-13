@@ -80,7 +80,7 @@ namespace NetStack.Serialization
             for (int i = 0; i < numChunks; i++)
             {
                 int dataIdx = i * step;
-                uint chunk = chunks[i];
+                u32 chunk = chunks[i];
 
                 if (dataIdx < length)
                     data[position + dataIdx] = (byte)(chunk);
@@ -115,7 +115,7 @@ namespace NetStack.Serialization
             for (int i = 0; i < numChunks; i++)
             {
                 int dataIdx = i * step;
-                uint chunk = chunks[i];
+                u32 chunk = chunks[i];
 
                 if (dataIdx < length)
                     data[dataIdx] = (byte)(chunk);

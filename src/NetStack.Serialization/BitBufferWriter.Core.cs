@@ -53,7 +53,7 @@ namespace NetStack.Serialization
                 #if DEBUG || NETSTACK_VALIDATE
                 if (chunkIndex >= totalNumChunks) throw new IndexOutOfRangeException("buffer overflow when trying to finalize stream");
                 #endif
-                chunks[chunkIndex] = (uint)(scratch & 0xFFFFFFFF);
+                chunks[chunkIndex] = (u32)(scratch & 0xFFFFFFFF);
                 scratch >>= 32;
                 scratchUsedBits -= 32;
                 chunkIndex++;
@@ -69,7 +69,7 @@ namespace NetStack.Serialization
         /// Store value in specified number of bits.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void raw(uint value, int numberOfBits)
+        public void raw(u32 value, int numberOfBits)
         {
 #if DEBUG || NETSTACK_VALIDATE
             if (numberOfBits <= 0)
@@ -81,16 +81,16 @@ namespace NetStack.Serialization
             if (BitsWritten + numberOfBits > totalNumberBits)
                 throw InvalidOperation($"Writing {numberOfBits} bits will exceed maximal capacity of {totalNumberBits}, while {BitsWritten} bits written");
 
-            if (value > (uint)((1ul << numberOfBits) - 1))
+            if (value > (u32)((1ul << numberOfBits) - 1))
                 throw Argument(nameof(value), $"{value} is too big, won't fit in requested {numberOfBits} number of bits");
 #endif
             internalRaw(value, numberOfBits);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void internalRaw(uint value, int numberOfBits)
+        private void internalRaw(u32 value, int numberOfBits)
         {
-            value &= (uint)((1ul << numberOfBits) - 1);
+            value &= (u32)((1ul << numberOfBits) - 1);
 
             scratch |= ((ulong)value) << scratchUsedBits;
 
@@ -103,7 +103,7 @@ namespace NetStack.Serialization
                     if (chunkIndex >= totalNumChunks) throw new IndexOutOfRangeException("Pushing failed, buffer is full.");
                 #endif                
                 // TODO: how much it will cost to cast ref byte into ref uint and set scratch (to allow FromArray with no copy)
-                chunks[chunkIndex] = (uint)(scratch);
+                chunks[chunkIndex] = (u32)(scratch);
                 scratch >>= 32;
                 scratchUsedBits -= 32;
                 chunkIndex++;

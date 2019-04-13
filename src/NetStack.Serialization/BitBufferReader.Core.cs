@@ -58,7 +58,7 @@ namespace NetStack.Serialization
 #if DEBUG
             if (scratchUsedBits == 0) throw new InvalidOperationException("Too many bits requested from scratch");
 #endif
-            uint output = (uint)(scratch & 1);
+            u32 output = (u32)(scratch & 1);
 
             scratch >>= 1;
             scratchUsedBits -= 1;
@@ -70,7 +70,7 @@ namespace NetStack.Serialization
         /// Reads raw data.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public uint raw(int numberOfBits)
+        public u32 raw(int numberOfBits)
         {
 #if DEBUG || NETSTACK_VALIDATE
             if (numberOfBits <= 0 || numberOfBits > 32) throw new ArgumentOutOfRangeException(nameof(numberOfBits), $"Should read from 1 to 32. Cannot read {numberOfBits}"); 
@@ -91,7 +91,7 @@ namespace NetStack.Serialization
 #if DEBUG
             if (scratchUsedBits < numberOfBits) throw new InvalidOperationException("Too many bits requested from scratch");
 #endif
-            uint output = (uint)(scratch & ((((ulong)1) << numberOfBits) - 1));
+            u32 output = (u32)(scratch & ((((ulong)1) << numberOfBits) - 1));
 
             scratch >>= numberOfBits;
             scratchUsedBits -= numberOfBits;
@@ -106,7 +106,7 @@ namespace NetStack.Serialization
         public int i32Peek()
         {
             T encoder = default;
-            uint value = u32Peek();
+            u32 value = u32Peek();
             return encoder.decode(value);
         }
 
@@ -115,9 +115,9 @@ namespace NetStack.Serialization
         /// </summary>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public uint u32Peek()
+        public u32 u32Peek()
         {
-            uint value = u32();
+            u32 value = u32();
             return value;
         }
 
@@ -128,7 +128,7 @@ namespace NetStack.Serialization
         public int i32Peek(int numberOfBits)
         {
             T encoder = default;
-            uint value = raw(numberOfBits);            
+            u32 value = raw(numberOfBits);            
             return encoder.decode(value);
         }
 
@@ -136,7 +136,7 @@ namespace NetStack.Serialization
         /// Reads 7 bit encoded uint value.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public uint u32()
+        public u32 u32()
         {
             T encoder = default;
             return encoder.u32(this);
@@ -146,7 +146,7 @@ namespace NetStack.Serialization
         public int i32()
         {
             T encoder = default;
-            uint value = u32();
+            u32 value = u32();
             return encoder.decode(value);
         }
 
@@ -154,7 +154,7 @@ namespace NetStack.Serialization
         public int i32(int numberOfBits)
         {
             T encoder = default;
-            uint value = raw(numberOfBits);
+            u32 value = raw(numberOfBits);
             return encoder.decode(value);
         }
 

@@ -55,21 +55,21 @@ namespace NetStack.Serialization
             for (int i = 0; i < numChunks; i++)
             {
                 int dataIdx = i * step;
-                uint chunk = 0;
+                u32 chunk = 0;
                 // TODO: ref into data and do block copy of all 4bytes, copy only last 3 bytes by hand
                 // may optimize by calculating variable her and doing zero init of remaining blocks
                 // may reintepret unsafe as uint, and then if less than 3 then only read last as 1 2 3
                 if (dataIdx < length)
-                    chunk = (uint)data[dataIdx];
+                    chunk = (u32)data[dataIdx];
 
                 if (dataIdx + 1 < length)
-                    chunk = chunk | (uint)data[dataIdx + 1] << 8;
+                    chunk = chunk | (u32)data[dataIdx + 1] << 8;
 
                 if (dataIdx + 2 < length)
-                    chunk = chunk | (uint)data[dataIdx + 2] << 16;
+                    chunk = chunk | (u32)data[dataIdx + 2] << 16;
 
                 if (dataIdx + 3 < length)
-                    chunk = chunk | (uint)data[dataIdx + 3] << 24;
+                    chunk = chunk | (u32)data[dataIdx + 3] << 24;
 
                 chunks[i] = chunk;
             }

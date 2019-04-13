@@ -26,7 +26,7 @@ namespace NetStack.Serialization
     {
         public void i32(BitBufferWriter<NoEncoding> b, int value)
         {
-             b.raw((uint)value, 32);
+             b.raw((u32)value, 32);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -36,6 +36,6 @@ namespace NetStack.Serialization
         }
        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public uint encode(i32 value) => (u32)value;
+        public u32 encode(i32 value) => (u32)value;
     }
 }

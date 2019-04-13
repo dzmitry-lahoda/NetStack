@@ -55,7 +55,7 @@ namespace NetStack.Serialization
 
         // zig zag encoding 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public uint encode(i32 value) => (u32)((value << 1) ^ (value >> 31));
+        public u32 encode(i32 value) => (u32)((value << 1) ^ (value >> 31));
     }
 
     public struct SevenBitDecoding : IDecompression<BitBufferReader<SevenBitDecoding>>

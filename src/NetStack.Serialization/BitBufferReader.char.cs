@@ -28,10 +28,10 @@ namespace NetStack.Serialization
         /// Reads string.`
         /// </summary>
         /// <param name="outVal">Span to fill</param>
-        public uint chars(Span<char> outVal)
+        public u32 chars(Span<char> outVal)
         {
-            uint codePage = raw(2);
-            uint length = raw(config.StringLengthBits);
+            u32 codePage = raw(2);
+            u32 length = raw(config.StringLengthBits);
 
             switch (codePage)
             {

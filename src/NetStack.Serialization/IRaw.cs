@@ -23,11 +23,11 @@ namespace NetStack.Serialization
 {
     public interface IRawWriter
     {
-        void raw(uint value, int numberOfBits);
+        void raw(u32 value, int numberOfBits);
     }
 
     public interface IRawReader
     {
-        uint raw(int numberOfBits);
+        u32 raw(int numberOfBits);
     }
 }
