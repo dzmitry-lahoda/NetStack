@@ -278,29 +278,6 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void ReadByteArray(byte[] outValue) => ReadByteArray(outValue, out var length, 0);
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void ReadByteArray(byte[] outValue, out int length) => ReadByteArray(outValue, out length, 0);
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void ReadByteArray(byte[] outValue, out int length, int offset)
-        {
-            // may throw here consider array to be non one or couple of elements, but larger - not hot path
-            Debug.Assert(outValue != null, "Supplied bytearray is null");
-
-            length = (int)raw(config.ByteArrLengthBits);
-
-            //Debug.Assert(BitsPassed2 - bitsRead <= length * 8, "The length for this read is bigger than bitbuffer");
-            Debug.Assert(length <= outValue.Length + offset, "The supplied byte array is too small for requested read");
-
-            for (int index = offset; index < length; index++)
-            {
-                outValue[index] = u8();
-            }
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int PeekByteArrayLength() => (i32)raw(config.ByteArrLengthBits);
     }
 }

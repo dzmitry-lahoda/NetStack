@@ -72,10 +72,6 @@ namespace NetStack.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public uint raw(int numberOfBits)
         {
-#if DEBUG
-    var oldScratchUsedBits = scratchUsedBits;
-#endif
-
 #if DEBUG || NETSTACK_VALIDATE
             if (numberOfBits <= 0 || numberOfBits > 32) throw new ArgumentOutOfRangeException(nameof(numberOfBits), $"Should read from 1 to 32. Cannot read {numberOfBits}"); 
             if (BitsRead + numberOfBits > totalNumberBits)throw new InvalidOperationException("reading more bits than in buffer");
@@ -109,9 +105,9 @@ namespace NetStack.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int i32Peek()
         {
+            T encoder = default;
             uint value = u32Peek();
-            int zagzig = (int)((value >> 1) ^ (-(int)(value & 1)));
-            return zagzig;
+            return encoder.zagzig(value);
         }
 
         /// <summary>
@@ -131,9 +127,9 @@ namespace NetStack.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int i32Peek(int numberOfBits)
         {
-            uint value = raw(numberOfBits);
-            int zagzig = (int)((value >> 1) ^ (-(int)(value & 1)));
-            return zagzig;
+            T encoder = default;
+            uint value = raw(numberOfBits);            
+            return encoder.zagzig(value);
         }
 
         /// <summary>

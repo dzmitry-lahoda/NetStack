@@ -17,45 +17,45 @@ namespace NetStack.Serialization
     partial class BitBufferTests
     {
         [Fact]
-        public void ByteArrayWriteRead()
+        public void u8ArrayWriteRead()
         {
-            var buffer = new BitBufferWriter<SevenBit>();
+            var writer = new BitBufferWriter<SevenBit>();
             var input = new byte[] { 1, 2, 3, 4, 5 };
-            buffer.AddByteArray(input);
-            buffer.Finish();
-            var allocated = new byte[ushort.MaxValue];
-            buffer.ToArray(allocated);
+            writer.u8(input);
+            writer.Finish();
+            var allocated = new u8[ushort.MaxValue];
+            writer.ToArray(allocated);
             var reader = new BitBufferReader<SevenBitRe>(allocated.Length);
             reader.FromArray(allocated);
             var output = new byte[5];
-            reader.ReadByteArray(output, out var length);
+            var length = reader.u8(output);
             Assert.Equal(input, output);
         }
 
         [Fact]
-        public void ByteArrayMaxWriteRead()
+        public void u8ArrayMaxWriteRead()
         {
-            var buffer = new BitBufferWriter<SevenBit>();
-            var input = new byte[buffer.Options.ByteArrLengthMax];
-            buffer.AddByteArray(input);
-            buffer.Finish();
+            var writer = new BitBufferWriter<SevenBit>();
+            var input = new byte[writer.Options.ByteArrLengthMax];
+            writer.u8(input);
+            writer.Finish();
             var allocated = new byte[ushort.MaxValue];
-            buffer.ToArray(allocated);
+            writer.ToArray(allocated);
             var reader = new BitBufferReader<SevenBitRe>(allocated.Length);
             reader.FromArray(allocated);
-            Assert.Equal(buffer.Options.ByteArrLengthMax, reader.PeekByteArrayLength());
+            Assert.Equal(writer.Options.ByteArrLengthMax, reader.PeekByteArrayLength());
         }
 
         [Fact]
         public void ToFromArrayPosition()
         {
-            var buffer = new BitBufferWriter<SevenBit>();
-            var input = new byte[buffer.Options.ByteArrLengthMax];
-            buffer.u8(13);
-            buffer.i64(i64.MaxValue);
-            buffer.Finish();
+            var writer = new BitBufferWriter<SevenBit>();
+            var input = new byte[writer.Options.ByteArrLengthMax];
+            writer.u8(13);
+            writer.i64(i64.MaxValue);
+            writer.Finish();
             var allocated = new byte[ushort.MaxValue];
-            buffer.ToArray(allocated, 10, 100);
+            writer.ToArray(allocated, 10, 100);
             var reader = new BitBufferReader<SevenBitRe>(allocated.Length);
             reader.FromArray(allocated, 10, 100);
             Assert.Equal(13, reader.u8());
