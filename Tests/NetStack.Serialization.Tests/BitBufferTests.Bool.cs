@@ -15,7 +15,7 @@ namespace NetStack.Serialization
             writer.b(true);
             var data = writer.ToArray();
             var reader = new BitBufferReader<SevenBitDecoding>();
-            reader.FromArray(data);
+            reader.CopyFrom(data);
             Assert.True(reader.PeekBool());
             Assert.True(reader.b());
         }
@@ -31,7 +31,7 @@ namespace NetStack.Serialization
 
             var data = write.ToArray();
             var reader = new BitBufferReader<SevenBitDecoding>();
-            reader.FromArray(data);
+            reader.CopyFrom(data);
             for (int i = 0; i < 1024; i++)
             {
                 Assert.True(reader.PeekBool());
@@ -46,7 +46,7 @@ namespace NetStack.Serialization
             writer.b(true);
             var data = writer.ToArray();
             var reader = new BitBufferReader<SevenBitDecoding>();
-            reader.FromArray(data);
+            reader.CopyFrom(data);
             for (int i = 0; i < 128; i++)
                 Assert.True(reader.PeekBool());
         }
@@ -60,7 +60,7 @@ namespace NetStack.Serialization
             var allocated = new byte[ushort.MaxValue];
             writer.ToArray(allocated);
             var reader = new BitBufferReader<SevenBitDecoding>(allocated.Length);
-            reader.FromArray(allocated);
+            reader.CopyFrom(allocated);
             Assert.True(reader.b());
         }
 
@@ -75,7 +75,7 @@ namespace NetStack.Serialization
             var allocated = new byte[ushort.MaxValue];
             writer.ToArray(allocated);
             var reader = new BitBufferReader<SevenBitDecoding>(allocated.Length);
-            reader.FromArray(allocated);
+            reader.CopyFrom(allocated);
             Assert.True(reader.b());
             Assert.False(reader.b());
             Assert.True(reader.b());

@@ -38,7 +38,7 @@ namespace NetStack.Serialization
 
 
                 var result = writer.ToArray();
-                reader.FromArray(result);
+                reader.CopyFrom(result);
                 writer.Clear();
             }
         }
@@ -52,11 +52,11 @@ namespace NetStack.Serialization
             writer.i16(i16.MaxValue);
             var result = writer.ToArray();
             var reader = new BitBufferReader<SevenBitDecoding>();
-            reader.FromArray(result);
+            reader.CopyFrom(result);
             Assert.Equal(i64.MaxValue, reader.i64());
             Assert.Equal(i32.MaxValue, reader.i32());
             Assert.Equal(i16.MaxValue, reader.i16());
-            reader.FromArray(result);
+            reader.CopyFrom(result);
             Assert.Equal(i64.MaxValue, reader.i64());
             Assert.Equal(i32.MaxValue, reader.i32());
             Assert.Equal(i16.MaxValue, reader.i16());
@@ -73,11 +73,11 @@ namespace NetStack.Serialization
             ReadOnlySpan<byte> read = span;
             writer.ToSpan(span);
             var reader = new BitBufferReader<SevenBitDecoding>();            
-            reader.FromSpan(read);
+            reader.CopyFrom(read);
             Assert.Equal(i64.MaxValue, reader.i64());
             Assert.Equal(i32.MaxValue, reader.i32());
             Assert.Equal(i16.MaxValue, reader.i16());
-            reader.FromSpan(read);
+            reader.CopyFrom(read);
             Assert.Equal(i64.MaxValue, reader.i64());
             Assert.Equal(i32.MaxValue, reader.i32());
             Assert.Equal(i16.MaxValue, reader.i16());
@@ -93,7 +93,7 @@ namespace NetStack.Serialization
             var allocated = new byte[ushort.MaxValue];
             writer.ToArray(allocated, 10, 100);
             var reader = new BitBufferReader<SevenBitDecoding>(allocated.Length);
-            reader.FromArray(allocated, 10, 100);
+            reader.CopyFrom(new ReadOnlySpan<u8>(allocated, 10, 100));
             Assert.Equal(13, reader.u8());
             Assert.Equal(long.MaxValue, reader.i64());
         }        

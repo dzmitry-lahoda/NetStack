@@ -26,7 +26,7 @@ namespace NetStack.Serialization
             var data = writer.ToArray();
             writer.ToArray();
             var reader = new BitBufferReader<SevenBitDecoding>();
-            reader.FromArray(data);
+            reader.CopyFrom(data);
             Assert.Equal(u16.MinValue, reader.u16());
             var half = u16.MaxValue / 2;
             Assert.Equal(half, reader.u16());
@@ -41,7 +41,7 @@ namespace NetStack.Serialization
             writer.u16(1, 3);
             var data =writer.ToArray();
             var reader = new BitBufferReader<SevenBitDecoding>();
-            reader.FromArray(data);
+            reader.CopyFrom(data);
             Assert.Equal(2, reader.i16(0, 10));
             Assert.Equal(1, reader.u16(3));
         }           

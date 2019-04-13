@@ -26,7 +26,7 @@ namespace NetStack.Serialization
             var allocated = new u8[ushort.MaxValue];
             writer.ToArray(allocated);
             var reader = new BitBufferReader<SevenBitDecoding>(allocated.Length);
-            reader.FromArray(allocated);
+            reader.CopyFrom(allocated);
             var output = new byte[5];
             var length = reader.u8(output);
             Assert.Equal(input, output);
@@ -41,7 +41,7 @@ namespace NetStack.Serialization
             var allocated = new byte[ushort.MaxValue];
             writer.ToArray(allocated);
             var reader = new BitBufferReader<SevenBitDecoding>(allocated.Length);
-            reader.FromArray(allocated);
+            reader.CopyFrom(allocated);
             Assert.Equal(writer.Options.ByteArrLengthMax, reader.u8ArrayLengthPeek());
         }
 
@@ -61,7 +61,7 @@ namespace NetStack.Serialization
             writer.u8(input);
             var data = writer.ToArray();
             var reader = new BitBufferReader<SevenBitDecoding>();
-            reader.FromArray(data);
+            reader.CopyFrom(data);
             
             Assert.Throws<ArgumentException>(()=> reader.u8(new byte[1]));
             Assert.Throws<ArgumentException>(()=> reader.u8(new byte[writer.Options.ByteArrLengthMax], writer.Options.ByteArrLengthMax + 1 ));

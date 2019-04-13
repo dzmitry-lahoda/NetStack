@@ -37,7 +37,7 @@ namespace NetStack.Serialization
             var allocated = new byte[ushort.MaxValue];
             buffer.ToArray(allocated);
             var reader = new BitBufferReader<SevenBitDecoding>(allocated.Length);
-            reader.FromArray(allocated);
+            reader.CopyFrom(allocated);
             Assert.Equal(expected, reader.block<SimpleStruct>());
         }          
     }

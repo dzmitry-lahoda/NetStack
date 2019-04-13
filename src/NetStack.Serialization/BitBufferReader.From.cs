@@ -27,65 +27,18 @@ namespace NetStack.Serialization
 {
     public partial class BitBufferReader<T>
     {
-        public void FromArray(u8[] data)
-        {
-            int length = data.Length;
-            FromArray(data, 0, length);
-        }
-
         /// <summary>
         /// Copies data from array.
         /// </summary>
-        public void FromArray(u8[] data, int position, int length)
+        public void CopyFrom(ReadOnlySpan<u8> data)
         {
             // may throw here as not hot path
-            if (length <= 0)
-                throw new ArgumentException("Should be positive", nameof(length));
-            if (position < 0)
-                throw new ArgumentException("Should be non negative", nameof(position));
-
-            Clear();
-
-            var step = Unsafe.SizeOf<u32>();
-            int numChunks = ((length - position) / step) + 1;
-
-            if (chunks.Length < numChunks)
-            {
-                Chunks = new u32[numChunks]; 
-            }
-
-            
-
-            for (var i = 0; i < numChunks; i++)
-            {
-                i32 dataIdx = i * step;
-                u32 chunk = 0;
-
-                if (dataIdx < length)
-                    chunk = (uint)data[position + dataIdx];
-
-                if (dataIdx + 1 < length)
-                    chunk = chunk | (uint)data[position + dataIdx + 1] << 8;
-
-                if (dataIdx + 2 < length)
-                    chunk = chunk | (uint)data[position + dataIdx + 2] << 16;
-
-                if (dataIdx + 3 < length)
-                    chunk = chunk | (uint)data[position + dataIdx + 3] << 24;
-
-                chunks[i] = chunk;
-            }
-        }
-        public void FromSpan(ReadOnlySpan<u8> data) => FromSpan(data, data.Length);
-
-        public void FromSpan(ReadOnlySpan<u8> data, i32 length)
-        {
-            // may throw here as not hot path
-            if (length <= 0)
-                throw new ArgumentException("Should be positive", nameof(length));
+            if (data.Length == 0)
+                throw new ArgumentException("Should be positive", nameof(data.Length));
             if (data.Length <= 0)
                 throw new ArgumentException("Should be positive", nameof(data.Length));
-                
+            
+            var length = data.Length;
             Clear();
             var step = Unsafe.SizeOf<uint>();
             int numChunks = (length / step) + 1;
