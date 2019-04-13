@@ -106,8 +106,7 @@ namespace NetStack.Serialization
         public i32 i32Peek()
         {
             T encoder = default;
-            u32 value = u32Peek();
-            return encoder.decode(value);
+            return encoder.i32(this);
         }
 
         /// <summary>
@@ -138,16 +137,15 @@ namespace NetStack.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public u32 u32()
         {
-            T encoder = default;
-            return encoder.u32(this);
+            T decoder = default;
+            return decoder.u32(this);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public i32 i32()
         {
-            T encoder = default;
-            u32 value = u32();
-            return encoder.decode(value);
+            T dencoder = default;
+            return dencoder.i32(this);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

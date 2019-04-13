@@ -22,20 +22,30 @@ using UnityEngine;
 
 namespace NetStack.Serialization
 {
-    public struct NoEncoding : ICompression<BitBufferWriter<NoEncoding>>
+    public struct RawEncoding : ICompression<BitBufferWriter<RawEncoding>>
     {
-        public void i32(BitBufferWriter<NoEncoding> b, int value)
+        private const int NumberOfBits = 32;
+
+        public void i32(BitBufferWriter<RawEncoding> b, int value)
         {
-             b.raw((u32)value, 32);
+            b.raw((u32)value, NumberOfBits);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void u32(BitBufferWriter<NoEncoding> b, u32 value)
-        {
-            b.raw(value, 32);
-        }
-       
+        public void u32(BitBufferWriter<RawEncoding> b, u32 value) => b.raw(value, 32);
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public u32 encode(i32 value) => (u32)value;
+    }
+
+    public struct RawDecoding : IDecompression<BitBufferReader<RawDecoding>>
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public u32 u32(BitBufferReader<RawDecoding> b) => b.raw(32);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public i32 decode(u32 value) => (i32)value;
+
+        public i32 i32(BitBufferReader<RawDecoding> b) => decode(u32(b));
     }
 }

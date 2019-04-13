@@ -45,7 +45,6 @@ namespace NetStack.Serialization
         /// <summary>
         /// Call after all write commands.
         /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Finish()
         {
             if (scratchUsedBits != 0)

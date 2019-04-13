@@ -96,6 +96,25 @@ namespace NetStack.Serialization
             reader.CopyFrom(new ReadOnlySpan<u8>(allocated, 10, 100));
             Assert.Equal(13, reader.u8());
             Assert.Equal(long.MaxValue, reader.i64());
-        }        
+        }  
+
+        [Fact]
+        public void RawToEncoded()
+        {
+            var rawWriter = new BitBufferWriter<RawEncoding>();
+            rawWriter.i32(i32.MaxValue - 13);
+            rawWriter.u32(u32.MaxValue - 666);
+            var writer = new BitBufferWriter<SevenBitEncoding>(rawWriter);
+            writer.i32(i32.MaxValue - 13);
+            writer.u32(u32.MaxValue - 666);
+            var data = writer.ToArray();
+            var rawReader = new BitBufferReader<RawDecoding>();
+            rawReader.CopyFrom(data);
+            Assert.Equal(i32.MaxValue - 13, rawReader.i32());
+            Assert.Equal(u32.MaxValue - 666, rawReader.u32());
+            var reader = new BitBufferReader<SevenBitDecoding>(rawReader);
+            Assert.Equal(i32.MaxValue - 13, reader.i32());
+            Assert.Equal(u32.MaxValue - 666, reader.u32());            
+        }                 
     }
 }

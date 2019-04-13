@@ -20,7 +20,7 @@ namespace NetStack.Serialization
         public void Encodings()
         {
             var writer1 = new BitBufferWriter<SevenBitEncoding>();
-            var writer2 = new BitBufferWriter<NoEncoding>();
+            var writer2 = new BitBufferWriter<RawEncoding>();
             writer1.i32(i32.MaxValue);
             writer2.i32(i32.MaxValue);
             Assert.Equal(40, writer1.BitsWritten);
@@ -28,13 +28,26 @@ namespace NetStack.Serialization
         }
 
         [Fact]
-        public void NoEncodings()
+        public void NoEncodingsWrite()
         {
-            var writer = new BitBufferWriter<NoEncoding>();
+            var writer = new BitBufferWriter<RawEncoding>();
             writer.i32(i32.MaxValue);
             var data = writer.ToArray();
             var value = BitConverter.ToInt32(data, 0);
             Assert.Equal(i32.MaxValue, value);
-        }        
+        }
+
+        [Fact]
+        public void RawToEncodedReadWrite()
+        {
+            var rawWriter = new BitBufferWriter<RawEncoding>();
+            rawWriter.i32(i32.MaxValue - 13);
+            rawWriter.u32(u32.MaxValue - 666);
+            var rawReader = new BitBufferReader<RawDecoding>();
+            var data = rawWriter.ToArray();
+            rawReader.CopyFrom(data);
+            Assert.Equal(i32.MaxValue - 13, rawReader.i32());
+            Assert.Equal(u32.MaxValue - 666, rawReader.u32());
+        }
     }
 }

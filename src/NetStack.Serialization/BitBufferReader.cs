@@ -62,5 +62,29 @@ namespace NetStack.Serialization
             Chunks = buffer;
             Clear();
         }
+
+        public BitBufferReader(BitBuffer startFrom)
+        {
+            Chunks = startFrom.chunks;
+            scratch = startFrom.scratch;
+            scratchUsedBits = startFrom.scratchUsedBits;
+            chunkIndex = startFrom.chunkIndex;
+            Finish();
+        }
+
+        private void Finish()
+        {
+            if (scratchUsedBits != 0)
+            {
+                #if DEBUG || NETSTACK_VALIDATE
+                if (chunkIndex >= totalNumChunks) throw new IndexOutOfRangeException("buffer overflow when trying to finalize stream");
+                #endif
+                chunks[chunkIndex] = (u32)(scratch & 0xFFFFFFFF);
+                scratch >>= 32;
+                scratchUsedBits -= 32;
+                chunkIndex++;
+            }
+        }
+
     }
 }

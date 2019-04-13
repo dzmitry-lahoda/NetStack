@@ -61,5 +61,15 @@ namespace NetStack.Serialization
             Chunks = buffer;
             Clear();
         }
+
+
+        public BitBufferWriter(BitBuffer startFrom)
+        {
+            Chunks = startFrom.chunks;
+            scratch = startFrom.scratch;
+            scratchUsedBits = startFrom.scratchUsedBits;
+            chunkIndex = startFrom.chunkIndex;
+            Finish();
+        }
     }
 }

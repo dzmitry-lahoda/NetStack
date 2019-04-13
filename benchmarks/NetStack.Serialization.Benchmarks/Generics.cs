@@ -13,14 +13,14 @@ namespace NetStack.Serialization
         public int N;
         private BitBufferWriter<SevenBitEncoding> buffer1;
         private GenericBitBufferWriter<SevenBitEncoding2> buffer2;
-        private BitBufferWriter<NoEncoding> buffer3;
+        private BitBufferWriter<RawEncoding> buffer3;
 
         [IterationSetup]
         public void GlobalSetup()
         {
             buffer1 = new BitBufferWriter<SevenBitEncoding>(2_000_000);
             buffer2 = new GenericBitBufferWriter<SevenBitEncoding2>(2_000_000);
-            buffer3 = new BitBufferWriter<NoEncoding>(2_000_000);
+            buffer3 = new BitBufferWriter<RawEncoding>(2_000_000);
         }
 
         [Benchmark]

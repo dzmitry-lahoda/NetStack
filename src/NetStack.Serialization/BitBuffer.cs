@@ -26,16 +26,22 @@ namespace NetStack.Serialization
     // core untyped data specific part of bit buffer
     public abstract partial class BitBuffer
     {
+        internal BitBuffer()
+        {
+            
+        }
+
+
         public static i32 BitsRequired(i32 min, i32 max) =>
             (min == max) ? 1 : BitOperations.Log2((u32)(max - min)) + 1;
 
         public static i32 BitsRequired(u32 min, u32 max) =>
             (min == max) ? 1 : BitOperations.Log2(max - min) + 1;
 
-        protected uint[] chunks;        
+        protected internal uint[] chunks;        
         protected i32 totalNumChunks;        
         protected i32 totalNumberBits;  
-        protected uint[] Chunks
+        protected internal uint[] Chunks
         {
             set 
             {
@@ -47,11 +53,11 @@ namespace NetStack.Serialization
 
 
         // bit index onto current head
-        protected i32 chunkIndex;
-        protected i32 scratchUsedBits;
+        protected internal i32 chunkIndex;
+        protected internal i32 scratchUsedBits;
         
         // last partially read value
-        protected u64 scratch;
+        protected internal u64 scratch;
 
         /// <summary>
         /// Sets buffer cursor to zero. Can start writing again.
