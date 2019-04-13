@@ -20,8 +20,9 @@ namespace NetStack.Serialization
         private const float SmallestThreeUnpack = 0.70710678118654752440084436210485f + 0.0000001f; // addition to rounding to fit in -0....1023 instead of 0...1024
         private const float SmallestThreePack = 1f / SmallestThreeUnpack;
 
+        //https://gafferongames.com/post/snapshot_compression/
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void AddQuaternion(this BitBufferWriter<SevenBitEncoding> self, Quaternion quaternion, int bitsPerComponent = 12)
+        public static void quaternion(this BitBufferWriter<SevenBitEncoding> self, Quaternion quaternion, int bitsPerComponent = 12)
         {
             float halfrangeFloat = (1 << bitsPerComponent - 1);
             float packer = SmallestThreePack * halfrangeFloat;
@@ -126,7 +127,7 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Quaternion ReadQuaternion(this BitBufferReader<SevenBitDecoding> self, int bitsPerValue = 12)
+        public static Quaternion quaternion(this BitBufferReader<SevenBitDecoding> self, int bitsPerValue = 12)
         {
             int halfrange = (1 << bitsPerValue - 1); //  - 1
             float unpacker = SmallestThreeUnpack * (1f / halfrange);
@@ -160,10 +161,10 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Quaternion PeekQuaternion(this BitBufferReader<SevenBitDecoding> self, int bitsPerValue = 12)
+        public static Quaternion quaternionPeek(this BitBufferReader<SevenBitDecoding> self, int bitsPerValue = 12)
         {
             var curReadpos = self.BitsRead;
-            var value = self.ReadQuaternion(bitsPerValue);
+            var value = self.quaternion(bitsPerValue);
             self.SetReadPosition(curReadpos);          
             return value;
         }        

@@ -91,7 +91,7 @@ namespace NetStack.Serialization
             writer.i64(i64.MaxValue);
             writer.Finish();
             var allocated = new byte[ushort.MaxValue];
-            writer.ToArray(allocated, 10, 100);
+            writer.ToSpan(new Span<u8>(allocated, 10, 100));
             var reader = new BitBufferReader<SevenBitDecoding>(allocated.Length);
             reader.CopyFrom(new ReadOnlySpan<u8>(allocated, 10, 100));
             Assert.Equal(13, reader.u8());

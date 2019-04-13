@@ -50,7 +50,7 @@ namespace NetStack.Serialization
 #endif
             if (scratchUsedBits < 1)
             {
-                scratch |= ((ulong)(chunks[chunkIndex])) << scratchUsedBits;
+                scratch |= ((u64)(chunks[chunkIndex])) << scratchUsedBits;
                 scratchUsedBits += 32;
                 chunkIndex++;
             }
@@ -83,7 +83,7 @@ namespace NetStack.Serialization
 #if DEBUG || NETSTACK_VALIDATE                
                 if (chunkIndex >= totalNumChunks) throw new InvalidOperationException("reading more than buffer size");
 #endif
-                scratch |= ((ulong)(chunks[chunkIndex])) << scratchUsedBits;
+                scratch |= ((u64)(chunks[chunkIndex])) << scratchUsedBits;
                 scratchUsedBits += 32;
                 chunkIndex++;
             }
@@ -91,7 +91,7 @@ namespace NetStack.Serialization
 #if DEBUG
             if (scratchUsedBits < numberOfBits) throw new InvalidOperationException("Too many bits requested from scratch");
 #endif
-            u32 output = (u32)(scratch & ((((ulong)1) << numberOfBits) - 1));
+            u32 output = (u32)(scratch & ((((u64)1) << numberOfBits) - 1));
 
             scratch >>= numberOfBits;
             scratchUsedBits -= numberOfBits;

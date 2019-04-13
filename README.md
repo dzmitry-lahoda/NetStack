@@ -28,13 +28,12 @@ All validation and exception are behind `#if DEBUG || NETSTACK_VALIDATE`.
     - [Variable-length](https://rosettacode.org/wiki/Variable-length_quantity) encoding
     - TODO: optimize write of 2,3,4 bits values
     - TODO: allow to start write from where previous bit buffer finished (Unity FPSSample)
-    - TODO: allow for interfaces with constrained generic usage (Unity FPSSample) so can do RAW bytes write
     - TODO: allow zero copy read write by init from byte array, cast head into ref as uint
     - TODO: add delta methods with small vs big delimeter 
-    - TODO: allow plug custom compressor instead of 7bit encoding like (huffman Unity FPSSample in learning and ready alphabet encodings)
+    - TODO: allow huffman Unity FPSSample in learning and ready alphabet encodings
     - TODO: add custom visualizer or custom to string (to 01 to to hex)
   	- TODO: Given possible do delta of prediction. Should prediction API be part of serializer?
-	  - TODO: NETSTACK_ZEROSHARP to compile with not GC objects usage 
+  	- Core code allocates Exceptions when DEBUG or NETSTACK_VALIDATE
     - No Fluent interface as it gives performance overhead and does not improves override. May still accept it as pull of separate project.
 
 ### Optimization priorities
@@ -53,9 +52,7 @@ All validation and exception are behind `#if DEBUG || NETSTACK_VALIDATE`.
   - CyclicSequenceBuffer (from Gaffer on Games)
   - CyclicIdPool (from Gaffer on Games)
 
-
-
-NetStack utilized [1](https://vimeo.com/292969981) and [2](https://forum.unity.com/threads/showcase-enet-unity-ecs-5000-real-time-player-simulation.605656/) 
+Original NetStack was utilized [1](https://vimeo.com/292969981) and [2](https://forum.unity.com/threads/showcase-enet-unity-ecs-5000-real-time-player-simulation.605656/) 
 
 # Usage
 

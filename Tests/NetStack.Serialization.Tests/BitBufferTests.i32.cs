@@ -25,7 +25,7 @@ namespace NetStack.Serialization
             writer.i32(int.MaxValue);
             writer.Finish();
             var allocated = new byte[ushort.MaxValue];
-            writer.ToArray(allocated);
+            writer.ToSpan(allocated);
             var reader = new BitBufferReader<SevenBitDecoding>(allocated.Length);
             reader.CopyFrom(allocated);
             Assert.Equal(int.MinValue, reader.i32());

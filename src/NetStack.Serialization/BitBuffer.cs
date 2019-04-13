@@ -51,7 +51,7 @@ namespace NetStack.Serialization
         protected i32 scratchUsedBits;
         
         // last partially read value
-        protected ulong scratch;
+        protected u64 scratch;
 
         /// <summary>
         /// Sets buffer cursor to zero. Can start writing again.

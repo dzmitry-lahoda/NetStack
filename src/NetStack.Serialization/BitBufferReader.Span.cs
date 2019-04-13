@@ -24,6 +24,9 @@ namespace NetStack.Serialization
     partial class BitBufferReader<T>
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public int u8ArrayLengthPeek() => (i32)raw(config.ByteArrLengthBits);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int u8(Span<u8> outValue) => u8(outValue, 0);
 
         /// <summary>

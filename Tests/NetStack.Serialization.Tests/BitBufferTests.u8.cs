@@ -26,7 +26,7 @@ namespace NetStack.Serialization
             writer.u8(u8.MaxValue);
             writer.Finish();
             var allocated = new u8[ushort.MaxValue];
-            writer.ToArray(allocated);
+            writer.ToSpan(allocated);
             var reader = new BitBufferReader<SevenBitDecoding>(allocated.Length);
             reader.CopyFrom(allocated);
             Assert.Equal(u8.MaxValue, reader.u8());

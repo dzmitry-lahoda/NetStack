@@ -11,12 +11,12 @@ namespace NetStack.Serialization
         {
             var buffer = new BitBufferWriter<SevenBitEncoding>();
             var angle = 359.1f;
-            buffer.AddHalfFloat(angle);
+            buffer.f16(angle);
             Assert.Equal(16, buffer.BitsWritten);
             var data = buffer.ToArray();
             var reader = new BitBufferReader<SevenBitDecoding>();
             reader.CopyFrom(data);
-            var result = reader.ReadHalfFloat();
+            var result = reader.f16();
             Assert.Equal(359, result);
         }
 

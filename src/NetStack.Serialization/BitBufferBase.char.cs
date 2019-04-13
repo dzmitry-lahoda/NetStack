@@ -30,7 +30,7 @@ namespace NetStack.Serialization
         protected const int bitsLATINEXT = 9;
         protected const int bitsUTF16 = 16;
         
-        internal enum CodePage : byte
+        internal enum CodePage : u8
         {
             Ascii = 0,
             Latin1 = 1,
@@ -38,15 +38,15 @@ namespace NetStack.Serialization
             UTF16 = 3
         }
 
-        protected const int codePageBitsRequried = 2;
+        protected const i32 codePageBitsRequired = 2;
 
-        public static int BitsRequired(ReadOnlySpan<char> value, int length, int bitLength = BitBufferOptions.DefaultStringLengthBits)
+        public static i32 BitsRequired(ReadOnlySpan<char> value, i32 length, i32 bitLength = BitBufferOptions.DefaultStringLengthBits)
         {
             if (value.Length == 0)
                 return bitLength;
                 
             var codePage = CodePage.Ascii; 
-            for (int i = 0; i < length; i++)
+            for (var i = 0; i < length; i++)
             {
                 var val = value[i];
                 if (val > 127)
@@ -85,7 +85,7 @@ namespace NetStack.Serialization
                     break;
             }
 
-            return bitLength + codePageBitsRequried;
+            return bitLength + codePageBitsRequired;
         }
     }
 }

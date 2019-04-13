@@ -29,79 +29,11 @@ namespace NetStack.Serialization
     public partial class BitBufferWriter<T>
     {
         /// <summary>
-        /// Dot not use for production. GC allocated array.
-        /// </summary>
-        /// <returns></returns>
-        public byte[] ToArray()
-        {
-            var data = new byte[LengthWritten];
-            ToArray(data);
-            return data;
-        }
-
-        /// <summary>
-        /// Rents array 
-        /// </summary>
-        public byte[] ToArray(ArrayPool<byte> pool = null)
-        {
-            pool = pool ?? ArrayPool<byte>.Shared;
-            var data = pool.Rent(LengthWritten);
-            ToArray(data);
-            return data;
-        }        
-
-        /// <summary>
-        /// Calls <see cref="Finish"/> and copies all internal data into array.
-        /// </summary>
-        /// <param name="data">The output buffer.</param>
-        /// <returns>Count of bytes written.</returns>
-        public int ToArray(byte[] data)
-        {
-            int length = data.Length;
-            ToArray(data, 0, length);
-            return LengthWritten;
-        }
-
-        public void ToArray(byte[] data, int position, int length)
-        {
-            // may throw here as not hot path
-            if (length <= 0)
-                throw new ArgumentException("Should be positive", nameof(length));
-            if (position < 0)
-                throw new ArgumentException("Should be non negative", nameof(position));
-            var step = Unsafe.SizeOf<uint>();
-            raw(1, 1);
-            var bitsPassed = BitsWritten;
-
-            Finish();
-
-            int numChunks = (bitsPassed >> 5) + 1;
-
-            for (int i = 0; i < numChunks; i++)
-            {
-                int dataIdx = i * step;
-                u32 chunk = chunks[i];
-
-                if (dataIdx < length)
-                    data[position + dataIdx] = (byte)(chunk);
-
-                if (dataIdx + 1 < length)
-                    data[position + dataIdx + 1] = (byte)(chunk >> 8);
-
-                if (dataIdx + 2 < length)
-                    data[position + dataIdx + 2] = (byte)(chunk >> 16);
-
-                if (dataIdx + 3 < length)
-                    data[position + dataIdx + 3] = (byte)(chunk >> 24);
-            }
-        }
-
-        /// <summary>
         /// Calls <see cref="Finish"/> and copies all internal data into span.
         /// </summary>
         /// <param name="data">The output buffer.</param>
         /// <returns>Count of bytes written.</returns>
-        public int ToSpan(Span<byte> data)
+        public int ToSpan(Span<u8> data)
         {
             // may throw here as not hot path, check span length
 
@@ -111,12 +43,12 @@ namespace NetStack.Serialization
 
             int numChunks = (bitsPassed >> 5) + 1;
             int length = data.Length;
-            var step = Unsafe.SizeOf<uint>();
+            var step = Unsafe.SizeOf<u32>();
             for (int i = 0; i < numChunks; i++)
             {
                 int dataIdx = i * step;
                 u32 chunk = chunks[i];
-
+                // TODO: optimize by copying 4 byte in single call via Unsafe
                 if (dataIdx < length)
                     data[dataIdx] = (byte)(chunk);
 

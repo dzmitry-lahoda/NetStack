@@ -59,7 +59,7 @@ namespace NetStack.Serialization
                 }
             }
 
-            raw((u32)codePage, codePageBitsRequried);
+            raw((u32)codePage, codePageBitsRequired);
             raw((u32)length, config.StringLengthBits);
 
             switch (codePage)

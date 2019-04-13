@@ -29,38 +29,38 @@ namespace NetStack.Serialization
     {
         public static readonly BitBufferOptions Default = new BitBufferOptions(stringLengthBits: DefaultStringLengthBits, byteArrLengthBits: defaultByteArrLengthBits);
 
-        private const int defaultByteArrLengthBits = 9;
+        private const i32 defaultByteArrLengthBits = 9;
 
-        public const int DefaultStringLengthBits = 8;
+        public const i32 DefaultStringLengthBits = 8;
 
-        private readonly int byteArrLengthMax;
+        private readonly i32 byteArrLengthMax;
 
-        public int ByteArrLengthMax => byteArrLengthMax;
+        public i32 ByteArrLengthMax => byteArrLengthMax;
 
-        public int StringLengthMax => stringLengthMax;
+        public i32 StringLengthMax => stringLengthMax;
 
-        private readonly int byteArrLengthBits;
+        private readonly i32 byteArrLengthBits;
 
-        public int ByteArrLengthBits => byteArrLengthBits;
+        public i32 ByteArrLengthBits => byteArrLengthBits;
 
-        private readonly int stringLengthBits;
+        private readonly i32 stringLengthBits;
 
-        public int StringLengthBits => stringLengthBits;
+        public i32 StringLengthBits => stringLengthBits;
 
-        private readonly int stringLengthMax;
+        private readonly i32 stringLengthMax;
 
         /// <summary>
         /// Creates new instance with its own buffer. 
         /// </summary>
         /// <param name="stringLengthBits">Bits used to store length of strings.</param>
         /// <param name="byteArrLengthBits">Bits used to store length of byte arrays.</param>
-        public BitBufferOptions(int stringLengthBits = DefaultStringLengthBits, int byteArrLengthBits = defaultByteArrLengthBits)
+        public BitBufferOptions(i32 stringLengthBits = DefaultStringLengthBits, i32 byteArrLengthBits = defaultByteArrLengthBits)
         {
             if (stringLengthBits <= 0)
-                throw new ArgumentException("Should be positive", nameof(stringLengthBits));
+                throw Argument("Should be positive", nameof(stringLengthBits));
 
             if (byteArrLengthBits <= 0)
-                throw new ArgumentException("Should be positive", nameof(byteArrLengthBits));
+                throw Argument("Should be positive", nameof(byteArrLengthBits));
 
             // one time setup
             this.byteArrLengthBits = byteArrLengthBits;

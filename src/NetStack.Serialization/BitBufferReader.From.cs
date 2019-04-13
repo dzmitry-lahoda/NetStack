@@ -73,6 +73,11 @@ namespace NetStack.Serialization
 
                 chunks[i] = chunk;
             }
+
+            // TODO: write sets 1 bit in the end. so we may read all remaining zeroes, minis 1 bit for flag, and make total less
+            // TODO: should be do that at all? Consoder multiple buffers writing sequenctially or other length indicator (like prefix)
+            // var leadingZeros = BitOperations.LeadingZeroCount(data[length - 1]);
+            // totalNumberBits = 8 * length - leadingZeros - 1;
         }
     }
 }

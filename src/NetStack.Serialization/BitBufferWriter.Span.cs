@@ -25,23 +25,16 @@ namespace NetStack.Serialization
     partial class BitBufferWriter<T>
     {       
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void u8(u8[] value) => u8(value, 0, value.Length);
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void u8(u8[] value, i32 length) => u8(value, 0, length);
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void u8(u8[] value, i32 offset, i32 length)
+        public void u8(ReadOnlySpan<u8> value)
         {
-            value.NotNull();
-            if (length > config.ByteArrLengthMax) 
+            if (value.Length > config.ByteArrLengthMax) 
                 throw Argument($"Byte array too big, raise the {nameof(config.ByteArrLengthBits)} value or split the array.");
             
-            if (length + 9 > (totalNumberBits - BitsWritten))
+            if (value.Length + 9 > (totalNumberBits - BitsWritten))
                 throw InvalidOperation("Byte array too big for buffer.");
             
-            raw((u32)length, config.ByteArrLengthBits);
-            for (var index = offset; index < length; index++)
+            raw((u32)value.Length, config.ByteArrLengthBits);
+            for (var index = 0; index < value.Length; index++)
                 u8(value[index]);
         }        
     }

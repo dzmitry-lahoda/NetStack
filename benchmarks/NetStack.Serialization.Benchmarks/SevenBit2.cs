@@ -32,7 +32,7 @@ namespace NetStack.Serialization
     {
         public void i32(GenericBitBufferWriter<SevenBitEncoding2> b, i32 value)
         {
-            u32(b, zigzag(value));
+            u32(b, encode(value));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -52,7 +52,7 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public uint zigzag(i32 value) => (u32)((value << 1) ^ (value >> 31));
+        public uint encode(i32 value) => (u32)((value << 1) ^ (value >> 31));
     }
 
 }

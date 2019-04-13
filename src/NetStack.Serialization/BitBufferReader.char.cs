@@ -36,25 +36,25 @@ namespace NetStack.Serialization
             switch (codePage)
             {
                 case 0:
-                    for (int i = 0; i < length; i++)
+                    for (var i = 0; i < length; i++)
                     {
                         outVal[i] = (char)raw(bitsASCII);
                     }
                     break;
                 case 1:
-                    for (int i = 0; i < length; i++)
+                    for (var i = 0; i < length; i++)
                     {
                         outVal[i] = (char)raw(bitsLATIN1);
                     }
                     break;
                 case 2:
-                    for (int i = 0; i < length; i++)
+                    for (var i = 0; i < length; i++)
                     {
                         outVal[i] = (char)raw(bitsLATINEXT);
                     }
                     break;
                 default:
-                    for (int i = 0; i < length; i++)
+                    for (var i = 0; i < length; i++)
                     {
                         var needs16 = raw(1);
                         if (needs16 == 1)

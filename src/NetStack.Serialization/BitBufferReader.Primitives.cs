@@ -65,22 +65,22 @@ namespace NetStack.Serialization
         public u8 u8Peek(u8 min, u8 max) => (u8)u32Peek(min, max);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public sbyte i8() => (sbyte)i32(8);
+        public i8 i8() => (i8)i32(8);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public sbyte i8(int numberOfBits) => (sbyte)i32(numberOfBits);
+        public i8 i8(int numberOfBits) => (i8)i32(numberOfBits);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public sbyte i8(sbyte min, sbyte max) => (sbyte)i32(min, max);
+        public i8 i8(i8 min, i8 max) => (i8)i32(min, max);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public sbyte i8Peek() => (sbyte)raw(8);
+        public i8 i8Peek() => (i8)raw(8);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public sbyte i8Peek(int numberOfBits) => (sbyte)i32Peek(numberOfBits);
+        public i8 i8Peek(int numberOfBits) => (i8)i32Peek(numberOfBits);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public sbyte i8Peek(sbyte min, sbyte max) => (sbyte)PeekInt(min, max);
+        public i8 i8Peek(i8 min, i8 max) => (i8)PeekInt(min, max);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public i16 i16() => (i16)i32();
@@ -92,13 +92,13 @@ namespace NetStack.Serialization
         public i16 i16(i16 min, i16 max) => (i16)i32(min, max);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public short i16Peek() => (i16)i32Peek();
+        public i16 i16Peek() => (i16)i32Peek();
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public short i16Peek(i32 numberOfBits) => (i16)i32Peek(numberOfBits);
+        public i16 i16Peek(i32 numberOfBits) => (i16)i32Peek(numberOfBits);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public short i16Peek(i16 min, i16 max) => (i16)PeekInt(min, max);
+        public i16 i16Peek(i16 min, i16 max) => (i16)PeekInt(min, max);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public u16 u16() => (u16)u32();
@@ -285,7 +285,6 @@ namespace NetStack.Serialization
             return Unsafe.As<ulong, f64>(ref value);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public int u8ArrayLengthPeek() => (i32)raw(config.ByteArrLengthBits);
+
     }
 }
