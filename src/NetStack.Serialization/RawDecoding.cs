@@ -18,5 +18,7 @@ namespace NetStack.Serialization
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public i32 i32(BitBufferReader<RawDecoding> b) => decode(u32(b));
+
+        public i32 i32(BitBufferReader<RawDecoding> b, i32 numberOfBits) => i32(b);
     }
 }

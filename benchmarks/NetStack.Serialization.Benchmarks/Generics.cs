@@ -9,7 +9,7 @@ namespace NetStack.Serialization
     [CoreJob]
     public class Generics
     {
-        [Params(10000)]
+        [Params(100000)]
         public int N;
         private BitBufferWriter<SevenBitEncoding> buffer1;
         private GenericBitBufferWriter<SevenBitEncoding2> buffer2;
@@ -18,9 +18,9 @@ namespace NetStack.Serialization
         [IterationSetup]
         public void GlobalSetup()
         {
-            buffer1 = new BitBufferWriter<SevenBitEncoding>(2_000_000);
-            buffer2 = new GenericBitBufferWriter<SevenBitEncoding2>(2_000_000);
-            buffer3 = new BitBufferWriter<RawEncoding>(2_000_000);
+            buffer1 = new BitBufferWriter<SevenBitEncoding>(20_000_000);
+            buffer2 = new GenericBitBufferWriter<SevenBitEncoding2>(20_000_000);
+            buffer3 = new BitBufferWriter<RawEncoding>(20_000_000);
         }
 
         [Benchmark]

@@ -149,7 +149,7 @@ namespace NetStack.Serialization
         public void i32(i32 value, i32 numberOfBits)
         {
             T encoder = default;
-            raw(encoder.encode(value), numberOfBits);
+            encoder.i32(this, value, numberOfBits);
         }
     }
 }

@@ -52,7 +52,7 @@ namespace NetStack.Serialization
         /// <param name="buffer">Custom buffer.</param>
         public BitBufferReader(u32[] buffer, BitBufferOptions config = default)
         {
-            // TODO: try inline config as struct to improve access perfromance? Test it via benchmark
+            // TODO: try inline config as struct to improve access performance? Test it via benchmark
             this.config = config == null  ? BitBufferOptions.Default : config;
             // not performance critical path so fine to check and throw
             if (buffer == null || buffer.Length == 0)

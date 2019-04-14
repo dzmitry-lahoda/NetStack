@@ -16,6 +16,8 @@ namespace NetStack.Serialization
 {
     partial class BitBufferTests
     {
+
+
         [Fact]
         public void u32ReadWrite()
         {
@@ -28,6 +30,8 @@ namespace NetStack.Serialization
             Assert.Equal(u32.MinValue, reader.u32());
             Assert.Equal(u32.MaxValue, reader.u32());
         }        
+
+
 
         [Fact]
         public void u32ReadWriteLimits()

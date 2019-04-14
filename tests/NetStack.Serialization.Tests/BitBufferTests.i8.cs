@@ -16,17 +16,24 @@ using f64 = System.Double;
 namespace NetStack.Serialization
 {
     partial class BitBufferTests
-    {
+    {        
         [Fact]
-        public void i8ReadWrite()
+        public void i8ReadWriteRaw() => i8ReadWrite<RawEncoding, RawDecoding>();
+
+        [Fact]
+        public void i8ReadWriteEncoded() => i8ReadWrite<SevenBitEncoding, SevenBitDecoding>();
+
+        private void i8ReadWrite<TEncoder, TDecoder>() 
+             where TEncoder:unmanaged, ICompression<BitBufferWriter<TEncoder>> 
+             where TDecoder:unmanaged, IDecompression<BitBufferReader<TDecoder>> 
         {
-            var writer = new BitBufferWriter<SevenBitEncoding>();
+            var writer = new BitBufferWriter<TEncoder>();
             writer.i8(i8.MinValue);
             i8 half = i8.MaxValue / 2;
             writer.i8(half);
             writer.i8(i8.MaxValue);
             var data = writer.ToArray();
-            var reader = new BitBufferReader<SevenBitDecoding>();
+            var reader = new BitBufferReader<TDecoder>();
             reader.CopyFrom(data);
             Assert.Equal(i8.MinValue, reader.i8());
             Assert.Equal(half, reader.i8Peek());

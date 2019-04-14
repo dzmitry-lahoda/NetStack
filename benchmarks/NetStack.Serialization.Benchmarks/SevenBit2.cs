@@ -53,6 +53,12 @@ namespace NetStack.Serialization
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public uint encode(i32 value) => (u32)((value << 1) ^ (value >> 31));
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void i32(GenericBitBufferWriter<SevenBitEncoding2> b, i32 value, i32 numberOfBits)
+        {
+             b.raw(encode(value), numberOfBits);
+        }
     }
 
 }

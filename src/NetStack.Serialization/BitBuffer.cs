@@ -25,13 +25,12 @@ namespace NetStack.Serialization
 
     // core untyped data specific part of bit buffer
     public abstract partial class BitBuffer
-    {
-        
+    {        
         public const i32 DefaultU32Capacity = BitBufferLimits.MtuIeee802Dot3 / 4;
 
         internal BitBuffer()
         {
-            // dot not allow inheritance outside of assembly to simplify move to stuct only code    
+            // dot not allow inheritance outside of assembly to simplify move to struct only code    
         }
 
         public static i32 BitsRequired(i32 min, i32 max) =>

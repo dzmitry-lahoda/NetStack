@@ -120,8 +120,7 @@ namespace NetStack.Serialization
         public i32 i32(i32 numberOfBits)
         {
             T encoder = default;
-            u32 value = raw(numberOfBits);
-            return encoder.decode(value);
+            return encoder.i32(this, numberOfBits);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
