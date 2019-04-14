@@ -58,7 +58,7 @@ namespace NetStack.Serialization
             }
         }                
 
-        [Benchmark]
+        //[Benchmark]
         public void SimpleGenericMemory()
         {
             for (int i = 0; i < N; i++)

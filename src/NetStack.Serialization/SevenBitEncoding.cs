@@ -56,12 +56,10 @@ namespace NetStack.Serialization
 
         // zig zag encoding 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public u32 encode(i32 value) => (u32)((value << 1) ^ (value >> 31));
-        
+        public u32 encode(i32 value) => BitOptsExtensions.ZigZag(value);
+
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public void i32(BitBufferWriter<SevenBitEncoding> b, i32 value, i32 numberOfBits)
-        {
-            b.raw(encode(value), numberOfBits);
-        }
+        public void i32(BitBufferWriter<SevenBitEncoding> b, i32 value, i32 numberOfBits) => 
+        b.raw(encode(value), numberOfBits);
     }
 }
