@@ -25,64 +25,6 @@ using BitOperations = System.Numerics.BitOperations;
 
 namespace NetStack.Serialization
 {
-    public interface ISpan
-    {
-        u32 this[i32 index]
-        {
-            [MethodImpl(MyMethodImplOptions.AggressiveInlining)]
-            get;
-            [MethodImpl(MyMethodImplOptions.AggressiveInlining)]
-            set;
-        }
-
-        int Length
-        {
-            [MethodImpl(MyMethodImplOptions.AggressiveInlining)]
-            get;
-        }
-    }
-
-    public struct data : ISpan
-    {
-        public uint[] chunks;
-
-        public uint this[int index]
-        {
-            [MethodImpl(MyMethodImplOptions.AggressiveInlining)]
-            get => chunks[index];
-            [MethodImpl(MyMethodImplOptions.AggressiveInlining)]
-            set => chunks[index] = value;
-        }
-
-        public int Length
-        {
-            [MethodImpl(MyMethodImplOptions.AggressiveInlining)]
-            get => chunks.Length;
-        }
-    }
-
-
-
-    public struct data2 : ISpan
-    {
-        public Memory<uint> chunks;
-
-        public uint this[int index]
-        {
-            [MethodImpl(MyMethodImplOptions.AggressiveInlining)]
-            get => chunks.Span[index];
-            [MethodImpl(MyMethodImplOptions.AggressiveInlining)]
-            set => chunks.Span[index] = value;
-        }
-
-        public int Length
-        {
-            [MethodImpl(MyMethodImplOptions.AggressiveInlining)]
-            get => chunks.Length;
-        }
-
-    }
-
     /// <summary>
     /// Bit level compression by ranged values.
     /// </summary>

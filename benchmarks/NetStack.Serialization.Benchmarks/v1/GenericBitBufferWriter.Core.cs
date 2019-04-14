@@ -25,7 +25,7 @@ namespace NetStack.Serialization
 
     partial struct GenericBitBufferWriter<T, TAcc>: IRawWriter 
         where T:unmanaged, ICompression<GenericBitBufferWriter<T, TAcc>>
-        where TAcc : struct, ISpan
+        where TAcc : struct, ISpan<u32>
     {
         // true if has not capacity to write numberOfBits
         public bool CannotAdd(int numberOfBits) => BitsWritten + numberOfBits > totalNumberBits;

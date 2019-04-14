@@ -32,15 +32,15 @@ namespace NetStack.Serialization
         public const short AggressiveInlining =  0x0100;
 }
  
-    public struct GenericSevenBit : ICompression<GenericBitBufferWriter<GenericSevenBit, data>>
+    public struct GenericSevenBit : ICompression<GenericBitBufferWriter<GenericSevenBit, ArraySpan>>
     {
-        public void i32(GenericBitBufferWriter<GenericSevenBit, data> b, i32 value)
+        public void i32(GenericBitBufferWriter<GenericSevenBit, ArraySpan> b, i32 value)
         {
             u32(b, encode(value));
         }
 
         [MethodImpl(MyMethodImplOptions.AggressiveInlining)]
-        public void u32(GenericBitBufferWriter<GenericSevenBit, data> b, u32 value)
+        public void u32(GenericBitBufferWriter<GenericSevenBit, ArraySpan> b, u32 value)
         {
             do
             {
@@ -59,21 +59,21 @@ namespace NetStack.Serialization
         public uint encode(i32 value) => (u32)((value << 1) ^ (value >> 31));
 
         [MethodImpl(MyMethodImplOptions.AggressiveInlining)]
-        public void i32(GenericBitBufferWriter<GenericSevenBit, data> b, i32 value, i32 numberOfBits)
+        public void i32(GenericBitBufferWriter<GenericSevenBit, ArraySpan> b, i32 value, i32 numberOfBits)
         {
              b.raw(encode(value), numberOfBits);
         }
     }
 
-    public struct GenericSevenBit2 : ICompression<GenericBitBufferWriter<GenericSevenBit2, data2>>
+    public struct GenericSevenBit2 : ICompression<GenericBitBufferWriter<GenericSevenBit2, MemorySpan>>
     {
-        public void i32(GenericBitBufferWriter<GenericSevenBit2, data2> b, i32 value)
+        public void i32(GenericBitBufferWriter<GenericSevenBit2, MemorySpan> b, i32 value)
         {
             u32(b, encode(value));
         }
 
         [MethodImpl(MyMethodImplOptions.AggressiveInlining)]
-        public void u32(GenericBitBufferWriter<GenericSevenBit2, data2> b, u32 value)
+        public void u32(GenericBitBufferWriter<GenericSevenBit2, MemorySpan> b, u32 value)
         {
             do
             {
@@ -92,7 +92,7 @@ namespace NetStack.Serialization
         public uint encode(i32 value) => (u32)((value << 1) ^ (value >> 31));
 
         [MethodImpl(MyMethodImplOptions.AggressiveInlining)]
-        public void i32(GenericBitBufferWriter<GenericSevenBit2, data2> b, i32 value, i32 numberOfBits)
+        public void i32(GenericBitBufferWriter<GenericSevenBit2, MemorySpan> b, i32 value, i32 numberOfBits)
         {
              b.raw(encode(value), numberOfBits);
         }
