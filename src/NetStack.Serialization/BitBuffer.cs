@@ -80,7 +80,7 @@ namespace NetStack.Serialization
             if (scratchUsedBits != 0)
             {
                 #if DEBUG || NETSTACK_VALIDATE
-                if (chunkIndex >= totalNumChunks) throw new IndexOutOfRangeException("buffer overflow when trying to finalize stream");
+                if (chunkIndex >= totalNumChunks) throw IndexOutOfRange("buffer overflow when trying to finalize stream");
                 #endif
                 chunks[chunkIndex] = (u32)(scratch & 0xFFFFFFFF);
                 scratch >>= 32;

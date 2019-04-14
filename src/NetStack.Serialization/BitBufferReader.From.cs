@@ -34,9 +34,9 @@ namespace NetStack.Serialization
         {
             // may throw here as not hot path
             if (data.Length == 0)
-                throw new ArgumentException("Should be positive", nameof(data.Length));
+                throw Argument("Should be positive", nameof(data.Length));
             if (data.Length <= 0)
-                throw new ArgumentException("Should be positive", nameof(data.Length));
+                throw Argument("Should be positive", nameof(data.Length));
             
             var length = data.Length;
             Clear();

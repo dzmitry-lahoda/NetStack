@@ -45,8 +45,8 @@ namespace NetStack.Serialization
         public bool b()
         {
 #if DEBUG || NETSTACK_VALIDATE
-            if (BitsRead >= totalNumberBits) throw new InvalidOperationException("reading more bits than in buffer");
-            if (scratchUsedBits < 1 && chunkIndex >= totalNumChunks) throw new InvalidOperationException("reading more than buffer size");
+            if (BitsRead >= totalNumberBits) throw InvalidOperation("reading more bits than in buffer");
+            if (scratchUsedBits < 1 && chunkIndex >= totalNumChunks) throw InvalidOperation("reading more than buffer size");
 #endif
             if (scratchUsedBits < 1)
             {
@@ -56,7 +56,7 @@ namespace NetStack.Serialization
             }
 
 #if DEBUG
-            if (scratchUsedBits == 0) throw new InvalidOperationException("Too many bits requested from scratch");
+            if (scratchUsedBits == 0) throw InvalidOperation("Too many bits requested from scratch");
 #endif
             u32 output = (u32)(scratch & 1);
 
@@ -73,15 +73,15 @@ namespace NetStack.Serialization
         public u32 raw(i32 numberOfBits)
         {
 #if DEBUG || NETSTACK_VALIDATE
-            if (numberOfBits <= 0 || numberOfBits > 32) throw new ArgumentOutOfRangeException(nameof(numberOfBits), $"Should read from 1 to 32. Cannot read {numberOfBits}"); 
-            if (BitsRead + numberOfBits > totalNumberBits)throw new InvalidOperationException("reading more bits than in buffer");
-            if (scratchUsedBits < 0 || scratchUsedBits > 64) throw new InvalidProgramException($"{scratchUsedBits} Too many bits used in scratch, Overflow?");
+            if (numberOfBits <= 0 || numberOfBits > 32) throw ArgumentOutOfRange(nameof(numberOfBits), $"Should read from 1 to 32. Cannot read {numberOfBits}"); 
+            if (BitsRead + numberOfBits > totalNumberBits)throw InvalidOperation("reading more bits than in buffer");
+            if (scratchUsedBits < 0 || scratchUsedBits > 64) throw InvalidProgram($"{scratchUsedBits} Too many bits used in scratch, Overflow?");
 #endif
 
             if (scratchUsedBits < numberOfBits)
             {
 #if DEBUG || NETSTACK_VALIDATE                
-                if (chunkIndex >= totalNumChunks) throw new InvalidOperationException("reading more than buffer size");
+                if (chunkIndex >= totalNumChunks) throw InvalidOperation("reading more than buffer size");
 #endif
                 scratch |= ((u64)(chunks[chunkIndex])) << scratchUsedBits;
                 scratchUsedBits += 32;
@@ -89,7 +89,7 @@ namespace NetStack.Serialization
             }
 
 #if DEBUG
-            if (scratchUsedBits < numberOfBits) throw new InvalidOperationException("Too many bits requested from scratch");
+            if (scratchUsedBits < numberOfBits) throw InvalidOperation("Too many bits requested from scratch");
 #endif
             u32 output = (u32)(scratch & ((((u64)1) << numberOfBits) - 1));
 
@@ -161,10 +161,10 @@ namespace NetStack.Serialization
         public void SetPosition(i32 bitsRead)
         {
 #if DEBUG || NETSTACK_VALIDATE        
-        if (bitsRead < 0) throw new ArgumentException("Pushing negative bits", nameof(bitsRead));
-        if (bitsRead > totalNumberBits) throw new ArgumentException("Pushing too many bits", nameof(bitsRead));
+        if (bitsRead < 0) throw Argument("Pushing negative bits", nameof(bitsRead));
+        if (bitsRead > totalNumberBits) throw Argument("Pushing too many bits", nameof(bitsRead));
 #endif            
-            throw new NotImplementedException();
+            throw NotImplemented();
         }
     }
 }

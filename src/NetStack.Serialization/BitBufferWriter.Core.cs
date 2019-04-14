@@ -84,7 +84,7 @@ namespace NetStack.Serialization
             if (scratchUsedBits >= 32)
             {
                 #if DEBUG || NETSTACK_VALIDATE
-                    if (chunkIndex >= totalNumChunks) throw new IndexOutOfRangeException("Pushing failed, buffer is full.");
+                    if (chunkIndex >= totalNumChunks) throw IndexOutOfRange("Pushing failed, buffer is full.");
                 #endif                
                 // TODO: how much it will cost to cast ref byte into ref uint and set scratch (to allow FromArray with no copy)
                 chunks[chunkIndex] = (u32)(scratch);
