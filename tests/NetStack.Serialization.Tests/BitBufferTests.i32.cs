@@ -49,6 +49,7 @@ namespace NetStack.Serialization
             reader.CopyFrom(data);
             Assert.Equal(12345, reader.i32(0, 123456));
             Assert.Equal(1, reader.i32());
+            Assert.Equal(42, reader.i32Peek(-1, 43));
             Assert.Equal(42, reader.i32(-1, 43));
             Assert.Equal(1, reader.i32(0, 10));
             Assert.Equal(2, reader.i32(3));

@@ -22,13 +22,14 @@ namespace NetStack.Serialization
         {
             var writer = new BitBufferWriter<SevenBitEncoding>();
             writer.i8(i8.MinValue);
-            writer.i8(i8.MaxValue / 2);
+            i8 half = i8.MaxValue / 2;
+            writer.i8(half);
             writer.i8(i8.MaxValue);
             var data = writer.ToArray();
             var reader = new BitBufferReader<SevenBitDecoding>();
             reader.CopyFrom(data);
             Assert.Equal(i8.MinValue, reader.i8());
-            i8 half = i8.MaxValue / 2;
+            Assert.Equal(half, reader.i8Peek());
             Assert.Equal(half, reader.i8());
             Assert.Equal(i8.MaxValue, reader.i8());
         }

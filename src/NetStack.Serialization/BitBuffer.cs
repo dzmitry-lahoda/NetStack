@@ -65,11 +65,13 @@ namespace NetStack.Serialization
         
         // last partially read value
         protected internal u64 scratch;
+
+
         /// <summary>
         /// Sets buffer cursor to zero. Can start writing again.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Clear()
+        public void Reset()
         {            
             chunkIndex = 0;
             scratch = 0;

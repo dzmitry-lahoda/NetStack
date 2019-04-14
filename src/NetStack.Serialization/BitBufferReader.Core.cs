@@ -124,7 +124,6 @@ namespace NetStack.Serialization
             return encoder.decode(value);
         }
 
-        // TODO: change API to be more safe on bit buffer operations (protect from misuse)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetPosition(i32 bitsRead)
         {
@@ -132,7 +131,17 @@ namespace NetStack.Serialization
         if (bitsRead < 0) throw Argument("Pushing negative bits", nameof(bitsRead));
         if (bitsRead > totalNumberBits) throw Argument("Pushing too many bits", nameof(bitsRead));
 #endif            
-            throw NotImplemented();
+           chunkIndex = bitsRead / 32;
+           scratchUsedBits = bitsRead % 32;
+           if (scratchUsedBits != 0)
+           {
+               scratch = ((u64)(chunks[chunkIndex])) >> scratchUsedBits;
+               chunkIndex += 1;
+           }
+           else
+           {
+               scratch = 0;
+           }
         }
     }
 }

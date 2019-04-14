@@ -24,7 +24,8 @@ namespace NetStack.Serialization
             writer.i16(i16.MinValue);
             writer.i16(i16.MinValue / 2);
             writer.i16(0);
-            writer.i16(i16.MaxValue / 2);
+            i16 half = i16.MaxValue / 2;
+            writer.i16(half);
             writer.i16(i16.MaxValue);
             writer.Align();
             var allocated = new byte[i16.MaxValue];
@@ -34,7 +35,7 @@ namespace NetStack.Serialization
             Assert.Equal(i16.MinValue, reader.i16());
             Assert.Equal(i16.MinValue / 2, reader.i16());
             Assert.Equal(0, reader.i16());
-            i16 half = i16.MaxValue / 2;
+            Assert.Equal(half, reader.i16Peek());
             Assert.Equal(half, reader.i16());
             Assert.Equal(i16.MaxValue, reader.i16());
         }

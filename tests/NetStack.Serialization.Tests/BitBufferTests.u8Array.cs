@@ -28,7 +28,9 @@ namespace NetStack.Serialization
             var reader = new BitBufferReader<SevenBitDecoding>(allocated.Length);
             reader.CopyFrom(allocated);
             var output = new byte[5];
+            var lengthPeek = reader.u8SpanLengthPeek();
             var length = reader.u8(output);
+            Assert.Equal(lengthPeek, length);
             Assert.Equal(input, output);
         }
 

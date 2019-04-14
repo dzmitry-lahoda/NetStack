@@ -18,6 +18,37 @@ namespace NetStack.Serialization
         }
 
         [Fact]
+        public void ResetSet()
+        {
+            var writer = new BitBufferWriter<SevenBitEncoding>(8);
+        
+            writer.i32(666);
+            var bitsWritten = writer.BitsWritten;
+            var bitsAvailable = writer.BitsAvailable;
+            writer.Reset();
+            Assert.Equal(0, writer.BitsWritten);
+            
+            writer.i32(666);
+            Assert.Equal(bitsWritten, writer.BitsWritten);
+            Assert.Equal(bitsAvailable, writer.BitsAvailable);
+            writer.i32(-273);
+            writer.b(true);
+            writer.i64(1234567890);
+            var reader = new BitBufferReader<SevenBitDecoding>();
+            reader.CopyFrom(writer.ToArray());
+            Assert.Equal(666, reader.i32());
+            var bitsRead = reader.BitsRead;
+            reader.i32();
+            reader.SetPosition(bitsRead);
+            Assert.Equal(-273, reader.i32());
+            var bitPosition = reader.BitsRead;
+            reader.b();
+            reader.SetPosition(bitPosition);
+            Assert.True(reader.b());            
+            
+        }        
+
+        [Fact]
         public void BitsRead()
         {
             var writer = new BitBufferWriter<SevenBitEncoding>();

@@ -39,7 +39,7 @@ namespace NetStack.Serialization
 
                 var result = writer.ToArray();
                 reader.CopyFrom(result);
-                writer.Clear();
+                writer.Reset();
             }
         }
 

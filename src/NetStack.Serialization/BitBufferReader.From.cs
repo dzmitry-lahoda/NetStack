@@ -39,7 +39,7 @@ namespace NetStack.Serialization
                 throw Argument("Should be positive", nameof(data.Length));
             
             var length = data.Length;
-            Clear();
+            Reset();
             var step = Unsafe.SizeOf<u32>();
             i32 numChunks = (length / step) + 1;
 

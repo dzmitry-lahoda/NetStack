@@ -82,31 +82,85 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public i8 i8Peek() => (i8)raw(8);
+        public i8 i8Peek()
+        {
+            var index = SIndex;
+            var value = i8();
+            SIndex = index;
+            return value;
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public i8 i8Peek(i32 numberOfBits) => (i8)i32Peek(numberOfBits);
+        public i8 i8Peek(i32 numberOfBits) 
+        {
+            var index = SIndex;
+            var value = i8(numberOfBits);
+            SIndex = index;
+            return value;
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public i8 i8Peek(i8 min, i8 max) => (i8)i32Peek(min, max);
+        public i8 i8Peek(i8 min, i8 max)
+        {
+            var index = SIndex;
+            var value = i8(min, max);
+            SIndex = index;
+            return value;
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public i16 i16Peek() => (i16)i32Peek();
+        public i16 i16Peek() 
+        {
+            var index = SIndex;
+            var value = i16();
+            SIndex = index;
+            return value;
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public i16 i16Peek(i32 numberOfBits) => (i16)i32Peek(numberOfBits);
+        public i16 i16Peek(i32 numberOfBits) 
+        {
+            var index = SIndex;
+            var value = i16(numberOfBits);
+            SIndex = index;
+            return value;
+        } 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public i16 i16Peek(i16 min, i16 max) => (i16)i32Peek(min, max);
+        public i16 i16Peek(i16 min, i16 max) 
+        {
+            var index = SIndex;
+            var value = i16(min, max);
+            SIndex = index;
+            return value;
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public u16 u16Peek() => (u16)u32Peek();
+        public u16 u16Peek() 
+        {
+            var index = SIndex;
+            var value = u16();
+            SIndex = index;
+            return value;
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public u16 u16Peek(i32 numberOfBits) => (u16)u32Peek(numberOfBits);
+        public u16 u16Peek(i32 numberOfBits)
+        {
+            var index = SIndex;
+            var value = u16(numberOfBits);
+            SIndex = index;
+            return value;
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public u16 u16Peek(u16 min, u16 max) => (u16)u32Peek(min, max);
+        public u16 u16Peek(u16 min, u16 max)
+        {
+            var index = SIndex;
+            var value = u16(min, max);
+            SIndex = index;
+            return value;
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool bPeek()
@@ -120,84 +174,83 @@ namespace NetStack.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public i32 i32Peek(i32 min, i32 max)
         {
-#if DEBUG || NETSTACK_VALIDATE
-            if (min > max) throw Argument("min should not be not lower than max");
-#endif
-
-            i32 bits = BitsRequired(min, max);
-#if DEBUG || NETSTACK_VALIDATE
-            if (BitsRead + bits > totalNumberBits) throw ArgumentOutOfRange("Reading too many bits for requested range");
-#endif
-
-            return (i32)(raw(bits) + min);
+            var index = SIndex;
+            var value = i32(min, max);
+            SIndex = index;
+            return value;
         }
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public u32 u32Peek(i32 numberOfBits) => raw(numberOfBits);
+        public u32 u32Peek(i32 numberOfBits) 
+        {
+            var index = SIndex;
+            var value = u32(numberOfBits);
+            SIndex = index;
+            return value;
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public u32 u32Peek(u32 min, u32 max)
         {
-#if DEBUG || NETSTACK_VALIDATE
-            if (min > max) throw Argument("min should not be not lower than max");
-#endif
-
-            i32 bits = BitsRequired(min, max);
-#if DEBUG || NETSTACK_VALIDATE
-            if (BitsRead + bits > totalNumberBits) throw ArgumentOutOfRange("Reading too many bits for requested range");
-#endif     
-
-            return (raw(bits) + min);
+            var index = SIndex;
+            var value = u32(min, max);
+            SIndex = index;
+            return value;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public i64 i64Peek()
         {
-            i64 value = i64();
+            var index = SIndex;
+            var value = i64();
+            SIndex = index;
             return value;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public u64 u64Peek()
         {
-            u64 value = u64();
+            var index = SIndex;
+            var value = u64();
+            SIndex = index;
             return value;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public f32 f32Peek(f32 min, f32 max, f32 precision)
         {
-            f32 range = max - min;
-            f32 invPrecision = 1.0f / precision;
-            f32 maxVal = range * invPrecision;
-            i32 numberOfBits = BitOperations.Log2((u32)(maxVal + 0.5f)) + 1;
-
-            return raw(numberOfBits) * precision + min;
+            var index = SIndex;
+            var value = f32(min, max, precision);
+            SIndex = index;
+            return value;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public f32 f32Peek(f32 min, f32 max, i32 numberOfBits)
         {
-            var maxvalue = (1 << numberOfBits) - 1;
-            f32 range = max - min;
-            var precision = range / maxvalue;
-
-            return raw(numberOfBits) * precision + min;
+            var index = SIndex;
+            var value = f32(min, max, numberOfBits);
+            SIndex = index;
+            return value;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public f32 f32Peek()
         {
-            var value = raw(32);
-            return Unsafe.As<u32, f32>(ref value);
+            var index = SIndex;
+            var value = f32();
+            SIndex = index;
+            return value;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public f64 f64Peek()
         {
-            var value = u64Peek();
-            return Unsafe.As<u64, f64>(ref value);
+            var index = SIndex;
+            var value = f64();
+            SIndex = index;
+            return value;
         }
     }
 }

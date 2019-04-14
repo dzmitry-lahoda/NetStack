@@ -22,7 +22,6 @@ using UnityEngine;
 
 namespace NetStack.Serialization
 {
-    // GC allocated String stuff
     abstract partial class BitBuffer
     {
         protected const int bitsASCII = 7;

@@ -59,7 +59,7 @@ namespace NetStack.Serialization
                 throw Argument("Buffer should be non null or empty", nameof(buffer));
 
             Chunks = buffer;
-            Clear();
+            Reset();
         }
 
         /// <summary>

@@ -26,6 +26,7 @@ namespace NetStack.Serialization
             var data = writer.ToArray();
             var reader = new BitBufferReader<SevenBitDecoding>();
             reader.CopyFrom(data);
+            Assert.Equal(123.456f, reader.f32Peek());
             Assert.Equal(123.456f, reader.f32());
         }
 
