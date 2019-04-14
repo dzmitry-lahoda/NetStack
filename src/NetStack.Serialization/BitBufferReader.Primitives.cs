@@ -26,14 +26,10 @@ namespace NetStack.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool bPeek()
         {
-            var tmp1 = scratchUsedBits;
-            var tmp2 = chunkIndex;
-            var tmp3 = scratch;
+            var index = SIndex;
             var result = b();
-            scratchUsedBits = tmp1;
-            chunkIndex = tmp2;
-            scratch = tmp3;
-            return true;
+            SIndex = index;
+            return result;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -48,13 +44,9 @@ namespace NetStack.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public u8 u8Peek()
         {
-            var tmp = scratch;
-            var tmp2 = scratchUsedBits;
-            var tmp3 = chunkIndex;
+            var index = SIndex;
             var result = (u8)raw(8);
-            tmp = scratch;
-            tmp2 = scratchUsedBits;
-            tmp3 = chunkIndex;
+            SIndex = index;
             return result;
         }
 

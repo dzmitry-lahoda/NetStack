@@ -40,6 +40,7 @@ namespace NetStack.Serialization
         public static i32 BitsRequired(u32 min, u32 max) =>
             (min == max) ? 1 : BitOperations.Log2(max - min) + 1;
 
+#region BState
         protected internal uint[] chunks;        
         protected i32 totalNumChunks;        
         protected i32 totalNumberBits;  
@@ -52,15 +53,18 @@ namespace NetStack.Serialization
                 totalNumberBits = totalNumChunks * 8 * Unsafe.SizeOf<uint>();   
             }
         }
+#endregion        
 
+#region SIndex
 
         // bit index onto current head
+        // trying to put these 2 or 3 into one struct degrade performance on .NET Core 2.1 x86-64
+        // have tried Auto and Explicit with 2 i32
         protected internal i32 chunkIndex;
         protected internal i32 scratchUsedBits;
         
         // last partially read value
         protected internal u64 scratch;
-
         /// <summary>
         /// Sets buffer cursor to zero. Can start writing again.
         /// </summary>
@@ -71,6 +75,22 @@ namespace NetStack.Serialization
             scratch = 0;
             scratchUsedBits = 0;
         }
+
+        public (i32 ChunkIndex, i32 ScratchUsedBits, u64 Scratch) SIndex 
+        {
+          get => (chunkIndex, scratchUsedBits, scratch);
+          set 
+          {
+              chunkIndex = value.ChunkIndex;
+              scratchUsedBits = value.ScratchUsedBits;
+              scratch = value.Scratch;
+          }  
+        } 
+
+#endregion 
+        
+
+
 
         /// <summary>
         /// Call aligns remaining bits to full bytes.

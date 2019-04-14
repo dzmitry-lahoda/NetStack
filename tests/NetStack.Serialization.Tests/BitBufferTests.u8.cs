@@ -64,6 +64,7 @@ namespace NetStack.Serialization
             var reader = new BitBufferReader<SevenBitDecoding>();
             reader.CopyFrom(data);
             Assert.Equal(u8.MaxValue, reader.u8Peek());
+            Assert.Equal(reader.u8Peek(), reader.u8());
         }
         
         public void u8MaxValueWritePeek1024()
