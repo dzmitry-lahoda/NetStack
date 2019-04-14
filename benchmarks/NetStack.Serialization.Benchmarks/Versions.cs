@@ -12,19 +12,22 @@ namespace NetStack.Serialization
         [Params(400_000)]
         public int N;
         private BitBufferWriter<SevenBitEncoding> buffer1;
-        private GenericBitBufferWriter<GenericSevenBit> buffer2;
+        private GenericBitBufferWriter<GenericSevenBit, data> buffer2;
         private BitBufferWriter<RawEncoding> buffer3;
 
         private MemoryBufferWriter<MemorySevenBit> buffer4;
+        private GenericBitBufferWriter<GenericSevenBit2, data2> buffer5;
 
         [IterationSetup]
         public void GlobalSetup()
         {
             if (N <= 0) throw new Exception();
             buffer1 = new BitBufferWriter<SevenBitEncoding>(2 * 64 *N);
-            buffer2 = new GenericBitBufferWriter<GenericSevenBit>(2 * 64 *N);
+            buffer2 = new GenericBitBufferWriter<GenericSevenBit, data>(new data{ chunks = new uint[ 2 * 64 *N]});
             buffer3 = new BitBufferWriter<RawEncoding>(2 * 64 *N);
             buffer4 = new MemoryBufferWriter<MemorySevenBit>(2 * 64 *N);
+            var x = new data2{ chunks = new Memory<uint>(new uint[ 2 * 64 *N])};
+            buffer5 = new GenericBitBufferWriter<GenericSevenBit2, data2>(x);
             
         }
 
@@ -53,11 +56,36 @@ namespace NetStack.Serialization
                 buffer2.i32(666);buffer2.i32(666);buffer2.i32(666);buffer2.i32(666);
                 buffer2.i32(666);buffer2.i32(666);buffer2.i32(666);buffer2.i32(666);                                
             }
-        }
-                
+        }                
 
-       
         [Benchmark]
+        public void SimpleGenericMemory()
+        {
+            for (int i = 0; i < N; i++)
+            {
+                buffer5.i32(666);buffer5.i32(666);buffer5.i32(666);buffer5.i32(666);                        
+                buffer5.i32(666);buffer5.i32(666);buffer5.i32(666);buffer5.i32(666);
+                buffer5.i32(666);buffer5.i32(666);buffer5.i32(666);buffer5.i32(666);
+                buffer5.i32(666);buffer5.i32(666);buffer5.i32(666);buffer5.i32(666);
+
+                buffer5.i32(666);buffer5.i32(666);buffer5.i32(666);buffer5.i32(666);
+                buffer5.i32(666);buffer5.i32(666);buffer5.i32(666);buffer5.i32(666);
+                buffer5.i32(666);buffer5.i32(666);buffer5.i32(666);buffer5.i32(666);
+                buffer5.i32(666);buffer5.i32(666);buffer5.i32(666);buffer5.i32(666);
+
+                buffer5.i32(666);buffer5.i32(666);buffer5.i32(666);buffer5.i32(666);
+                buffer5.i32(666);buffer5.i32(666);buffer5.i32(666);buffer5.i32(666);
+                buffer5.i32(666);buffer5.i32(666);buffer5.i32(666);buffer5.i32(666);
+                buffer5.i32(666);buffer5.i32(666);buffer5.i32(666);buffer5.i32(666);
+
+                buffer5.i32(666);buffer5.i32(666);buffer5.i32(666);buffer5.i32(666);
+                buffer5.i32(666);buffer5.i32(666);buffer5.i32(666);buffer5.i32(666);
+                buffer5.i32(666);buffer5.i32(666);buffer5.i32(666);buffer5.i32(666);
+                buffer5.i32(666);buffer5.i32(666);buffer5.i32(666);buffer5.i32(666);                                
+            }
+        }   
+       
+        //[Benchmark]
         public void GenericMemorySpan()
         {
             for (int i = 0; i < N; i++)
@@ -84,7 +112,7 @@ namespace NetStack.Serialization
             }            
         } 
 
-        //[Benchmark]
+        [Benchmark]
         public void Generic7Bit()
         {
             for (int i = 0; i < N; i++)

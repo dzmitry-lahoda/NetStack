@@ -32,15 +32,15 @@ namespace NetStack.Serialization
         public const short AggressiveInlining =  0x0100;
 }
  
-    public struct GenericSevenBit : ICompression<GenericBitBufferWriter<GenericSevenBit>>
+    public struct GenericSevenBit : ICompression<GenericBitBufferWriter<GenericSevenBit, data>>
     {
-        public void i32(GenericBitBufferWriter<GenericSevenBit> b, i32 value)
+        public void i32(GenericBitBufferWriter<GenericSevenBit, data> b, i32 value)
         {
             u32(b, encode(value));
         }
 
         [MethodImpl(MyMethodImplOptions.AggressiveInlining)]
-        public void u32(GenericBitBufferWriter<GenericSevenBit> b, u32 value)
+        public void u32(GenericBitBufferWriter<GenericSevenBit, data> b, u32 value)
         {
             do
             {
@@ -59,7 +59,40 @@ namespace NetStack.Serialization
         public uint encode(i32 value) => (u32)((value << 1) ^ (value >> 31));
 
         [MethodImpl(MyMethodImplOptions.AggressiveInlining)]
-        public void i32(GenericBitBufferWriter<GenericSevenBit> b, i32 value, i32 numberOfBits)
+        public void i32(GenericBitBufferWriter<GenericSevenBit, data> b, i32 value, i32 numberOfBits)
+        {
+             b.raw(encode(value), numberOfBits);
+        }
+    }
+
+    public struct GenericSevenBit2 : ICompression<GenericBitBufferWriter<GenericSevenBit2, data2>>
+    {
+        public void i32(GenericBitBufferWriter<GenericSevenBit2, data2> b, i32 value)
+        {
+            u32(b, encode(value));
+        }
+
+        [MethodImpl(MyMethodImplOptions.AggressiveInlining)]
+        public void u32(GenericBitBufferWriter<GenericSevenBit2, data2> b, u32 value)
+        {
+            do
+            {
+                var buffer = value & 0b0111_1111u;
+                value >>= 7;
+
+                if (value > 0)
+                    buffer |= 0b1000_0000u;
+
+                b.raw(buffer, 8);
+            }
+            while (value > 0);
+        }
+
+        [MethodImpl(MyMethodImplOptions.AggressiveInlining)]
+        public uint encode(i32 value) => (u32)((value << 1) ^ (value >> 31));
+
+        [MethodImpl(MyMethodImplOptions.AggressiveInlining)]
+        public void i32(GenericBitBufferWriter<GenericSevenBit2, data2> b, i32 value, i32 numberOfBits)
         {
              b.raw(encode(value), numberOfBits);
         }

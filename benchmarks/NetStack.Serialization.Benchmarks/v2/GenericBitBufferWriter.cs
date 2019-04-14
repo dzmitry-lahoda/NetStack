@@ -68,7 +68,6 @@ namespace NetStack.Serialization
             scratchUsedBits = 0;
         }
 
-
         private BitBufferOptions config;
 
         public BitBufferOptions Options => config;

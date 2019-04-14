@@ -5,8 +5,7 @@ Comprehensively tested code for creating concurrent networking systems for multi
 NetStack is dependant on `System.Memory`,  `System.Runtime.CompilerServices.Unsafe`. Optimized for `C# 7.3+`, `Unity 2018.3+` and `.NET Core 2.1+`. Works on `.NET Standard 2.0`. 
 
 NetStack does NOT depends on `System.IO.Pipelines` nor `System.Threading.Channels` nor `System.Net.Sockets`. 
-Does NOT have code to control threads and sockets.
-  
+Does NOT have code to control threads and sockets.  
 
 # Exceptions, validation.
 
@@ -33,8 +32,8 @@ All validation and exception are behind `#if DEBUG || NETSTACK_VALIDATE`.
   - Start write or read from where previous bit buffer finished.
   - TODO: allow zero copy read write by init from byte array, cast head into ref as uint
   - TODO: add custom visualizer or custom to string (to 01 to to hex)
-  - TODO: Given possible do delta of prediction. Should prediction API be part of serializer?
-  - Core code allocates Exceptions when DEBUG or NETSTACK_VALIDATE
+  - TODO: Given possibility do delta of prediction. Should prediction API be part of serializer?
+  - 
   - No fluent interface as it adds performance overhead.
 
 ### Optimization priorities

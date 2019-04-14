@@ -1,4 +1,4 @@
-﻿﻿sing System;
+﻿﻿using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -25,10 +25,68 @@ using BitOperations = System.Numerics.BitOperations;
 
 namespace NetStack.Serialization
 {
+    public interface ISpan
+    {
+        u32 this[i32 index]
+        {
+            [MethodImpl(MyMethodImplOptions.AggressiveInlining)]
+            get;
+            [MethodImpl(MyMethodImplOptions.AggressiveInlining)]
+            set;
+        }
+
+        int Length
+        {
+            [MethodImpl(MyMethodImplOptions.AggressiveInlining)]
+            get;
+        }
+    }
+
+    public struct data : ISpan
+    {
+        public uint[] chunks;
+
+        public uint this[int index]
+        {
+            [MethodImpl(MyMethodImplOptions.AggressiveInlining)]
+            get => chunks[index];
+            [MethodImpl(MyMethodImplOptions.AggressiveInlining)]
+            set => chunks[index] = value;
+        }
+
+        public int Length
+        {
+            [MethodImpl(MyMethodImplOptions.AggressiveInlining)]
+            get => chunks.Length;
+        }
+    }
+
+
+
+    public struct data2 : ISpan
+    {
+        public Memory<uint> chunks;
+
+        public uint this[int index]
+        {
+            [MethodImpl(MyMethodImplOptions.AggressiveInlining)]
+            get => chunks.Span[index];
+            [MethodImpl(MyMethodImplOptions.AggressiveInlining)]
+            set => chunks.Span[index] = value;
+        }
+
+        public int Length
+        {
+            [MethodImpl(MyMethodImplOptions.AggressiveInlining)]
+            get => chunks.Length;
+        }
+
+    }
+
     /// <summary>
     /// Bit level compression by ranged values.
     /// </summary>
-    public partial struct GenericBitBufferWriter<T>
+    public partial struct GenericBitBufferWriter<T, TAcc>
     {
         public static int BitsRequired(int min, int max) =>
     (min == max) ? 1 : BitOperations.Log2((uint)(max - min)) + 1;
@@ -36,10 +94,11 @@ namespace NetStack.Serialization
         public static int BitsRequired(uint min, uint max) =>
             (min == max) ? 1 : BitOperations.Log2(max - min) + 1;
 
-        private uint[] chunks;
+        private TAcc chunks;
+
         private int totalNumChunks;
         private int totalNumberBits;
-        private uint[] Chunks
+        private TAcc Chunks
         {
             set
             {
@@ -77,25 +136,15 @@ namespace NetStack.Serialization
         public const int DefaultCapacityUInt = BitBufferLimits.MtuIeee802Dot3 / 4;
 
         /// <summary>
-        /// Creates new instance with its own buffer. Create once and reuse to avoid GC.
-        /// Call <see cref="FromArray"/> to reinitialize with copy of data.
-        /// </summary>
-        /// <param name="capacity">Count of 4 byte integers used as internal buffer.</param>
-        public GenericBitBufferWriter(i32 capacity = DefaultCapacityUInt, BitBufferOptions config = default)
-        : this(new u32[capacity], config)
-        {
-        }
-
-        /// <summary>
         /// Creates new instance with its own buffer. 
         /// </summary>
         /// <param name="buffer">Custom buffer.</param>
-        public GenericBitBufferWriter(u32[] buffer, BitBufferOptions config = default)
+        public GenericBitBufferWriter(TAcc buffer, BitBufferOptions config = default)
         {
             // TODO: try inline config as struct to improve access perfromance? Test it via benchmark
             this.config = config ?? defaultConfig;
             // not performance critical path so fine to check and throw
-            if (buffer == null || buffer.Length == 0)
+            if (buffer.Length == 0)
                 throw Argument("Buffer should be non null or empty", nameof(buffer));
 
             chunks = buffer;
