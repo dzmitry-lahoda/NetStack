@@ -47,7 +47,7 @@ namespace NetStack.Serialization
              if (length > outValue.Length - offset) 
                 throw Argument(nameof(outValue), "The supplied byte array is too small for requested read");
 
-            for (i32 index = offset; index < length; index++)
+            for (var index = offset; index < length; index++)
                 outValue[index] = u8(); // TODO: can read faster if read by 4 bytes?
  
             return length;

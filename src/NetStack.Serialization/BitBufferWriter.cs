@@ -53,7 +53,7 @@ namespace NetStack.Serialization
         /// <param name="buffer">Custom buffer.</param>
         public BitBufferWriter(u32[] buffer, BitBufferOptions config = default)
         {
-            // TODO: try inline config as struct to improve access perfromance? Test it via benchmark
+            // TODO: try inline config as struct to improve access performance? Test it via benchmark
             this.config = config == null  ? BitBufferOptions.Default : config;
             // not performance critical path so fine to check and throw
             if (buffer == null || buffer.Length == 0)
@@ -62,14 +62,16 @@ namespace NetStack.Serialization
             Clear();
         }
 
-
+        /// <summary>
+        /// Starts writing into buffer for previous buffer after <see cref="Align"/>
+        /// </summary>
         public BitBufferWriter(BitBuffer startFrom)
         {
             Chunks = startFrom.chunks;
             scratch = startFrom.scratch;
             scratchUsedBits = startFrom.scratchUsedBits;
             chunkIndex = startFrom.chunkIndex;
-            Finish();
+            Align();
         }
     }
 }

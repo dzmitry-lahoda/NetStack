@@ -33,18 +33,4 @@ namespace NetStack.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         u32 encode(i32 value);
     }
-
-    public interface IDecompression<T> where T : IRawReader
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        u32 u32(T b);
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-
-
-        i32 i32(T b);
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        i32 decode(u32 value);
-    }
 }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -36,16 +36,5 @@ namespace NetStack.Serialization
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public u32 encode(i32 value) => (u32)value;
-    }
-
-    public struct RawDecoding : IDecompression<BitBufferReader<RawDecoding>>
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public u32 u32(BitBufferReader<RawDecoding> b) => b.raw(32);
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public i32 decode(u32 value) => (i32)value;
-
-        public i32 i32(BitBufferReader<RawDecoding> b) => decode(u32(b));
     }
 }

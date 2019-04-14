@@ -18,7 +18,7 @@ namespace NetStack.Serialization
         public unsafe static string String(this BitBufferReader<SevenBitDecoding> self)
         {
             var size = MemoryPool<char>.Shared.Rent(self.Options.StringLengthMax);
-            var length = self.chars(size.Memory.Span);
+            var length = self.c(size.Memory.Span);
             using (var pin = size.Memory.Pin())
                 return new String((char*)pin.Pointer,0, (int)length);         
         }

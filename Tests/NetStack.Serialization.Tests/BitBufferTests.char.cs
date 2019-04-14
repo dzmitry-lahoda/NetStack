@@ -11,7 +11,7 @@ namespace NetStack.Serialization
         {
             var bits = BitBuffer.BitsRequired("0",1);
             var bitBuffer = new BitBufferWriter<SevenBitEncoding>();
-            bitBuffer.chars("0");
+            bitBuffer.c("0");
             Assert.Equal(bits, bitBuffer.BitsWritten);
             var result = bitBuffer.ToArray();
         }
@@ -21,7 +21,7 @@ namespace NetStack.Serialization
         {
             var bits = BitBuffer.BitsRequired("Ё",1);
             var bitBuffer = new BitBufferWriter<SevenBitEncoding>();
-            bitBuffer.chars("Ё");
+            bitBuffer.c("Ё");
             Assert.Equal(bits, bitBuffer.BitsWritten);
             var result = bitBuffer.ToArray();
         }
@@ -36,8 +36,8 @@ namespace NetStack.Serialization
         public void AnsiStringWriteRead()
         {
             var writer = new BitBufferWriter<SevenBitEncoding>();
-            writer.chars("123456789");
-            writer.Finish();
+            writer.c("123456789");
+            writer.Align();
             var allocated = new byte[ushort.MaxValue];
             writer.ToSpan(allocated);
             var reader = new BitBufferReader<SevenBitDecoding>(allocated.Length);
@@ -49,7 +49,7 @@ namespace NetStack.Serialization
         public void StringWriteRead()
         {
             var writer = new BitBufferWriter<SevenBitEncoding>();
-            writer.chars("lahoda.prо/минск");
+            writer.c("lahoda.prо/минск");
             var allocated = new byte[ushort.MaxValue];
             writer.ToSpan(allocated);
             var reader = new BitBufferReader<SevenBitDecoding>(allocated.Length);

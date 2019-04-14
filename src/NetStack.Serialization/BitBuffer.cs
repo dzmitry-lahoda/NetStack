@@ -31,7 +31,6 @@ namespace NetStack.Serialization
             
         }
 
-
         public static i32 BitsRequired(i32 min, i32 max) =>
             (min == max) ? 1 : BitOperations.Log2((u32)(max - min)) + 1;
 
@@ -69,6 +68,23 @@ namespace NetStack.Serialization
             scratch = 0;
             scratchUsedBits = 0;
         }
+
+        /// <summary>
+        /// Call aligns remaining bits to full bytes.
+        /// </summary>
+        public void Align()
+        {
+            if (scratchUsedBits != 0)
+            {
+                #if DEBUG || NETSTACK_VALIDATE
+                if (chunkIndex >= totalNumChunks) throw new IndexOutOfRangeException("buffer overflow when trying to finalize stream");
+                #endif
+                chunks[chunkIndex] = (u32)(scratch & 0xFFFFFFFF);
+                scratch >>= 32;
+                scratchUsedBits -= 32;
+                chunkIndex++;
+            }
+        }        
 
         public override string ToString()
         {

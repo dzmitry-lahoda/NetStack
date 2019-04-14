@@ -22,7 +22,7 @@ namespace NetStack.Serialization
         {
             var writer = new BitBufferWriter<SevenBitEncoding>();
             writer.f32(123.456f);
-            writer.Finish();
+            writer.Align();
             var data = writer.ToArray();
             var reader = new BitBufferReader<SevenBitDecoding>();
             reader.CopyFrom(data);

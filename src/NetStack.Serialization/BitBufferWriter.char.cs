@@ -23,16 +23,18 @@ using UnityEngine;
 
 namespace NetStack.Serialization
 {
-    // GC allocated String stuff
     partial class BitBufferWriter<T>
     {
+        /// <summary>
+        /// Adds span of chars into buffer.
+        /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void chars(ReadOnlySpan<char> value)
+        public void c(ReadOnlySpan<char> value)
         {
             if (value.Length > config.StringLengthMax)
-                        throw ArgumentOutOfRange($"String too long, raise the {nameof(config.StringLengthBits)} value or split the string.");
+                throw ArgumentOutOfRange($"String too long, raise the {nameof(config.StringLengthBits)} value or split the string.");
 
-            i32 length = value.Length;
+            var length = value.Length;
 
             if (length * 17 + 10 > (totalNumberBits - BitsWritten)) // possible overflow
             {
@@ -49,7 +51,7 @@ namespace NetStack.Serialization
                     codePage = CodePage.Latin1;
                     if (val > 255)
                     {
-                        codePage = CodePage.LatinExtended; 
+                        codePage = CodePage.LatinExtended;
                         if (val > 511)
                         {
                             codePage = CodePage.UTF16;

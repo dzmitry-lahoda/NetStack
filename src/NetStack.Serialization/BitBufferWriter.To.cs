@@ -29,7 +29,7 @@ namespace NetStack.Serialization
     public partial class BitBufferWriter<T>
     {
         /// <summary>
-        /// Calls <see cref="Finish"/> and copies all internal data into span.
+        /// Calls <see cref="Align"/> and copies all internal data into span.
         /// </summary>
         /// <param name="data">The output buffer.</param>
         /// <returns>Count of bytes written.</returns>
@@ -39,7 +39,7 @@ namespace NetStack.Serialization
 
             raw(1, 1);
             var bitsPassed = BitsWritten;
-            Finish();
+            Align();
 
             i32 numChunks = (bitsPassed >> 5) + 1;
             i32 length = data.Length;

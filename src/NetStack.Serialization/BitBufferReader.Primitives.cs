@@ -24,7 +24,7 @@ namespace NetStack.Serialization
     partial class BitBufferReader<T>
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool PeekBool()
+        public bool bPeek()
         {
             var tmp1 = scratchUsedBits;
             var tmp2 = chunkIndex;
@@ -147,7 +147,7 @@ namespace NetStack.Serialization
             if (BitsRead + bits > totalNumberBits) throw ArgumentOutOfRange("Reading too many bits for requested range");
 #endif     
 
-            return (int)(raw(bits) + min);
+            return (i32)(raw(bits) + min);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -185,33 +185,33 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public long i64()
+        public i64 i64()
         {
             i32 low = i32();
             i32 high = i32();
-            long value = high;
+            i64 value = high;
             return value << 32 | (u32)low;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public long PeekLong()
+        public i64 PeekLong()
         {
-            long value = i64();
+            i64 value = i64();
             return value;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public ulong u64()
+        public u64 u64()
         {
             u32 low = u32();
             u32 high = u32();
-            return (ulong)high << 32 | low;
+            return (u64)high << 32 | low;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public ulong PeekULong()
+        public u64 PeekULong()
         {
-            ulong value = u64();
+            u64 value = u64();
             return value;
         }
 
@@ -275,14 +275,14 @@ namespace NetStack.Serialization
         public f64 f64()
         {
             var value = u64();
-            return Unsafe.As<ulong, f64>(ref value);
+            return Unsafe.As<u64, f64>(ref value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public f64 f64Peek()
         {
             var value = PeekULong();
-            return Unsafe.As<ulong, f64>(ref value);
+            return Unsafe.As<u64, f64>(ref value);
         }
 
 

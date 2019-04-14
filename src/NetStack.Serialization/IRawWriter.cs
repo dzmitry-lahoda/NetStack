@@ -1,10 +1,9 @@
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 using System.Text;
 using static System.Except;
 using i8 = System.SByte;
 using i16 = System.Int16;
-using i32 = System.Int32;
 using i64 = System.Int64;
 using u8 = System.Byte;
 using u16 = System.UInt16;
@@ -25,10 +24,5 @@ namespace NetStack.Serialization
     public interface IRawWriter
     {
         void raw(u32 value, int numberOfBits);
-    }
-
-    public interface IRawReader
-    {
-        u32 raw(i32 numberOfBits);
     }
 }

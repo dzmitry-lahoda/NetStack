@@ -43,7 +43,7 @@ namespace NetStack.Serialization
         /// </summary>
         /// <param name="capacity">Count of 4 byte integers used as internal buffer.</param>
         public BitBufferReader(i32 capacity = DefaultCapacityUInt, BitBufferOptions config = default)
-        : this(new uint[capacity], config)
+        : this(new u32[capacity], config)
         {
         }
 
@@ -51,7 +51,7 @@ namespace NetStack.Serialization
         /// Creates new instance with its own buffer. 
         /// </summary>
         /// <param name="buffer">Custom buffer.</param>
-        public BitBufferReader(uint[] buffer, BitBufferOptions config = default)
+        public BitBufferReader(u32[] buffer, BitBufferOptions config = default)
         {
             // TODO: try inline config as struct to improve access perfromance? Test it via benchmark
             this.config = config == null  ? BitBufferOptions.Default : config;
@@ -69,22 +69,7 @@ namespace NetStack.Serialization
             scratch = startFrom.scratch;
             scratchUsedBits = startFrom.scratchUsedBits;
             chunkIndex = startFrom.chunkIndex;
-            Finish();
+            Align();
         }
-
-        private void Finish()
-        {
-            if (scratchUsedBits != 0)
-            {
-                #if DEBUG || NETSTACK_VALIDATE
-                if (chunkIndex >= totalNumChunks) throw new IndexOutOfRangeException("buffer overflow when trying to finalize stream");
-                #endif
-                chunks[chunkIndex] = (u32)(scratch & 0xFFFFFFFF);
-                scratch >>= 32;
-                scratchUsedBits -= 32;
-                chunkIndex++;
-            }
-        }
-
     }
 }

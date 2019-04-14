@@ -31,7 +31,9 @@ namespace NetStack.Serialization
         /// </summary>
         public i32 LengthWritten => ((BitsWritten - 1) >> 3) + 1;
 
-        // total count of used bits since buffer start
+        /// <summary>
+        /// Gets total count of used bits since buffer start.
+        /// </summary>
         public i32 BitsWritten
         {
             get
@@ -43,24 +45,7 @@ namespace NetStack.Serialization
         }
 
         /// <summary>
-        /// Call after all write commands.
-        /// </summary>
-        public void Finish()
-        {
-            if (scratchUsedBits != 0)
-            {
-                #if DEBUG || NETSTACK_VALIDATE
-                if (chunkIndex >= totalNumChunks) throw new IndexOutOfRangeException("buffer overflow when trying to finalize stream");
-                #endif
-                chunks[chunkIndex] = (u32)(scratch & 0xFFFFFFFF);
-                scratch >>= 32;
-                scratchUsedBits -= 32;
-                chunkIndex++;
-            }
-        }
-
-        /// <summary>
-        /// Hom much bits can be yet written into buffer before it <see cref="IsReadFinished"/>.
+        /// Hom much bits can be yet written into buffer before it cannot add bits more.
         /// </summary>
         public i32 BitsAvailable => totalNumberBits - BitsWritten;
 
@@ -91,7 +76,7 @@ namespace NetStack.Serialization
         {
             value &= (u32)((1ul << numberOfBits) - 1);
 
-            scratch |= ((ulong)value) << scratchUsedBits;
+            scratch |= ((u64)value) << scratchUsedBits;
 
             // maintain with bool index increase, do not reuse - looses 5% of performance on .NET Core event if AggressiveInlining
             scratchUsedBits += numberOfBits;
