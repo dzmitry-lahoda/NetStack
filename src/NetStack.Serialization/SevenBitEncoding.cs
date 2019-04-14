@@ -30,7 +30,7 @@ namespace NetStack.Serialization
     // going container to be struct seems to be more complex and permaturely (will wait C# 8)
     public struct SevenBitEncoding : ICompression<BitBufferWriter<SevenBitEncoding>>
     {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public void i32(BitBufferWriter<SevenBitEncoding> b, i32 value)
         {
             // have tried to have only encode, with no i32 method, 
@@ -38,7 +38,7 @@ namespace NetStack.Serialization
             u32(b, encode(value));
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public void u32(BitBufferWriter<SevenBitEncoding> b, u32 value)
         {
             do
@@ -55,10 +55,10 @@ namespace NetStack.Serialization
         }
 
         // zig zag encoding 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public u32 encode(i32 value) => (u32)((value << 1) ^ (value >> 31));
         
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public void i32(BitBufferWriter<SevenBitEncoding> b, i32 value, i32 numberOfBits)
         {
             b.raw(encode(value), numberOfBits);

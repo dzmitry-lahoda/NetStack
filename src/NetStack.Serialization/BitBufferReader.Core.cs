@@ -41,7 +41,7 @@ namespace NetStack.Serialization
         /// <summary>
         /// Reads one bit boolean.
         /// </summary>        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public bool b()
         {
 #if DEBUG || NETSTACK_VALIDATE
@@ -50,7 +50,7 @@ namespace NetStack.Serialization
 #endif
             if (scratchUsedBits < 1)
             {
-                scratch |= ((u64)(chunks.Span[chunkIndex])) << scratchUsedBits;
+                scratch |= ((u64)(chunks[chunkIndex])) << scratchUsedBits;
                 scratchUsedBits += 32;
                 chunkIndex++;
             }
@@ -69,7 +69,7 @@ namespace NetStack.Serialization
         /// <summary>
         /// Reads raw data.
         /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public u32 raw(i32 numberOfBits)
         {
 #if DEBUG || NETSTACK_VALIDATE
@@ -83,7 +83,7 @@ namespace NetStack.Serialization
 #if DEBUG || NETSTACK_VALIDATE                
                 if (chunkIndex >= totalNumChunks) throw InvalidOperation("reading more than buffer size");
 #endif
-                scratch |= ((u64)(chunks.Span[chunkIndex])) << scratchUsedBits;
+                scratch |= ((u64)(chunks[chunkIndex])) << scratchUsedBits;
                 scratchUsedBits += 32;
                 chunkIndex++;
             }
@@ -102,28 +102,28 @@ namespace NetStack.Serialization
         /// <summary>
         /// Reads 7 bit encoded uint value.
         /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public u32 u32()
         {
             T decoder = default;
             return decoder.u32(this);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public i32 i32()
         {
             T dencoder = default;
             return dencoder.i32(this);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public i32 i32(i32 numberOfBits)
         {
             T encoder = default;
             return encoder.i32(this, numberOfBits);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public void SetPosition(i32 bitsRead)
         {
 #if DEBUG || NETSTACK_VALIDATE        
@@ -134,7 +134,7 @@ namespace NetStack.Serialization
            scratchUsedBits = bitsRead % 32;
            if (scratchUsedBits != 0)
            {
-               scratch = ((u64)(chunks.Span[chunkIndex])) >> scratchUsedBits;
+               scratch = ((u64)(chunks[chunkIndex])) >> scratchUsedBits;
                chunkIndex += 1;
            }
            else

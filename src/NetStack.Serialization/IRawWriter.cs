@@ -24,7 +24,7 @@ namespace NetStack.Serialization
 {
     public interface IRawWriter
     {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         void raw(u32 value, int numberOfBits);
     }
 }

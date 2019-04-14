@@ -10,9 +10,15 @@ using UnityEngine;
 
 namespace NetStack.Serialization
 {
+    internal static class Optimization
+    {
+        // backport of values from 3.0 to target performance into future, compile fold old target still get improvements on new runtime
+        public const short AggressiveInliningAndOptimization = 0x0100 | 0x0200; 
+    }
+
     public struct SevenBitDecoding : IDecompression<BitBufferReader<SevenBitDecoding>>
     {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public u32 u32(BitBufferReader<SevenBitDecoding> b)
         {
             u32 buffer = 0x0u;
@@ -30,14 +36,14 @@ namespace NetStack.Serialization
 
             return value;
         }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public i32 decode(u32 value) => (i32)((value >> 1) ^ (-(i32)(value & 1)));
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public i32 i32(BitBufferReader<SevenBitDecoding> b) => decode(u32(b));
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public i32 i32(BitBufferReader<SevenBitDecoding> b, i32 numberOfBits)
         {
             u32 value = b.raw(numberOfBits);

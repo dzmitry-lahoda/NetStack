@@ -40,8 +40,8 @@ namespace NetStack.Serialization
             (min == max) ? 1 : BitOperations.Log2(max - min) + 1;
 
 #region BState
-        //protected internal u32[] chunks;        
-        protected internal System.Memory<u32> chunks;
+        protected internal u32[] chunks;        
+        //protected internal System.Memory<u32> chunks;
         protected i32 totalNumChunks;        
         protected i32 totalNumberBits;  
         protected internal u32[] Chunks
@@ -70,7 +70,7 @@ namespace NetStack.Serialization
         /// <summary>
         /// Sets buffer cursor to zero. Can start writing again.
         /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public void Reset()
         {            
             chunkIndex = 0;
@@ -104,7 +104,7 @@ namespace NetStack.Serialization
                 #if DEBUG || NETSTACK_VALIDATE
                 if (chunkIndex >= totalNumChunks) throw IndexOutOfRange("buffer overflow when trying to finalize stream");
                 #endif
-                chunks.Span[chunkIndex] = (u32)(scratch & 0xFFFFFFFF);
+                chunks[chunkIndex] = (u32)(scratch & 0xFFFFFFFF);
                 scratch >>= 32;
                 scratchUsedBits -= 32;
                 chunkIndex++;
@@ -117,7 +117,7 @@ namespace NetStack.Serialization
 
             for (i32 i = chunks.Length - 1; i >= 0; i--)
             {
-                toStringBuilder.Append(Convert.ToString(chunks.Span[i], 2).PadLeft(32, '0'));
+                toStringBuilder.Append(Convert.ToString(chunks[i], 2).PadLeft(32, '0'));
             }
 
             var spaced = new StringBuilder();

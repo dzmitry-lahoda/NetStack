@@ -10,7 +10,7 @@ namespace NetStack.Serialization
 {
     public interface IRawReader
     {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         u32 raw(i32 numberOfBits);
     }
 }

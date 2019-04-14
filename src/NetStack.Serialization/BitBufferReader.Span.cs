@@ -23,7 +23,7 @@ namespace NetStack.Serialization
 {
     partial class BitBufferReader<T>
     {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public i32 u8SpanLengthPeek() 
         {
            var index = SIndex;
@@ -32,7 +32,7 @@ namespace NetStack.Serialization
            return value;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public i32 u8(Span<u8> outputValue) => u8(outputValue, 0);
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace NetStack.Serialization
         /// <param name="outputValue">Array to write into.</param>
         /// <param name="offset">Byte offset of output array to start write</param>
         /// <returns>Length of read array.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public i32 u8(Span<u8> outputValue, i32 offset)
         {
             var length = (int)raw(config.U8SpanBitsLength);        

@@ -26,7 +26,7 @@ namespace NetStack.Serialization
         /// <summary>
         /// Reads int, but does not move cursor.
         /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public i32 i32Peek()
         {
             T encoder = default;
@@ -37,7 +37,7 @@ namespace NetStack.Serialization
         /// Reads uint, but does not move cursor.
         /// </summary>
         /// <returns></returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public u32 u32Peek()
         {
             u32 value = u32();
@@ -47,7 +47,7 @@ namespace NetStack.Serialization
         /// <summary>
         /// Reads i32 value without progressing bits position.
         /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public i32 i32Peek(i32 numberOfBits)
         {
             T encoder = default;
@@ -55,7 +55,7 @@ namespace NetStack.Serialization
             return encoder.decode(value);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public u8 u8Peek()
         {
             var index = SIndex;
@@ -64,7 +64,7 @@ namespace NetStack.Serialization
             return value;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public u8 u8Peek(i32 numberOfBits)
         {
             var index = SIndex;
@@ -72,7 +72,7 @@ namespace NetStack.Serialization
             SIndex = index;
             return value;
         }
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public u8 u8Peek(u8 min, u8 max)
         {
             var index = SIndex;
@@ -81,7 +81,7 @@ namespace NetStack.Serialization
             return value;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public i8 i8Peek()
         {
             var index = SIndex;
@@ -90,7 +90,7 @@ namespace NetStack.Serialization
             return value;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public i8 i8Peek(i32 numberOfBits) 
         {
             var index = SIndex;
@@ -99,7 +99,7 @@ namespace NetStack.Serialization
             return value;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public i8 i8Peek(i8 min, i8 max)
         {
             var index = SIndex;
@@ -108,7 +108,7 @@ namespace NetStack.Serialization
             return value;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public i16 i16Peek() 
         {
             var index = SIndex;
@@ -117,7 +117,7 @@ namespace NetStack.Serialization
             return value;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public i16 i16Peek(i32 numberOfBits) 
         {
             var index = SIndex;
@@ -126,7 +126,7 @@ namespace NetStack.Serialization
             return value;
         } 
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public i16 i16Peek(i16 min, i16 max) 
         {
             var index = SIndex;
@@ -135,7 +135,7 @@ namespace NetStack.Serialization
             return value;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public u16 u16Peek() 
         {
             var index = SIndex;
@@ -144,7 +144,7 @@ namespace NetStack.Serialization
             return value;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public u16 u16Peek(i32 numberOfBits)
         {
             var index = SIndex;
@@ -153,7 +153,7 @@ namespace NetStack.Serialization
             return value;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public u16 u16Peek(u16 min, u16 max)
         {
             var index = SIndex;
@@ -162,7 +162,7 @@ namespace NetStack.Serialization
             return value;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public bool bPeek()
         {
             var index = SIndex;
@@ -171,7 +171,7 @@ namespace NetStack.Serialization
             return result;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public i32 i32Peek(i32 min, i32 max)
         {
             var index = SIndex;
@@ -181,7 +181,7 @@ namespace NetStack.Serialization
         }
 
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public u32 u32Peek(i32 numberOfBits) 
         {
             var index = SIndex;
@@ -190,7 +190,7 @@ namespace NetStack.Serialization
             return value;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public u32 u32Peek(u32 min, u32 max)
         {
             var index = SIndex;
@@ -199,7 +199,7 @@ namespace NetStack.Serialization
             return value;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public i64 i64Peek()
         {
             var index = SIndex;
@@ -208,7 +208,7 @@ namespace NetStack.Serialization
             return value;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public u64 u64Peek()
         {
             var index = SIndex;
@@ -217,7 +217,7 @@ namespace NetStack.Serialization
             return value;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public f32 f32Peek(f32 min, f32 max, f32 precision)
         {
             var index = SIndex;
@@ -226,7 +226,7 @@ namespace NetStack.Serialization
             return value;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public f32 f32Peek(f32 min, f32 max, i32 numberOfBits)
         {
             var index = SIndex;
@@ -235,7 +235,7 @@ namespace NetStack.Serialization
             return value;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public f32 f32Peek()
         {
             var index = SIndex;
@@ -244,7 +244,7 @@ namespace NetStack.Serialization
             return value;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public f64 f64Peek()
         {
             var index = SIndex;

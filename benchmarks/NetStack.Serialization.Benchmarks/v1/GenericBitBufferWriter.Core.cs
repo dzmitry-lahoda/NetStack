@@ -47,7 +47,7 @@ namespace NetStack.Serialization
         /// <summary>
         /// Call after all write commands.
         /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(MyMethodImplOptions.AggressiveInlining)]
         public void Finish()
         {
             if (scratchUsedBits != 0)
@@ -68,7 +68,7 @@ namespace NetStack.Serialization
         /// <summary>
         /// Store value in specified number of bits.
         /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(MyMethodImplOptions.AggressiveInlining)]
         public void raw(uint value, int numberOfBits)
         {
 #if DEBUG || NETSTACK_VALIDATE
@@ -87,7 +87,7 @@ namespace NetStack.Serialization
             internalRaw(value, numberOfBits);
         }
         
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(MyMethodImplOptions.AggressiveInlining)]
         public void internalRaw(uint value, int numberOfBits)
         {
             value &= (uint)((1ul << numberOfBits) - 1);
@@ -113,7 +113,7 @@ namespace NetStack.Serialization
         //  BoolViaInt | 10000 | 1.998 ms | 0.0666 ms | 0.1943 ms | 1.942 ms |
         //    BoolFast | 10000 | 1.592 ms | 0.0493 ms | 0.1429 ms | 1.564 ms |        
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(MyMethodImplOptions.AggressiveInlining)]
         public void b(bool value)
         {
             if (value)
@@ -136,7 +136,7 @@ namespace NetStack.Serialization
         /// Adds value 7 bit encoded value.
         /// Store seven right bits, if more than 8 with 1, then set 1 to continue.
         /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(MyMethodImplOptions.AggressiveInlining)]
         public void u32(uint value)
         {
             T encoder = default;
@@ -146,7 +146,7 @@ namespace NetStack.Serialization
         /// <summary>
         /// Store value ZigZag and 7 bits encoded.
         /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(MyMethodImplOptions.AggressiveInlining)]
         public void i32(int value)
         {
             uint zigzag = (uint)((value << 1) ^ (value >> 31));
@@ -156,7 +156,7 @@ namespace NetStack.Serialization
         /// <summary>
         /// Store value ZigZag encoded in number of bits.
         /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(MyMethodImplOptions.AggressiveInlining)]
         public void i32(int value, int numberOfBits)
         {
             uint zigzag = (uint)((value << 1) ^ (value >> 31));

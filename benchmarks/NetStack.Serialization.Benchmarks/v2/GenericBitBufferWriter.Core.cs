@@ -21,21 +21,20 @@ using UnityEngine;
 #endif
 namespace NetStack.Serialization
 {
-    partial class BitBufferWriter<T> : IRawWriter 
-        where T:unmanaged, ICompression<BitBufferWriter<T>> // https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern
+
+
+    partial struct MemoryBufferWriter<T>: IRawWriter where T:unmanaged, ICompression<MemoryBufferWriter<T>>
     {
         // true if has not capacity to write numberOfBits
-        public bool CannotAdd(i32 numberOfBits) => BitsWritten + numberOfBits > totalNumberBits;
+        public bool CannotAdd(int numberOfBits) => BitsWritten + numberOfBits > totalNumberBits;
 
         /// <summary>
         /// Count of written bytes.
         /// </summary>
-        public i32 LengthWritten => ((BitsWritten - 1) >> 3) + 1;
+        public int LengthWritten => ((BitsWritten - 1) >> 3) + 1;
 
-        /// <summary>
-        /// Gets total count of used bits since buffer start.
-        /// </summary>
-        public i32 BitsWritten
+        // total count of used bits since buffer start
+        public int BitsWritten
         {
             get
             {
@@ -46,15 +45,31 @@ namespace NetStack.Serialization
         }
 
         /// <summary>
-        /// Hom much bits can be yet written into buffer before it cannot add bits more.
+        /// Call after all write commands.
         /// </summary>
-        public i32 BitsAvailable => totalNumberBits - BitsWritten;
+        [MethodImpl(MyMethodImplOptions.AggressiveInlining)]
+        public void Finish()
+        {
+            if (scratchUsedBits != 0)
+            {
+                Debug.Assert(chunkIndex < totalNumChunks, "buffer overflow when trying to finalize stream");
+                chunks.Span[chunkIndex] = (uint)(scratch & 0xFFFFFFFF);
+                scratch >>= 32;
+                scratchUsedBits -= 32;
+                chunkIndex++;
+            }
+        }
+
+        /// <summary>
+        /// Hom much bits can be yet written into buffer before it <see cref="IsReadFinished"/>.
+        /// </summary>
+        public int BitsAvailable => totalNumberBits - BitsWritten;
 
         /// <summary>
         /// Store value in specified number of bits.
         /// </summary>
-        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public void raw(u32 value, i32 numberOfBits)
+        [MethodImpl(MyMethodImplOptions.AggressiveInlining)]
+        public void raw(uint value, int numberOfBits)
         {
 #if DEBUG || NETSTACK_VALIDATE
             if (numberOfBits <= 0)
@@ -66,44 +81,39 @@ namespace NetStack.Serialization
             if (BitsWritten + numberOfBits > totalNumberBits)
                 throw InvalidOperation($"Writing {numberOfBits} bits will exceed maximal capacity of {totalNumberBits}, while {BitsWritten} bits written");
 
-            if (value > (u32)((1ul << numberOfBits) - 1))
+            if (value > (uint)((1ul << numberOfBits) - 1))
                 throw Argument(nameof(value), $"{value} is too big, won't fit in requested {numberOfBits} number of bits");
 #endif
             internalRaw(value, numberOfBits);
         }
         
-        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        private void internalRaw(u32 value, i32 numberOfBits)
+        [MethodImpl(MyMethodImplOptions.AggressiveInlining)]
+        public void internalRaw(uint value, int numberOfBits)
         {
-            value &= (u32)((1ul << numberOfBits) - 1);
+            value &= (uint)((1ul << numberOfBits) - 1);
 
-            scratch |= ((u64)value) << scratchUsedBits;
+            scratch |= ((ulong)value) << scratchUsedBits;
 
             // maintain with bool index increase, do not reuse - looses 5% of performance on .NET Core event if AggressiveInlining
             scratchUsedBits += numberOfBits;
 
             if (scratchUsedBits >= 32)
             {
-                #if DEBUG || NETSTACK_VALIDATE
-                    if (chunkIndex >= totalNumChunks) throw IndexOutOfRange("Pushing failed, buffer is full.");
-                #endif                
+                Debug.Assert(chunkIndex < totalNumChunks, "Pushing failed, buffer is full.");
                 // TODO: how much it will cost to cast ref byte into ref uint and set scratch (to allow FromArray with no copy)
-                chunks[chunkIndex] = (u32)(scratch);
+                chunks.Span[chunkIndex] = (uint)(scratch);
                 scratch >>= 32;
                 scratchUsedBits -= 32;
                 chunkIndex++;
             }
         }
 
-
         //      Method |     N |     Mean |     Error |    StdDev |   Median |
         // ----------- |------ |---------:|----------:|----------:|---------:|
         //  BoolViaInt | 10000 | 1.998 ms | 0.0666 ms | 0.1943 ms | 1.942 ms |
         //    BoolFast | 10000 | 1.592 ms | 0.0493 ms | 0.1429 ms | 1.564 ms |        
-        /// <summary>
-        /// Writes boolean value into buffer.
-        /// </summary>
-        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
+
+        [MethodImpl(MyMethodImplOptions.AggressiveInlining)]
         public void b(bool value)
         {
             if (value)
@@ -115,7 +125,7 @@ namespace NetStack.Serialization
             {
                 Debug.Assert(chunkIndex < totalNumChunks, "Pushing failed, buffer is full.");
                 // TODO: will it be improvement to for chunks to be (u)long?
-                chunks[chunkIndex] = (u32)(scratch);
+                chunks.Span[chunkIndex] = (u32)(scratch);
                 scratch >>= 32;
                 scratchUsedBits -= 32;
                 chunkIndex++;
@@ -126,8 +136,8 @@ namespace NetStack.Serialization
         /// Adds value 7 bit encoded value.
         /// Store seven right bits, if more than 8 with 1, then set 1 to continue.
         /// </summary>
-        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public void u32(u32 value)
+        [MethodImpl(MyMethodImplOptions.AggressiveInlining)]
+        public void u32(uint value)
         {
             T encoder = default;
             encoder.u32(this, value);
@@ -136,21 +146,21 @@ namespace NetStack.Serialization
         /// <summary>
         /// Store value ZigZag and 7 bits encoded.
         /// </summary>
-        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public void i32(i32 value)
+        [MethodImpl(MyMethodImplOptions.AggressiveInlining)]
+        public void i32(int value)
         {
-            T encoder = default;
-            encoder.i32(this, value);
+            uint zigzag = (uint)((value << 1) ^ (value >> 31));
+            u32(zigzag);
         }
 
         /// <summary>
         /// Store value ZigZag encoded in number of bits.
         /// </summary>
-        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public void i32(i32 value, i32 numberOfBits)
+        [MethodImpl(MyMethodImplOptions.AggressiveInlining)]
+        public void i32(int value, int numberOfBits)
         {
-            T encoder = default;
-            encoder.i32(this, value, numberOfBits);
+            uint zigzag = (uint)((value << 1) ^ (value >> 31));
+            raw(zigzag, numberOfBits);
         }
     }
 }

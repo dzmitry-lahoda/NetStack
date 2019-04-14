@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿﻿sing System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -28,24 +28,24 @@ namespace NetStack.Serialization
     /// <summary>
     /// Bit level compression by ranged values.
     /// </summary>
-    public partial struct GenericBitBufferWriter<T> 
+    public partial struct GenericBitBufferWriter<T>
     {
-                public static int BitsRequired(int min, int max) =>
-            (min == max) ? 1 : BitOperations.Log2((uint)(max - min)) + 1;
+        public static int BitsRequired(int min, int max) =>
+    (min == max) ? 1 : BitOperations.Log2((uint)(max - min)) + 1;
 
         public static int BitsRequired(uint min, uint max) =>
             (min == max) ? 1 : BitOperations.Log2(max - min) + 1;
 
-        private uint[] chunks;        
-        private int totalNumChunks;        
-        private int totalNumberBits;  
+        private uint[] chunks;
+        private int totalNumChunks;
+        private int totalNumberBits;
         private uint[] Chunks
         {
-            set 
+            set
             {
                 chunks = value;
                 totalNumChunks = chunks.Length;
-                totalNumberBits = totalNumChunks * 8 * Unsafe.SizeOf<uint>();   
+                totalNumberBits = totalNumChunks * 8 * Unsafe.SizeOf<uint>();
             }
         }
 
@@ -53,16 +53,16 @@ namespace NetStack.Serialization
         // bit index onto current head
         private int chunkIndex;
         private int scratchUsedBits;
-        
+
         // last partially read value
         private ulong scratch;
 
         /// <summary>
         /// Sets buffer cursor to zero. Can start writing again.
         /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(MyMethodImplOptions.AggressiveInlining)]
         public void Reset()
-        {            
+        {
             chunkIndex = 0;
             scratch = 0;
             scratchUsedBits = 0;
@@ -98,9 +98,9 @@ namespace NetStack.Serialization
             if (buffer == null || buffer.Length == 0)
                 throw Argument("Buffer should be non null or empty", nameof(buffer));
 
-                chunks = buffer;
-                totalNumChunks = chunks.Length;
-                totalNumberBits = totalNumChunks * 8 * Unsafe.SizeOf<uint>();   
+            chunks = buffer;
+            totalNumChunks = chunks.Length;
+            totalNumberBits = totalNumChunks * 8 * Unsafe.SizeOf<uint>();
 
             chunkIndex = 0;
             scratch = 0;

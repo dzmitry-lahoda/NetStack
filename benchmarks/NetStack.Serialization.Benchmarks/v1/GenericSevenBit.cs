@@ -25,18 +25,22 @@ using BitOperations = System.Numerics.BitOperations;
 
 namespace NetStack.Serialization
 {
-    // circular constrained generics work on .NET Core as fast as manual code (even slightly faster on .NET Core 2.2 x86-64 if container is class)
-    // Unity FPS samples has usage of constrained generic (and IL2CPP does LLVM) indicates these should work there to
-    // going container to be struct seems to be more complex and permaturely (will wait C# 8)
-    public struct SevenBitEncoding2 : ICompression<GenericBitBufferWriter<SevenBitEncoding2>>
+
+    public static class MyMethodImplOptions
     {
-        public void i32(GenericBitBufferWriter<SevenBitEncoding2> b, i32 value)
+        //0x0200 | 0x0100
+        public const short AggressiveInlining =  0x0100;
+}
+ 
+    public struct GenericSevenBit : ICompression<GenericBitBufferWriter<GenericSevenBit>>
+    {
+        public void i32(GenericBitBufferWriter<GenericSevenBit> b, i32 value)
         {
             u32(b, encode(value));
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void u32(GenericBitBufferWriter<SevenBitEncoding2> b, u32 value)
+        [MethodImpl(MyMethodImplOptions.AggressiveInlining)]
+        public void u32(GenericBitBufferWriter<GenericSevenBit> b, u32 value)
         {
             do
             {
@@ -51,11 +55,11 @@ namespace NetStack.Serialization
             while (value > 0);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(MyMethodImplOptions.AggressiveInlining)]
         public uint encode(i32 value) => (u32)((value << 1) ^ (value >> 31));
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void i32(GenericBitBufferWriter<SevenBitEncoding2> b, i32 value, i32 numberOfBits)
+        [MethodImpl(MyMethodImplOptions.AggressiveInlining)]
+        public void i32(GenericBitBufferWriter<GenericSevenBit> b, i32 value, i32 numberOfBits)
         {
              b.raw(encode(value), numberOfBits);
         }

@@ -28,7 +28,7 @@ namespace NetStack.Serialization
         /// <summary>
         /// Adds span of chars into buffer.
         /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public void c(ReadOnlySpan<char> value)
         {
             if (value.Length > config.CharSpanLengthMax)

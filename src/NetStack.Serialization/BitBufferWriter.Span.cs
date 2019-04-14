@@ -24,7 +24,7 @@ namespace NetStack.Serialization
 {
     partial class BitBufferWriter<T>
     {       
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public void u8(ReadOnlySpan<u8> value)
         {
             if (value.Length > config.U8SpanLengthMax) 

@@ -13,6 +13,7 @@ using u32 = System.UInt32;
 using u64 = System.UInt64;
 using f32 = System.Single;
 using f64 = System.Double;
+using System.Linq;
 #if !(ENABLE_MONO || ENABLE_IL2CPP)
 using System.Diagnostics;
 using System.Numerics;

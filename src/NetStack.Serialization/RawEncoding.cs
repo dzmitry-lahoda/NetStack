@@ -24,16 +24,16 @@ namespace NetStack.Serialization
 {
     public struct RawEncoding : ICompression<BitBufferWriter<RawEncoding>>
     {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public void i32(BitBufferWriter<RawEncoding> b, int value) => b.raw((u32)value, 32);
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public void u32(BitBufferWriter<RawEncoding> b, u32 value) => b.raw(value, 32);
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public u32 encode(i32 value) => (u32)value;
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public void i32(BitBufferWriter<RawEncoding> b, i32 value, i32 numberOfBits) => i32(b, value);
     }
 }
