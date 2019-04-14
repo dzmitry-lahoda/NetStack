@@ -39,27 +39,13 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public void u32(BitBufferWriter<SevenBitEncoding> b, u32 value)
-        {
-            do
-            {
-                var buffer = value & 0b0111_1111u;
-                value >>= 7;
+        public void u32(BitBufferWriter<SevenBitEncoding> b, u32 value) => BitOptsExtensions.u32<BitBufferWriter<SevenBitEncoding>>(b,value);
 
-                if (value > 0)
-                    buffer |= 0b1000_0000u;
-
-                b.raw(buffer, 8);
-            }
-            while (value > 0);
-        }
-
-        // zig zag encoding 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public u32 encode(i32 value) => BitOptsExtensions.ZigZag(value);
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public void i32(BitBufferWriter<SevenBitEncoding> b, i32 value, i32 numberOfBits) => 
-        b.raw(encode(value), numberOfBits);
+            b.raw(encode(value), numberOfBits);
     }
 }
