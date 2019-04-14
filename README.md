@@ -26,16 +26,16 @@ All validation and exception are behind `#if DEBUG || NETSTACK_VALIDATE`.
   - Compact bit-packing
     - [ZigZag](https://developers.google.com/protocol-buffers/docs/encoding#signed-integers) encoding
     - [Variable-length](https://rosettacode.org/wiki/Variable-length_quantity) encoding
-		- TODO: allow huffman Unity FPSSample in learning and ready alphabet encodings
+	- TODO: allow huffman Unity FPSSample in learning and ready alphabet encodings, learng big vs small values in delta
     - TODO: optimize write of 2,3,4 bits values
     - TODO: add delta methods with small vs big delimeter
-    - Possiblity to write with no packing 
+    - Debugging write and read with no packing 
   - Start write or read from where previous bit buffer finished.
   - TODO: allow zero copy read write by init from byte array, cast head into ref as uint
   - TODO: add custom visualizer or custom to string (to 01 to to hex)
-	- TODO: Given possible do delta of prediction. Should prediction API be part of serializer?
-	- Core code allocates Exceptions when DEBUG or NETSTACK_VALIDATE
-  - Not Fluent interface as it gives performance overhead and does not improves override. May still accept it as pull of separate project.
+  - TODO: Given possible do delta of prediction. Should prediction API be part of serializer?
+  - Core code allocates Exceptions when DEBUG or NETSTACK_VALIDATE
+  - No fluent interface as it adds performance overhead.
 
 ### Optimization priorities
 

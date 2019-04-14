@@ -14,7 +14,6 @@ using u64 = System.UInt64;
 using f32 = System.Single;
 using f64 = System.Double;
 
-
 namespace NetStack.Serialization
 {
     partial class BitBufferTests
@@ -53,7 +52,7 @@ namespace NetStack.Serialization
             Assert.Equal(2, reader.u8(3));
             Assert.Equal(0, reader.u8());
             Assert.Equal(bitsWritten, reader.BitsRead);
-        }     
+        }
 
         [Fact]
         public void u8MaxValueWritePeek()
@@ -66,7 +65,7 @@ namespace NetStack.Serialization
             Assert.Equal(u8.MaxValue, reader.u8Peek());
             Assert.Equal(reader.u8Peek(), reader.u8());
         }
-        
+
         public void u8MaxValueWritePeek1024()
         {
             var writer = new BitBufferWriter<SevenBitEncoding>();
@@ -76,7 +75,7 @@ namespace NetStack.Serialization
             reader.CopyFrom(data);
             for (int i = 0; i < 1024; i++)
             {
-                Assert.Equal(u8.MaxValue, reader.u8Peek());    
+                Assert.Equal(u8.MaxValue, reader.u8Peek());
             }
         }
 
@@ -86,8 +85,8 @@ namespace NetStack.Serialization
             var writer = new BitBufferWriter<SevenBitEncoding>(1000);
             for (int i = 0; i < 513; i++)
             {
-                //buffer.Addu8(i % 2 == 0 ? u8.MaxValue : (u8)0);
-                writer.u8(u8.MaxValue) ;
+                var val = (u8)(u8.MaxValue / (i % 2 + 1));
+                writer.u8(val);
             }
 
             var data = writer.ToArray();
@@ -95,12 +94,9 @@ namespace NetStack.Serialization
             reader.CopyFrom(data);
             for (int i = 0; i < 513; i++)
             {
-                    //Assert.Equal(i % 2 == 0 ? u8.MaxValue : (u8)0, reader.Peeku8());
-                    //Assert.Equal(i % 2 == 0 ? u8.MaxValue : (u8)0, reader.Readu8());
-                    var peek = reader.u8Peek();
-                    //Assert.True(u8.MaxValue == peek, $"Peek {peek} at {i} is wrong");
-                    var read =  reader.u8();
-                    //Assert.True(u8.MaxValue == read, $"Read {read} at {i} is wrong");
+                var val = (u8)(u8.MaxValue / (i % 2 + 1));
+                Assert.Equal(val, reader.u8Peek());
+                Assert.Equal(val, reader.u8());
             }
         }
 
@@ -109,21 +105,21 @@ namespace NetStack.Serialization
         public void u8WriteOutOfRange()
         {
             var writer = new BitBufferWriter<SevenBitEncoding>();
-            Assert.Throws<ArgumentOutOfRangeException>(()=> writer.u8(125, 0, 123));
-            Assert.Throws<ArgumentOutOfRangeException>(()=> writer.u8(1, 2, 123));
-            Assert.Throws<ArgumentException>(()=> writer.u8(123, 2));
-            Assert.Throws<ArgumentException>(()=> writer.u8(44, 55, 33));
-        }    
+            Assert.Throws<ArgumentOutOfRangeException>(() => writer.u8(125, 0, 123));
+            Assert.Throws<ArgumentOutOfRangeException>(() => writer.u8(1, 2, 123));
+            Assert.Throws<ArgumentException>(() => writer.u8(123, 2));
+            Assert.Throws<ArgumentException>(() => writer.u8(44, 55, 33));
+        }
 
         [Fact]
         public void u8ReadOutOfRange()
         {
             var reader = new BitBufferReader<SevenBitDecoding>();
             reader.CopyFrom(new u8[666]);
-            Assert.Throws<ArgumentException>(()=> reader.u8(255, 123));
-            Assert.Throws<ArgumentOutOfRangeException>(()=> reader.u8(-1));
-            Assert.Throws<ArgumentOutOfRangeException>(()=> reader.u8(33));
-        }               
+            Assert.Throws<ArgumentException>(() => reader.u8(255, 123));
+            Assert.Throws<ArgumentOutOfRangeException>(() => reader.u8(-1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => reader.u8(33));
+        }
 
         [Fact]
         public void u8VerySmallReader()
@@ -139,7 +135,7 @@ namespace NetStack.Serialization
             smallReader.u8(u8.MinValue, u8.MaxValue);
             smallReader.u8(u8.MinValue, u8.MaxValue);
             smallReader.u8(u8.MinValue, u8.MaxValue);
-            Assert.Throws<ArgumentOutOfRangeException>(()=> smallReader.u8(u8.MinValue, u8.MaxValue));
+            Assert.Throws<ArgumentOutOfRangeException>(() => smallReader.u8(u8.MinValue, u8.MaxValue));
         }
 #endif          
     }
