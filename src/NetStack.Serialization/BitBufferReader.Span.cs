@@ -24,7 +24,13 @@ namespace NetStack.Serialization
     partial class BitBufferReader<T>
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public i32 u8SpanLengthPeek() => (i32)raw(config.U8SpanBitsLength);
+        public i32 u8SpanLengthPeek() 
+        {
+           var index = SIndex;
+           var value = (i32)raw(config.U8SpanBitsLength);
+           SIndex = index;
+           return value;
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public i32 u8(Span<u8> outputValue) => u8(outputValue, 0);

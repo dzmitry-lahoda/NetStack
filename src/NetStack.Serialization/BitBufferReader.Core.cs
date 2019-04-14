@@ -97,39 +97,7 @@ namespace NetStack.Serialization
             scratchUsedBits -= numberOfBits;
 
             return output;
-        }
-
-        /// <summary>
-        /// Reads int, but does not move cursor.
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public i32 i32Peek()
-        {
-            T encoder = default;
-            return encoder.i32(this);
-        }
-
-        /// <summary>
-        /// Reads uint, but does not move cursor.
-        /// </summary>
-        /// <returns></returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public u32 u32Peek()
-        {
-            u32 value = u32();
-            return value;
-        }
-
-        /// <summary>
-        /// Reads i32 value without progressing bits position.
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public i32 i32Peek(i32 numberOfBits)
-        {
-            T encoder = default;
-            u32 value = raw(numberOfBits);            
-            return encoder.decode(value);
-        }
+        }        
 
         /// <summary>
         /// Reads 7 bit encoded uint value.
