@@ -24,31 +24,31 @@ namespace NetStack.Serialization
     partial class BitBufferReader<T>
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public i32 u8ArrayLengthPeek() => (i32)raw(config.ByteArrLengthBits);
+        public i32 u8SpanLengthPeek() => (i32)raw(config.U8SpanBitsLength);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public i32 u8(Span<u8> outValue) => u8(outValue, 0);
+        public i32 u8(Span<u8> outputValue) => u8(outputValue, 0);
 
         /// <summary>
         /// Reads length prefixed array from buffer.
         /// </summary>
-        /// <param name="outValue">Array to write into.</param>
+        /// <param name="outputValue">Array to write into.</param>
         /// <param name="offset">Byte offset of output array to start write</param>
         /// <returns>Length of read array.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public i32 u8(Span<u8> outValue, i32 offset)
+        public i32 u8(Span<u8> outputValue, i32 offset)
         {
-            var length = (int)raw(config.ByteArrLengthBits);        
+            var length = (int)raw(config.U8SpanBitsLength);        
             if (totalNumberBits - BitsRead < length * 8)
                   throw InvalidOperation("The length for this read is bigger than bitbuffer");
-
+            
             // 1                    1        0   OK
             // 1                    1        1   FAIL    
-             if (length > outValue.Length - offset) 
-                throw Argument(nameof(outValue), "The supplied byte array is too small for requested read");
+             if (length > outputValue.Length - offset) 
+                throw Argument(nameof(outputValue), "The supplied byte array is too small for requested read");
 
             for (var index = offset; index < length; index++)
-                outValue[index] = u8(); // TODO: can read faster if read by 4 bytes?
+                outputValue[index] = u8(); // TODO: can read faster if read by 4 bytes?
  
             return length;
         }  

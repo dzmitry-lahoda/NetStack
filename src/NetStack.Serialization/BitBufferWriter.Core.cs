@@ -94,11 +94,14 @@ namespace NetStack.Serialization
             }
         }
 
+
         //      Method |     N |     Mean |     Error |    StdDev |   Median |
         // ----------- |------ |---------:|----------:|----------:|---------:|
         //  BoolViaInt | 10000 | 1.998 ms | 0.0666 ms | 0.1943 ms | 1.942 ms |
         //    BoolFast | 10000 | 1.592 ms | 0.0493 ms | 0.1429 ms | 1.564 ms |        
-
+        /// <summary>
+        /// Writes boolean value into buffer.
+        /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void b(bool value)
         {

@@ -36,20 +36,20 @@ namespace NetStack.Serialization
         public void u8ArrayMaxWriteRead()
         {
             var writer = new BitBufferWriter<SevenBitEncoding>();
-            var input = new byte[writer.Options.ByteArrLengthMax];
+            var input = new byte[writer.Options.U8SpanLengthMax];
             writer.u8(input);
             var allocated = new byte[ushort.MaxValue];
             writer.ToSpan(allocated);
             var reader = new BitBufferReader<SevenBitDecoding>(allocated.Length);
             reader.CopyFrom(allocated);
-            Assert.Equal(writer.Options.ByteArrLengthMax, reader.u8ArrayLengthPeek());
+            Assert.Equal(writer.Options.U8SpanLengthMax, reader.u8SpanLengthPeek());
         }
 
         [Fact]
         public void u8ArrayWriteLimit()
         {
             var writer = new BitBufferWriter<SevenBitEncoding>();
-            var input = new byte[writer.Options.ByteArrLengthMax + 1];
+            var input = new byte[writer.Options.U8SpanLengthMax + 1];
             Assert.Throws<ArgumentException>(()=> writer.u8(input));
         }
 
@@ -57,14 +57,14 @@ namespace NetStack.Serialization
         public void u8ArrayReadLimit()
         {
             var writer = new BitBufferWriter<SevenBitEncoding>();
-            var input = new byte[writer.Options.ByteArrLengthMax];
+            var input = new byte[writer.Options.U8SpanLengthMax];
             writer.u8(input);
             var data = writer.ToArray();
             var reader = new BitBufferReader<SevenBitDecoding>();
             reader.CopyFrom(data);
             
             Assert.Throws<ArgumentException>(()=> reader.u8(new byte[1]));
-            Assert.Throws<ArgumentException>(()=> reader.u8(new byte[writer.Options.ByteArrLengthMax], writer.Options.ByteArrLengthMax + 1 ));
+            Assert.Throws<ArgumentException>(()=> reader.u8(new byte[writer.Options.U8SpanLengthMax], writer.Options.U8SpanLengthMax + 1 ));
         }
     }
 }

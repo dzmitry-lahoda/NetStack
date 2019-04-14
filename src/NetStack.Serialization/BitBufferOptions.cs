@@ -27,46 +27,46 @@ namespace NetStack.Serialization
 {
     public class  BitBufferOptions
     {
-        public static readonly BitBufferOptions Default = new BitBufferOptions(stringLengthBits: DefaultCharSpanLengthBits, byteArrLengthBits: DefaultU8SpanLengthBits);
+        public static readonly BitBufferOptions Default = new BitBufferOptions(charSpanBitsLength: DefaultCharSpanBitsLength, u8SpanBitsLength: DefaultU8SpanBitsLength);
 
-        public const i32 DefaultU8SpanLengthBits = 9;
+        public const i32 DefaultU8SpanBitsLength = 9;
 
-        public const i32 DefaultCharSpanLengthBits = 8;
+        public const i32 DefaultCharSpanBitsLength = 8;
 
-        private readonly i32 byteArrLengthMax;
+        private readonly i32 u8SpanLengthMax;
 
-        public i32 ByteArrLengthMax => byteArrLengthMax;
+        public i32 U8SpanLengthMax => u8SpanLengthMax;
 
-        public i32 StringLengthMax => stringLengthMax;
+        public i32 CharSpanLengthMax => charSpanLengthMax;
 
-        private readonly i32 byteArrLengthBits;
+        private readonly i32 u8SpanBitsLength;
 
-        public i32 ByteArrLengthBits => byteArrLengthBits;
+        public i32 U8SpanBitsLength => u8SpanBitsLength;
 
-        private readonly i32 stringLengthBits;
+        private readonly i32 charSpanBitsLength;
 
-        public i32 StringLengthBits => stringLengthBits;
+        public i32 CharSpanBitsLength => charSpanBitsLength;
 
-        private readonly i32 stringLengthMax;
+        private readonly i32 charSpanLengthMax;
 
         /// <summary>
         /// Creates new instance with its own buffer. 
         /// </summary>
-        /// <param name="stringLengthBits">Bits used to store length of strings.</param>
-        /// <param name="byteArrLengthBits">Bits used to store length of byte arrays.</param>
-        public BitBufferOptions(i32 stringLengthBits = DefaultCharSpanLengthBits, i32 byteArrLengthBits = DefaultU8SpanLengthBits)
+        /// <param name="charSpanBitsLength">Bits used to store length of strings.</param>
+        /// <param name="u8SpanBitsLength">Bits used to store length of byte arrays.</param>
+        public BitBufferOptions(i32 charSpanBitsLength = DefaultCharSpanBitsLength, i32 u8SpanBitsLength = DefaultU8SpanBitsLength)
         {
-            if (stringLengthBits <= 0)
-                throw Argument("Should be positive", nameof(stringLengthBits));
+            if (charSpanBitsLength <= 0)
+                throw Argument("Should be positive", nameof(charSpanBitsLength));
 
-            if (byteArrLengthBits <= 0)
-                throw Argument("Should be positive", nameof(byteArrLengthBits));
+            if (u8SpanBitsLength <= 0)
+                throw Argument("Should be positive", nameof(u8SpanBitsLength));
 
             // one time setup
-            this.byteArrLengthBits = byteArrLengthBits;
-            byteArrLengthMax = (1 << byteArrLengthBits) - 1;
-            this.stringLengthBits = stringLengthBits;
-            stringLengthMax = (1 << stringLengthBits) - 1;
+            this.u8SpanBitsLength = u8SpanBitsLength;
+            u8SpanLengthMax = (1 << u8SpanBitsLength) - 1;
+            this.charSpanBitsLength = charSpanBitsLength;
+            charSpanLengthMax = (1 << charSpanBitsLength) - 1;
         }
     }
 }

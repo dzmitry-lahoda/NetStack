@@ -17,7 +17,7 @@ namespace NetStack.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public unsafe static string String(this BitBufferReader<SevenBitDecoding> self)
         {
-            var size = MemoryPool<char>.Shared.Rent(self.Options.StringLengthMax);
+            var size = MemoryPool<char>.Shared.Rent(self.Options.CharSpanLengthMax);
             var length = self.c(size.Memory.Span);
             using (var pin = size.Memory.Pin())
                 return new String((char*)pin.Pointer,0, (int)length);         

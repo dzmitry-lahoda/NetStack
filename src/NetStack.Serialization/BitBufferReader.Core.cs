@@ -158,7 +158,7 @@ namespace NetStack.Serialization
 
         // TODO: change API to be more safe on bit buffer operations (protect from misuse)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void SetReadPosition(i32 bitsRead)
+        public void SetPosition(i32 bitsRead)
         {
 #if DEBUG || NETSTACK_VALIDATE        
         if (bitsRead < 0) throw new ArgumentException("Pushing negative bits", nameof(bitsRead));
@@ -166,14 +166,5 @@ namespace NetStack.Serialization
 #endif            
             throw new NotImplementedException();
         }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void ResetReadPosition()
-        {
-            scratchUsedBits = 0;
-            chunkIndex = 0;
-            scratch = 0;
-        }        
-
     }
 }

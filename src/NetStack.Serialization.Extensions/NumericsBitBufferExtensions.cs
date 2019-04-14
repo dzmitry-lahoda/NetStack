@@ -165,7 +165,7 @@ namespace NetStack.Serialization
         {
             var curReadpos = self.BitsRead;
             var value = self.quaternion(bitsPerValue);
-            self.SetReadPosition(curReadpos);          
+            self.SetPosition(curReadpos);          
             return value;
         }        
     }

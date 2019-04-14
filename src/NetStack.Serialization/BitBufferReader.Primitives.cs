@@ -80,7 +80,7 @@ namespace NetStack.Serialization
         public i8 i8Peek(i32 numberOfBits) => (i8)i32Peek(numberOfBits);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public i8 i8Peek(i8 min, i8 max) => (i8)PeekInt(min, max);
+        public i8 i8Peek(i8 min, i8 max) => (i8)i32Peek(min, max);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public i16 i16() => (i16)i32();
@@ -98,7 +98,7 @@ namespace NetStack.Serialization
         public i16 i16Peek(i32 numberOfBits) => (i16)i32Peek(numberOfBits);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public i16 i16Peek(i16 min, i16 max) => (i16)PeekInt(min, max);
+        public i16 i16Peek(i16 min, i16 max) => (i16)i32Peek(min, max);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public u16 u16() => (u16)u32();
@@ -136,7 +136,7 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public i32 PeekInt(i32 min, i32 max)
+        public i32 i32Peek(i32 min, i32 max)
         {
 #if DEBUG || NETSTACK_VALIDATE
             if (min > max) throw Argument("min should not be not lower than max");
@@ -194,7 +194,7 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public i64 PeekLong()
+        public i64 i64Peek()
         {
             i64 value = i64();
             return value;
@@ -209,7 +209,7 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public u64 PeekULong()
+        public u64 u64Peek()
         {
             u64 value = u64();
             return value;
@@ -281,7 +281,7 @@ namespace NetStack.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public f64 f64Peek()
         {
-            var value = PeekULong();
+            var value = u64Peek();
             return Unsafe.As<u64, f64>(ref value);
         }
 

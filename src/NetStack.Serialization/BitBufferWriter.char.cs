@@ -31,8 +31,8 @@ namespace NetStack.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void c(ReadOnlySpan<char> value)
         {
-            if (value.Length > config.StringLengthMax)
-                throw ArgumentOutOfRange($"String too long, raise the {nameof(config.StringLengthBits)} value or split the string.");
+            if (value.Length > config.CharSpanLengthMax)
+                throw ArgumentOutOfRange($"String too long, raise the {nameof(config.CharSpanBitsLength)} value or split the string.");
 
             var length = value.Length;
 
@@ -62,7 +62,7 @@ namespace NetStack.Serialization
             }
 
             raw((u32)codePage, codePageBitsRequired);
-            raw((u32)length, config.StringLengthBits);
+            raw((u32)length, config.CharSpanBitsLength);
 
             switch (codePage)
             {

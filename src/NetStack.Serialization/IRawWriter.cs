@@ -12,6 +12,7 @@ using u64 = System.UInt64;
 using f32 = System.Single;
 using f64 = System.Double;
 using System.Buffers;
+using System.Runtime.CompilerServices;
 #if !(ENABLE_MONO || ENABLE_IL2CPP)
 using System.Diagnostics;
 using System.Numerics;
@@ -23,6 +24,7 @@ namespace NetStack.Serialization
 {
     public interface IRawWriter
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         void raw(u32 value, int numberOfBits);
     }
 }

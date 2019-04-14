@@ -30,6 +30,7 @@ namespace NetStack.Serialization
     // going container to be struct seems to be more complex and permaturely (will wait C# 8)
     public struct SevenBitEncoding : ICompression<BitBufferWriter<SevenBitEncoding>>
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void i32(BitBufferWriter<SevenBitEncoding> b, i32 value)
         {
             // have tried to have only encode, with no i32 method, 

@@ -14,8 +14,6 @@ namespace NetStack.Serialization
         u32 u32(T b);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-
-
         i32 i32(T b);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

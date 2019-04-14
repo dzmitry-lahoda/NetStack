@@ -27,13 +27,13 @@ namespace NetStack.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void u8(ReadOnlySpan<u8> value)
         {
-            if (value.Length > config.ByteArrLengthMax) 
-                throw Argument($"Byte array too big, raise the {nameof(config.ByteArrLengthBits)} value or split the array.");
+            if (value.Length > config.U8SpanLengthMax) 
+                throw Argument($"Byte array too big, raise the {nameof(config.U8SpanBitsLength)} value or split the array.");
             
             if (value.Length + 9 > (totalNumberBits - BitsWritten))
                 throw InvalidOperation("Byte array too big for buffer.");
             
-            raw((u32)value.Length, config.ByteArrLengthBits);
+            raw((u32)value.Length, config.U8SpanBitsLength);
             for (var index = 0; index < value.Length; index++)
                 u8(value[index]);
         }        

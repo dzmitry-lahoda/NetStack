@@ -24,12 +24,8 @@ namespace NetStack.Serialization
 {
     public struct RawEncoding : ICompression<BitBufferWriter<RawEncoding>>
     {
-        private const int NumberOfBits = 32;
-
-        public void i32(BitBufferWriter<RawEncoding> b, int value)
-        {
-            b.raw((u32)value, NumberOfBits);
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void i32(BitBufferWriter<RawEncoding> b, int value) => b.raw((u32)value, 32);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void u32(BitBufferWriter<RawEncoding> b, u32 value) => b.raw(value, 32);

@@ -16,6 +16,7 @@ namespace NetStack.Serialization
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public i32 decode(u32 value) => (i32)value;
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public i32 i32(BitBufferReader<RawDecoding> b) => decode(u32(b));
     }
 }
