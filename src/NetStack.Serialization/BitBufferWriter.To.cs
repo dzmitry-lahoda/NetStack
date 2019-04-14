@@ -47,7 +47,7 @@ namespace NetStack.Serialization
             for (var i = 0; i < numChunks; i++)
             {
                 i32 dataIdx = i * step;
-                u32 chunk = chunks[i];
+                u32 chunk = chunks.Span[i];
                 // TODO: optimize by copying 4 byte in single call via Unsafe
                 if (dataIdx < length)
                     data[dataIdx] = (byte)(chunk);

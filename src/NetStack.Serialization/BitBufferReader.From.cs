@@ -71,7 +71,7 @@ namespace NetStack.Serialization
                 if (dataIdx + 3 < length)
                     chunk = chunk | (u32)data[dataIdx + 3] << 24;
 
-                chunks[i] = chunk;
+                chunks.Span[i] = chunk;
             }
 
             // TODO: write sets 1 bit in the end. so we may read all remaining zeroes, minis 1 bit for flag, and make total less

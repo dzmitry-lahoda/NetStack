@@ -67,7 +67,7 @@ namespace NetStack.Serialization
         /// </summary>
         public BitBufferReader(BitBuffer startFrom)
         {
-            Chunks = startFrom.chunks;
+            Chunks = startFrom.chunks.ToArray();
             scratch = startFrom.scratch;
             scratchUsedBits = startFrom.scratchUsedBits;
             chunkIndex = startFrom.chunkIndex;

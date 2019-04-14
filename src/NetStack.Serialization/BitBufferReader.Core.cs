@@ -50,7 +50,7 @@ namespace NetStack.Serialization
 #endif
             if (scratchUsedBits < 1)
             {
-                scratch |= ((u64)(chunks[chunkIndex])) << scratchUsedBits;
+                scratch |= ((u64)(chunks.Span[chunkIndex])) << scratchUsedBits;
                 scratchUsedBits += 32;
                 chunkIndex++;
             }
@@ -83,7 +83,7 @@ namespace NetStack.Serialization
 #if DEBUG || NETSTACK_VALIDATE                
                 if (chunkIndex >= totalNumChunks) throw InvalidOperation("reading more than buffer size");
 #endif
-                scratch |= ((u64)(chunks[chunkIndex])) << scratchUsedBits;
+                scratch |= ((u64)(chunks.Span[chunkIndex])) << scratchUsedBits;
                 scratchUsedBits += 32;
                 chunkIndex++;
             }
@@ -134,7 +134,7 @@ namespace NetStack.Serialization
            scratchUsedBits = bitsRead % 32;
            if (scratchUsedBits != 0)
            {
-               scratch = ((u64)(chunks[chunkIndex])) >> scratchUsedBits;
+               scratch = ((u64)(chunks.Span[chunkIndex])) >> scratchUsedBits;
                chunkIndex += 1;
            }
            else

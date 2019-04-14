@@ -88,7 +88,7 @@ namespace NetStack.Serialization
                     if (chunkIndex >= totalNumChunks) throw IndexOutOfRange("Pushing failed, buffer is full.");
                 #endif                
                 // TODO: how much it will cost to cast ref byte into ref uint and set scratch (to allow FromArray with no copy)
-                chunks[chunkIndex] = (u32)(scratch);
+                chunks.Span[chunkIndex] = (u32)(scratch);
                 scratch >>= 32;
                 scratchUsedBits -= 32;
                 chunkIndex++;
@@ -115,7 +115,7 @@ namespace NetStack.Serialization
             {
                 Debug.Assert(chunkIndex < totalNumChunks, "Pushing failed, buffer is full.");
                 // TODO: will it be improvement to for chunks to be (u)long?
-                chunks[chunkIndex] = (u32)(scratch);
+                chunks.Span[chunkIndex] = (u32)(scratch);
                 scratch >>= 32;
                 scratchUsedBits -= 32;
                 chunkIndex++;

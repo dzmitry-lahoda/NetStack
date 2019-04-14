@@ -9,7 +9,7 @@ namespace NetStack.Serialization
     [CoreJob]
     public class Generics
     {
-        [Params(100000)]
+        [Params(10000)]
         public int N;
         private BitBufferWriter<SevenBitEncoding> buffer1;
         private GenericBitBufferWriter<SevenBitEncoding2> buffer2;
