@@ -21,7 +21,8 @@ using UnityEngine;
 #endif
 namespace NetStack.Serialization
 {
-    partial class BitBufferWriter<T> : IRawWriter where T:unmanaged, ICompression<BitBufferWriter<T>> 
+    partial class BitBufferWriter<T> : IRawWriter 
+        where T:unmanaged, ICompression<BitBufferWriter<T>> // https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern
     {
         // true if has not capacity to write numberOfBits
         public bool CannotAdd(i32 numberOfBits) => BitsWritten + numberOfBits > totalNumberBits;
