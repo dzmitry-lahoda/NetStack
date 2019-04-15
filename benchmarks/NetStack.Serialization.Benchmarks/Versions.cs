@@ -31,6 +31,34 @@ namespace NetStack.Serialization
             
         }
 
+  [Benchmark]
+        public void Generic7Bit()
+        {
+            for (int i = 0; i < N; i++)
+            {
+                buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);                        
+                buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);
+                buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);
+                buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);
+
+                buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);
+                buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);
+                buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);
+                buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);
+
+                buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);
+                buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);
+                buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);
+                buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);
+
+                buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);
+                buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);
+                buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);
+                buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);                                
+            }
+        }      
+
+
         [Benchmark]
         public void SimpleGenericFastAsManual()
         {
@@ -111,34 +139,7 @@ namespace NetStack.Serialization
                 buffer4.i32(666);buffer4.i32(666);buffer4.i32(666);buffer4.i32(666);                                
             }            
         } 
-
-        [Benchmark]
-        public void Generic7Bit()
-        {
-            for (int i = 0; i < N; i++)
-            {
-                buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);                        
-                buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);
-                buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);
-                buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);
-
-                buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);
-                buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);
-                buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);
-                buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);
-
-                buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);
-                buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);
-                buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);
-                buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);
-
-                buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);
-                buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);
-                buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);
-                buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);buffer1.i32(666);                                
-            }
-        }      
-
+      
         //[Benchmark]
         public void NoEncoding()
         {

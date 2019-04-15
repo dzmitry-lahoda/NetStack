@@ -8,6 +8,28 @@ using UnityEngine;
 
 namespace NetStack.Serialization
 {
+    // generic class is optimzied-inlined to manual like code, while generic on method not
+    public static class BitOptsExtensions<T> where T : IRawWriter
+    {
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
+        public static void u32(T b, u32 value)
+        {
+            do
+            {
+                // TODO: how to use CPU parallelism here ? unrol loop? couple of temporal variables? 
+                // TODO: mere 8 and 8 into one 16? write special handling code for 8 and 16 coming from outside?
+                var buffer = value & 0b0111_1111u;
+                value >>= 7;
+
+                if (value > 0)
+                    buffer |= 0b1000_0000u;
+
+                b.raw(buffer, 8);
+            }
+            while (value > 0);
+        }
+    }
+
     public static class BitOptsExtensions
     {
         //https://gist.github.com/mfuerstenau/ba870a29e16536fdbaba
@@ -19,8 +41,7 @@ namespace NetStack.Serialization
         public static uint ZigZag(int value) => (u32)((value << 1) ^ (value >> 31));
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public static void u32<T>(T b, u32 value)
-            where T: IRawWriter
+        public static void u32<T>(T b, u32 value) where T : IRawWriter
         {
             do
             {

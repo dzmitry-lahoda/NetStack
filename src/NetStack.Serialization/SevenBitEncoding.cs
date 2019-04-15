@@ -39,13 +39,28 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public void u32(BitBufferWriter<SevenBitEncoding> b, u32 value) => BitOptsExtensions.u32<BitBufferWriter<SevenBitEncoding>>(b,value);
+        public void u32(BitBufferWriter<SevenBitEncoding> b, u32 value) 
+        // trying to use generic method or class with call for inline and optimize with only interface constraint losses great of performance
+        //=> BitOptsExtensions<BitBufferWriter<SevenBitEncoding>>.u32(b,value);
+        {
+            // TODO: how to use CPU parallelism here ? unrol loop? couple of temporal variables? 
+            // TODO: mere 8 and 8 into one 16? write special handling code for 8 and 16 coming from outside?
+            do
+            {
+                var buffer = value & 0b0111_1111u;
+                value >>= 7;
+                if (value > 0)
+                    buffer |= 0b1000_0000u;
+                b.raw(buffer, 8);
+            }
+            while (value > 0);
+        }
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public u32 encode(i32 value) => BitOptsExtensions.ZigZag(value);
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public void i32(BitBufferWriter<SevenBitEncoding> b, i32 value, i32 numberOfBits) => 
+        public void i32(BitBufferWriter<SevenBitEncoding> b, i32 value, i32 numberOfBits) =>
             b.raw(encode(value), numberOfBits);
     }
 }
