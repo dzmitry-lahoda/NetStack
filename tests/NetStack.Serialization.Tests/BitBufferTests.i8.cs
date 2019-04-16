@@ -54,6 +54,32 @@ namespace NetStack.Serialization
             Assert.Equal(13, reader.i8(0, 14));
             Assert.Equal(2, reader.i8(4));
             Assert.Equal(bitsWritten, reader.BitsRead);
-        }        
+        }     
+
+       [Fact]
+        public void i8ReadWriteSmallLimits()
+        {
+            var writer = new BitBufferWriter<SevenBitEncoding>();
+            writer.i32(500);
+            writer.i16(1);
+            writer.i32(0);
+            writer.u8(0, 0, 4);
+            writer.u8(1, 0, 4);
+            writer.u8(2, 0, 4);
+            writer.u8(3, 0, 4);
+            writer.u8(4, 0, 4);
+            writer.i32(0, 0, 4);
+            writer.i32(1, 0, 4);
+            writer.i32(2, 0, 4);
+            writer.i32(3, 0, 4);
+            writer.i32(4, 0, 4);            
+            #if DEBUG || NETSTACK_VALIDATE
+            
+            Assert.Throws<System.ArgumentOutOfRangeException>(()=>writer.u8(5, 0, 4));            
+            Assert.Throws<System.ArgumentOutOfRangeException>(()=>writer.u8(255, 0, 4));
+            Assert.Throws<System.ArgumentOutOfRangeException>(()=>writer.i32(5, 0, 4));            
+            Assert.Throws<System.ArgumentOutOfRangeException>(()=>writer.i32(255, 0, 4));
+            #endif
+        }            
    }
 }

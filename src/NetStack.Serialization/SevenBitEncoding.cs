@@ -45,15 +45,12 @@ namespace NetStack.Serialization
         {
             // TODO: how to use CPU parallelism here ? unrol loop? couple of temporal variables? 
             // TODO: mere 8 and 8 into one 16? write special handling code for 8 and 16 coming from outside?
-            do
+            while (value >= 0b10000000)
             {
-                var buffer = value & 0b0111_1111u;
+                b.raw((u8)(value | 0b10000000), 8);
                 value >>= 7;
-                if (value > 0)
-                    buffer |= 0b1000_0000u;
-                b.raw(buffer, 8);
             }
-            while (value > 0);
+            b.u8((u8)value);
         }
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]

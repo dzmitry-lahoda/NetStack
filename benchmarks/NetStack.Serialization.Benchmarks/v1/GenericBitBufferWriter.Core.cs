@@ -67,6 +67,9 @@ namespace NetStack.Serialization
         /// </summary>
         public int BitsAvailable => totalNumberBits - BitsWritten;
 
+        [MethodImpl(MyMethodImplOptions.AggressiveInlining)]
+        public void u8(u8 value) => raw(value, 8);
+
         /// <summary>
         /// Store value in specified number of bits.
         /// </summary>

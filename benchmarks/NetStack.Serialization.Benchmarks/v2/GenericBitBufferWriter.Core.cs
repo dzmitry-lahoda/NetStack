@@ -109,6 +109,9 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(MyMethodImplOptions.AggressiveInlining)]
+        public void u8(u8 value) => raw(value, 8);
+
+        [MethodImpl(MyMethodImplOptions.AggressiveInlining)]
         public void b(bool value)
         {
             if (value)

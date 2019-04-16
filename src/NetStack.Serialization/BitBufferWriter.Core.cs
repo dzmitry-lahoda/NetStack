@@ -76,25 +76,36 @@ namespace NetStack.Serialization
         private void internalRaw(u32 value, i32 numberOfBits)
         {
             value &= (u32)((1ul << numberOfBits) - 1);
-
             scratch |= ((u64)value) << scratchUsedBits;
-
             // maintain with bool index increase, do not reuse - looses 5% of performance on .NET Core event if AggressiveInlining
             scratchUsedBits += numberOfBits;
+            SIndexInc();
+        }
 
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
+        public void u8(u8 value)
+        {
+            scratch |= ((u64)value) << scratchUsedBits;
+            scratchUsedBits += 8;
+            SIndexInc();
+        }        
+
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
+        private void SIndexInc()
+        {
             if (scratchUsedBits >= 32)
             {
-                #if DEBUG || NETSTACK_VALIDATE
-                    if (chunkIndex >= totalNumChunks) throw IndexOutOfRange("Pushing failed, buffer is full.");
-                #endif                
+#if DEBUG || NETSTACK_VALIDATE
+                if (chunkIndex >= totalNumChunks) throw IndexOutOfRange("Pushing failed, buffer is full.");
+#endif
                 // TODO: how much it will cost to cast ref byte into ref uint and set scratch (to allow FromArray with no copy)
+                // TODO: will it be improvement to for chunks to be (u)long?
                 chunks[chunkIndex] = (u32)(scratch);
                 scratch >>= 32;
                 scratchUsedBits -= 32;
                 chunkIndex++;
             }
         }
-
 
         //      Method |     N |     Mean |     Error |    StdDev |   Median |
         // ----------- |------ |---------:|----------:|----------:|---------:|
@@ -106,20 +117,9 @@ namespace NetStack.Serialization
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public void b(bool value)
         {
-            if (value)
-                scratch |= 1ul << scratchUsedBits;
-
+            if (value) scratch |= 1ul << scratchUsedBits;
             scratchUsedBits += 1;
-
-            if (scratchUsedBits >= 32)
-            {
-                Debug.Assert(chunkIndex < totalNumChunks, "Pushing failed, buffer is full.");
-                // TODO: will it be improvement to for chunks to be (u)long?
-                chunks[chunkIndex] = (u32)(scratch);
-                scratch >>= 32;
-                scratchUsedBits -= 32;
-                chunkIndex++;
-            }
+            SIndexInc();
         }
 
         /// <summary>

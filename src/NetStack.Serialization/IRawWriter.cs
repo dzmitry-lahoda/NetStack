@@ -27,5 +27,8 @@ namespace NetStack.Serialization
     {
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         void raw(u32 value, i32 numberOfBits);
+
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
+        void u8(u8 value);
     }
 }
