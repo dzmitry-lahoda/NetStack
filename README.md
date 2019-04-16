@@ -9,7 +9,7 @@ Does NOT have code to control threads and sockets.
 
 # Exceptions, validation.
 
-All validation and exception are behind `#if DEBUG || NETSTACK_VALIDATE`.
+All validation and exception are behind `#if DEBUG || NETSTACK_VALIDATE`. 
 
 # Modules
 
@@ -226,3 +226,9 @@ struct MessageObject {
 	}
 }
 ```
+
+
+# Development
+
+[Open Assets/Scripts directory in VS Code](Assets/Scripts/readme.md)
+

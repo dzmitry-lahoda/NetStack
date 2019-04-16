@@ -1,0 +1,22 @@
+<Project>
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <!-- Unity Editor support, hope they will migrate to msbuild in some time in future -->
+  <PropertyGroup>
+    <BaseOutputPath>.bin</BaseOutputPath>
+    <BaseIntermediateOutputPath>.obj</BaseIntermediateOutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="*.asmdef" />
+    <None Remove="**/*.meta" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <NUnitVersion>3.11.0</NUnitVersion>
+    <NUnit3TestAdapter>3.13.0</NUnit3TestAdapter>
+    <MicrosoftNETTestSdk>16.0.0</MicrosoftNETTestSdk>  
+  </PropertyGroup>
+
+</Project>

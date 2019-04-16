@@ -1,0 +1,18 @@
+﻿{
+    "name": "NetStack.Serialization.Benchmarks",
+    "references": [
+        "NetStack.Serialization"
+    ],
+    "optionalUnityReferences": [
+        "TestAssemblies"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": []
+}

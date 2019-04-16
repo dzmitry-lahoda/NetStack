@@ -1,0 +1,9 @@
+﻿{
+    "name": "NetStack.Serialization",
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": []
+}

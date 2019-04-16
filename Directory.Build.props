@@ -1,9 +1,0 @@
-<Project>
-  <PropertyGroup>
-    <!-- avoid Unitu Editor and VS Code conflicts -->
-    <BaseOutputPath>.bin</BaseOutputPath>
-    <BaseIntermediateOutputPath>.obj</BaseIntermediateOutputPath>
-
-    <LangVersion>latest</LangVersion>    
- </PropertyGroup>
-</Project>
