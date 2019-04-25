@@ -31,30 +31,16 @@ namespace NetStack.Serialization
             u32(b, encode(value));
         }
 
-//    where T : unmanaged, ICompression<BitBufferWriter<T>> 
-// holder also losts 10 percentage of performance
-        private struct Holder : IRawWriter
-        {
-            [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-            public Holder(BitBufferWriter<SevenBitEncoding> b) => this.b = b;
-
-            private BitBufferWriter<SevenBitEncoding> b;
-
-            [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-            public void raw(u32 value, i32 numberOfBits) => b.raw(value, numberOfBits);
-
-            [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-            public void u8(u8 value) => b.u8(value);
-        }
-
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public void u32(BitBufferWriter<SevenBitEncoding> b, u32 value)
-        //trying to use generic method or class with call for inline and optimize with only interface constraint losses great of performance
-        // => BitOptsExtensions<Holder>.u32(new Holder(b),value);
+        // 1. trying to use generic method or class with call for inline and optimize with only interface constraint losses great of performance
+        // 2. passing instance of class buffer by `in` slows down by 10
+        // 3. per call instance of holder struct  also losts 10 percentage of performance (not sure if share per thread)
         {
             // TODO: how to use CPU parallelism here ? unrol loop? couple of temporal variables? 
             // TODO: mere 8 and 8 into one 16? write special handling code for 8 and 16 coming from outside?
-            //for (;value >= 0b10000000; b.raw((u8)(value | 0b10000000), 8), value >>= 7) {} b.u8((u8)value);
+            // oneliner version to use if need copy paste
+            // for (;value >= 0b10000000; b.raw((u8)(value | 0b10000000), 8), value >>= 7) {} b.u8((u8)value);
             while (value >= 0b10000000)
             {
                 b.raw((u8)(value | 0b10000000), 8);
@@ -64,7 +50,7 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public u32 encode(i32 value) => BitOptsExtensions.ZigZag(value);
+        public u32 encode(i32 value) => Coder.ZigZag.Encode(value);
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public void i32(BitBufferWriter<SevenBitEncoding> b, i32 value, i32 numberOfBits) =>

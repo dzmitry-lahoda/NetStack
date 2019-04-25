@@ -34,6 +34,33 @@ namespace NetStack.Serialization
         }
 
         [Benchmark]
+        public void SimpleGenericMemory()
+        {
+            for (int i = 0; i < N; i++)
+            {
+                buffer5.i32(666); buffer5.i32(666); buffer5.i32(666); buffer5.i32(666);
+                buffer5.i32(666); buffer5.i32(666); buffer5.i32(666); buffer5.i32(666);
+                buffer5.i32(666); buffer5.i32(666); buffer5.i32(666); buffer5.i32(666);
+                buffer5.i32(666); buffer5.i32(666); buffer5.i32(666); buffer5.i32(666);
+
+                buffer5.i32(666); buffer5.i32(666); buffer5.i32(666); buffer5.i32(666);
+                buffer5.i32(666); buffer5.i32(666); buffer5.i32(666); buffer5.i32(666);
+                buffer5.i32(666); buffer5.i32(666); buffer5.i32(666); buffer5.i32(666);
+                buffer5.i32(666); buffer5.i32(666); buffer5.i32(666); buffer5.i32(666);
+
+                buffer5.i32(666); buffer5.i32(666); buffer5.i32(666); buffer5.i32(666);
+                buffer5.i32(666); buffer5.i32(666); buffer5.i32(666); buffer5.i32(666);
+                buffer5.i32(666); buffer5.i32(666); buffer5.i32(666); buffer5.i32(666);
+                buffer5.i32(666); buffer5.i32(666); buffer5.i32(666); buffer5.i32(666);
+
+                buffer5.i32(666); buffer5.i32(666); buffer5.i32(666); buffer5.i32(666);
+                buffer5.i32(666); buffer5.i32(666); buffer5.i32(666); buffer5.i32(666);
+                buffer5.i32(666); buffer5.i32(666); buffer5.i32(666); buffer5.i32(666);
+                buffer5.i32(666); buffer5.i32(666); buffer5.i32(666); buffer5.i32(666);
+            }
+        }
+
+        //[Benchmark]
         public void Generic7Bit()
         {
             for (int i = 0; i < N; i++)
@@ -88,34 +115,9 @@ namespace NetStack.Serialization
             }
         }
 
-        //[Benchmark]
-        public void SimpleGenericMemory()
-        {
-            for (int i = 0; i < N; i++)
-            {
-                buffer5.i32(666); buffer5.i32(666); buffer5.i32(666); buffer5.i32(666);
-                buffer5.i32(666); buffer5.i32(666); buffer5.i32(666); buffer5.i32(666);
-                buffer5.i32(666); buffer5.i32(666); buffer5.i32(666); buffer5.i32(666);
-                buffer5.i32(666); buffer5.i32(666); buffer5.i32(666); buffer5.i32(666);
 
-                buffer5.i32(666); buffer5.i32(666); buffer5.i32(666); buffer5.i32(666);
-                buffer5.i32(666); buffer5.i32(666); buffer5.i32(666); buffer5.i32(666);
-                buffer5.i32(666); buffer5.i32(666); buffer5.i32(666); buffer5.i32(666);
-                buffer5.i32(666); buffer5.i32(666); buffer5.i32(666); buffer5.i32(666);
 
-                buffer5.i32(666); buffer5.i32(666); buffer5.i32(666); buffer5.i32(666);
-                buffer5.i32(666); buffer5.i32(666); buffer5.i32(666); buffer5.i32(666);
-                buffer5.i32(666); buffer5.i32(666); buffer5.i32(666); buffer5.i32(666);
-                buffer5.i32(666); buffer5.i32(666); buffer5.i32(666); buffer5.i32(666);
-
-                buffer5.i32(666); buffer5.i32(666); buffer5.i32(666); buffer5.i32(666);
-                buffer5.i32(666); buffer5.i32(666); buffer5.i32(666); buffer5.i32(666);
-                buffer5.i32(666); buffer5.i32(666); buffer5.i32(666); buffer5.i32(666);
-                buffer5.i32(666); buffer5.i32(666); buffer5.i32(666); buffer5.i32(666);
-            }
-        }
-
-        //[Benchmark]
+        [Benchmark]
         public void GenericMemorySpan()
         {
             for (int i = 0; i < N; i++)

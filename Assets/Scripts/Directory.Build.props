@@ -7,11 +7,12 @@
   <PropertyGroup>
     <BaseOutputPath>.bin</BaseOutputPath>
     <BaseIntermediateOutputPath>.obj</BaseIntermediateOutputPath>
+    <DefaultItemExcludes>$(DefaultItemExcludes);**\*.meta;**\*.asmdef;*.meta;*.asmdef</DefaultItemExcludes>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="*.asmdef" />
     <None Remove="**/*.meta" />
-  </ItemGroup>
+  </ItemGroup>  
 
   <PropertyGroup>
     <NUnitVersion>3.11.0</NUnitVersion>

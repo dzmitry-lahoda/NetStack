@@ -70,12 +70,6 @@ namespace NetStack.Serialization
                 }
 
 #endif
-
-// #if (ENABLE_MONO)
-// TODO: validate that cast to uint, then & with 0111_1111_...._1111 then cast back to flaot via Unsafe may be faster to ABS float
-// https://github.com/dotnet/corefx/blob/8d82a5d4d33cc67b3dbf62c73f8b704c8939feaf/src/Common/src/CoreLib/System/Math.cs#L40
-// https://github.com/dotnet/corefx/blob/8d82a5d4d33cc67b3dbf62c73f8b704c8939feaf/src/Common/src/CoreLib/System/MathF.cs#L34
-
                 abs = Math.Abs(element);
                 if (abs > maxValue)
                 {

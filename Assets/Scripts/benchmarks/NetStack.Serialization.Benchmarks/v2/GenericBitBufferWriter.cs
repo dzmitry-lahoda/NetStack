@@ -36,7 +36,7 @@ namespace NetStack.Serialization
         public static int BitsRequired(uint min, uint max) =>
             (min == max) ? 1 : BitOperations.Log2(max - min) + 1;
 
-        private Memory<uint> chunks;        
+        private uint[] chunks;        
         private int totalNumChunks;        
         private int totalNumberBits;  
         private uint[] Chunks
