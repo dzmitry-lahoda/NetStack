@@ -123,10 +123,10 @@ namespace NetStack.Serialization
             int halfrange = (1 << bitsPerValue - 1); //  - 1
             float unpacker = SmallestThreeUnpack * (1f / halfrange);
 
-            uint m = self.raw(2);
-            int aint = (int)self.raw(bitsPerValue);
-            int bint = (int)self.raw(bitsPerValue);
-            int cint = (int)self.raw(bitsPerValue);
+            uint m = self.u32(2);
+            int aint = (int)self.u32(bitsPerValue);
+            int bint = (int)self.u32(bitsPerValue);
+            int cint = (int)self.u32(bitsPerValue);
 
             aint -= halfrange;
             bint -= halfrange;

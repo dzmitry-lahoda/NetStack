@@ -21,9 +21,6 @@ namespace NetStack.Serialization
     partial class BitBufferReader<T>
     {
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public u8 u8() => (u8)raw(8);
-
-        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public u8 u8(i32 numberOfBits) => (u8)u32(numberOfBits);
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
@@ -70,11 +67,8 @@ namespace NetStack.Serialization
 #if !NO_EXCEPTIONS
             if (BitsRead + bits > totalNumberBits) Throw.ArgumentOutOfRange("Reading too many bits for requested range");
 #endif      
-            return (int)(raw(bits) + min);
+            return (int)(u32(bits) + min);
         }
-
-        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public u32 u32(i32 numberOfBits) => raw(numberOfBits);
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public u32 u32(u32 min, u32 max)
@@ -86,7 +80,7 @@ namespace NetStack.Serialization
 #if !NO_EXCEPTIONS
             if (BitsRead + bits > totalNumberBits) Throw.ArgumentOutOfRange("Reading too many bits for requested range");
 #endif      
-            return (raw(bits) + min);
+            return (u32(bits) + min);
         }
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
@@ -109,7 +103,7 @@ namespace NetStack.Serialization
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public f32 f32()
         {
-            var value = raw(32);
+            var value = u32(32);
             return Unsafe.As<u32, f32>(ref value);
         }
 
@@ -121,7 +115,7 @@ namespace NetStack.Serialization
             f32 maxVal = range * invPrecision;
             i32 numberOfBits = BitOperations.Log2((u32)(maxVal + 0.5f)) + 1;
 
-            return raw(numberOfBits) * precision + min;
+            return u32(numberOfBits) * precision + min;
         }
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
@@ -131,7 +125,7 @@ namespace NetStack.Serialization
             f32 range = max - min;
             var precision = range / maxvalue;
 
-            return raw(numberOfBits) * precision + min;
+            return u32(numberOfBits) * precision + min;
         }
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]

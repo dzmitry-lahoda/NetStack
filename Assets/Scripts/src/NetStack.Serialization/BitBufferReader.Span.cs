@@ -24,7 +24,7 @@ namespace NetStack.Serialization
         public i32 u8SpanLengthPeek()
         {
             var index = SIndex;
-            var value = (i32)raw(config.U8SpanBitsLength);
+            var value = (i32)u32(config.U8SpanBitsLength);
             SIndex = index;
             return value;
         }
@@ -41,7 +41,7 @@ namespace NetStack.Serialization
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public i32 u8(Span<u8> outputValue, i32 offset)
         {
-            var length = (int)raw(config.U8SpanBitsLength);
+            var length = (int)u32(config.U8SpanBitsLength);
             if (totalNumberBits - BitsRead < length * 8)
                 Throw.InvalidOperation("The length for this read is bigger than bitbuffer");
 

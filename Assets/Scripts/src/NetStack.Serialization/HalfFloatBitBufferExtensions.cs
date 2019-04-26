@@ -31,10 +31,10 @@ namespace NetStack.Serialization
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public static f32 f32Half(this BitBufferReader<SevenBitDecoding> self) =>
-            HalfPrecision.Decompress((u16)self.raw(16));
+            HalfPrecision.Decompress((u16)self.u32(16));
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public static f32 f32HalfPeek(this BitBufferReader<SevenBitDecoding> self) =>
-            HalfPrecision.Decompress((u16)self.raw(16));
+            HalfPrecision.Decompress((u16)self.u32(16));
     }
 }

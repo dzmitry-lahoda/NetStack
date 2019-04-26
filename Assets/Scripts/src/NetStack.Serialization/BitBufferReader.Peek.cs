@@ -48,7 +48,7 @@ namespace NetStack.Serialization
         public i32 i32Peek(i32 numberOfBits)
         {
             T encoder = default;
-            u32 value = raw(numberOfBits);
+            u32 value = u32(numberOfBits);
             return encoder.decode(value);
         }
 
@@ -56,7 +56,7 @@ namespace NetStack.Serialization
         public u8 u8Peek()
         {
             var index = SIndex;
-            var value = (u8)raw(8);
+            var value = (u8)u32(8);
             SIndex = index;
             return value;
         }

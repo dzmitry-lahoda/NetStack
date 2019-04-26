@@ -20,7 +20,7 @@ namespace NetStack.Serialization
             do
             {
                 // has no guard against corrupted bytes - may read overflow
-                buffer = b.raw(8);
+                buffer = b.u8();
                 value |= (buffer & 0b0111_1111u) << shift;
                 shift += 7;
             }
@@ -31,7 +31,7 @@ namespace NetStack.Serialization
             // u32 value = 0;
             // for (var i = 0; i < sizeof(u32) + 1; i++)
             // {
-            //     byte readByte = b.raw(8);
+            //     byte readByte = b.u8();
             //     value |= (readByte & 0b0111_1111) << i * 7;
             //     if ((readByte & 0b1000_0000) == 0)
             //         return value;
@@ -49,7 +49,7 @@ namespace NetStack.Serialization
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public i32 i32(BitBufferReader<SevenBitDecoding> b, i32 numberOfBits)
         {
-            u32 value = b.raw(numberOfBits);
+            u32 value = b.u32(numberOfBits);
             return decode(value);
         }
     }

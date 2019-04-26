@@ -26,37 +26,37 @@ namespace NetStack.Serialization
         /// <param name="outputValue">Span to fill</param>
         public u32 c(Span<char> outputValue)
         {
-            u32 codePage = raw(2);
-            u32 length = raw(config.CharSpanBitsLength);
+            u32 codePage = u32(2);
+            u32 length = u32(config.CharSpanBitsLength);
 
             switch (codePage)
             {
                 case 0:
                     for (var i = 0; i < length; i++)
                     {
-                        outputValue[i] = (char)raw(BitBuffer.bitsASCII);
+                        outputValue[i] = (char)u32(BitBuffer.bitsASCII);
                     }
                     break;
                 case 1:
                     for (var i = 0; i < length; i++)
                     {
-                        outputValue[i] = (char)raw(BitBuffer.bitsLATIN1);
+                        outputValue[i] = (char)u32(BitBuffer.bitsLATIN1);
                     }
                     break;
                 case 2:
                     for (var i = 0; i < length; i++)
                     {
-                        outputValue[i] = (char)raw(BitBuffer.bitsLATINEXT);
+                        outputValue[i] = (char)u32(BitBuffer.bitsLATINEXT);
                     }
                     break;
                 default:
                     for (var i = 0; i < length; i++)
                     {
-                        var needs16 = raw(1);
+                        var needs16 = u32(1);
                         if (needs16 == 1)
-                           outputValue[i] = (char)raw(BitBuffer.bitsUTF16);
+                           outputValue[i] = (char)u32(BitBuffer.bitsUTF16);
                         else
-                           outputValue[i] = (char)raw(BitBuffer.bitsASCII);
+                           outputValue[i] = (char)u32(BitBuffer.bitsASCII);
                     }
                     break;
             }

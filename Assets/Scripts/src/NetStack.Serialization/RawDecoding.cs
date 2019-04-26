@@ -7,7 +7,7 @@ namespace NetStack.Serialization
     public struct RawDecoding : IDecompression<BitBufferReader<RawDecoding>>
     {
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public u32 u32(BitBufferReader<RawDecoding> b) => b.raw(32);
+        public u32 u32(BitBufferReader<RawDecoding> b) => b.u32(32);
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public i32 decode(u32 value) => (i32)value;
