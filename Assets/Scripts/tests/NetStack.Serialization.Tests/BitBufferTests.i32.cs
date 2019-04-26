@@ -19,7 +19,7 @@ namespace NetStack.Serialization
         [Test]
         public void IntReadWrite()
         {
-            var writer = new BitBufferWriter<SevenBitEncoding>();
+            var writer = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>();
             writer.i32(int.MinValue);
             writer.i32(0);
             writer.i32(int.MaxValue);
@@ -36,7 +36,7 @@ namespace NetStack.Serialization
         [Test]
         public void IntMinMaxRequired()
         {
-            var writer = new BitBufferWriter<SevenBitEncoding>();
+            var writer = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>();
             writer.i32(12345, 0, 123456);
             writer.i32(1);
             writer.i32(42, -1, 43);
@@ -60,7 +60,7 @@ namespace NetStack.Serialization
         [Test]
         public void i32WriteOutOfRange()
         {
-            var writer = new BitBufferWriter<SevenBitEncoding>();
+            var writer = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>();
             Assert.Throws<ArgumentOutOfRangeException>(()=> writer.i32(12345, 0, 123));
             Assert.Throws<ArgumentOutOfRangeException>(()=> writer.i32(-12345, 0, 123));
             Assert.Throws<ArgumentException>(()=> writer.i32(-12345, 2));

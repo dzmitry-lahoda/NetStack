@@ -11,7 +11,7 @@ namespace NetStack.Serialization
         [Test]
         public void PeekBool()
         {
-            var writer = new BitBufferWriter<SevenBitEncoding>();
+            var writer = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>();
             writer.b(true);
             var data = writer.ToArray();
             var reader = new BitBufferReader<SevenBitDecoding>();
@@ -23,7 +23,7 @@ namespace NetStack.Serialization
         [Test]
         public void BoolWritePeekRead1024()
         {
-            var write = new BitBufferWriter<SevenBitEncoding>();
+            var write = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>();
             for (int i = 0; i < 1024; i++)
             {
                 write.b(true);
@@ -42,7 +42,7 @@ namespace NetStack.Serialization
         [Test]
         public void BoolWritePeek128()
         {
-            var writer = new BitBufferWriter<SevenBitEncoding>();
+            var writer = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>();
             writer.b(true);
             var data = writer.ToArray();
             var reader = new BitBufferReader<SevenBitDecoding>();
@@ -54,7 +54,7 @@ namespace NetStack.Serialization
         [Test]
         public void BoolReadWrite()
         {
-            var writer = new BitBufferWriter<SevenBitEncoding>();
+            var writer = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>();
             writer.b(true);
             writer.Align();
             var allocated = new byte[ushort.MaxValue];
@@ -67,7 +67,7 @@ namespace NetStack.Serialization
         [Test]
         public void TrueFalseTrueReadWrite()
         {
-            var writer = new BitBufferWriter<SevenBitEncoding>();
+            var writer = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>();
             writer.b(true);
             writer.b(false);
             writer.b(true);

@@ -20,7 +20,7 @@ namespace NetStack.Serialization
         [Test]
         public void f32ReadWrite()
         {
-            var writer = new BitBufferWriter<SevenBitEncoding>();
+            var writer = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>();
             writer.f32(123.456f);
             writer.Align();
             var data = writer.ToArray();
@@ -33,7 +33,7 @@ namespace NetStack.Serialization
         [Test]
         public void f32MinMaxRequired()
         {
-            var writer = new BitBufferWriter<SevenBitEncoding>();
+            var writer = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>();
             writer.f32(1234.5f, 0, 12345.6f, 0.01f);
             var data = writer.ToArray();
             var reader = new BitBufferReader<SevenBitDecoding>();
@@ -45,7 +45,7 @@ namespace NetStack.Serialization
         [Test]
         public void f32Bits()
         {
-            var writer = new BitBufferWriter<SevenBitEncoding>();
+            var writer = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>();
             writer.f32(1f, 0f, 1f, 1);
             var data = writer.ToArray();
             var reader = new BitBufferReader<SevenBitDecoding>();
@@ -57,7 +57,7 @@ namespace NetStack.Serialization
         [Test]
         public void f32WriteOutOfRange()
         {
-            var writer = new BitBufferWriter<SevenBitEncoding>();
+            var writer = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>();
             Assert.Throws<ArgumentOutOfRangeException>(()=> writer.f32(12345f, 0f, 123f, 0.1f));
         }        
 #endif         

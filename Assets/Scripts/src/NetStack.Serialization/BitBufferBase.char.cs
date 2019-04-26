@@ -18,22 +18,23 @@ using System.Numerics;
 
 namespace NetStack.Serialization
 {
-    abstract partial class BitBuffer<TStorage>
+
+    public enum CodePage : u8
     {
-        protected const int bitsASCII = 7;
-        protected const int bitsLATIN1 = 8;
-        protected const int bitsLATINEXT = 9;
-        protected const int bitsUTF16 = 16;
+        Ascii = 0,
+        Latin1 = 1,
+        LatinExtended = 2,
+        UTF16 = 3
+    }
 
-        internal enum CodePage : u8
-        {
-            Ascii = 0,
-            Latin1 = 1,
-            LatinExtended = 2,
-            UTF16 = 3
-        }
+    public static partial class BitBuffer
+    {
+        public const int bitsASCII = 7;
+        public const int bitsLATIN1 = 8;
+        public const int bitsLATINEXT = 9;
+        public const int bitsUTF16 = 16;
 
-        protected const i32 codePageBitsRequired = 2;
+        public const i32 codePageBitsRequired = 2;
 
         public static i32 BitsRequired(ReadOnlySpan<char> value, i32 length, i32 bitLength = BitBufferOptions.DefaultCharSpanBitsLength)
         {

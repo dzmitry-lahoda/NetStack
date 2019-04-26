@@ -21,7 +21,7 @@ namespace NetStack.Serialization
         [Test]
         public void SimpleStructWrite()
         {
-            var writer = new BitBufferWriter<SevenBitEncoding>();
+            var writer = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>();
             var expected = new SimpleStruct { a = 1.2f, b = 123, c = byte.MaxValue, d = ushort.MaxValue };
             writer.block(in expected);
             Assert.True(writer.LengthWritten < Unsafe.SizeOf<SimpleStruct>());
@@ -30,7 +30,7 @@ namespace NetStack.Serialization
         [Test]
         public void SimpleStructReadWrite()
         {
-            var buffer = new BitBufferWriter<SevenBitEncoding>();
+            var buffer = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>();
             var expected = new SimpleStruct { a = 1.2f, b = 123, c = byte.MaxValue, d = ushort.MaxValue };
             buffer.block(expected);
             buffer.Align();

@@ -19,8 +19,8 @@ namespace NetStack.Serialization
         [Test]
         public void Encodings()
         {
-            var writer1 = new BitBufferWriter<SevenBitEncoding>();
-            var writer2 = new BitBufferWriter<RawEncoding>();
+            var writer1 = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>();
+            var writer2 = new BitBufferWriter<RawEncoding<u32ArrayMemory>>();
             writer1.i32(i32.MaxValue);
             writer2.i32(i32.MaxValue);
             Assert.AreEqual(40, writer1.BitsWritten);
@@ -30,7 +30,7 @@ namespace NetStack.Serialization
         [Test]
         public void NoEncodingsWrite()
         {
-            var writer = new BitBufferWriter<RawEncoding>();
+            var writer = new BitBufferWriter<RawEncoding<u32ArrayMemory>>();
             writer.i32(i32.MaxValue);
             var data = writer.ToArray();
             var value = BitConverter.ToInt32(data, 0);
@@ -40,7 +40,7 @@ namespace NetStack.Serialization
         [Test]
         public void RawToEncodedReadWrite()
         {
-            var rawWriter = new BitBufferWriter<RawEncoding>();
+            var rawWriter = new BitBufferWriter<RawEncoding<u32ArrayMemory>>();
             rawWriter.i32(i32.MaxValue - 13);
             rawWriter.u32(u32.MaxValue - 666);
             var rawReader = new BitBufferReader<RawDecoding>();

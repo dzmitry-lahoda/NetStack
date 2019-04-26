@@ -18,13 +18,13 @@ namespace NetStack.Serialization
     partial class BitBufferTests
     {        
         [Test]
-        public void i8ReadWriteRaw() => i8ReadWrite<RawEncoding, RawDecoding>();
+        public void i8ReadWriteRaw() => i8ReadWrite<RawEncoding<u32ArrayMemory>, RawDecoding>();
 
         [Test]
-        public void i8ReadWriteEncoded() => i8ReadWrite<SevenBitEncoding, SevenBitDecoding>();
+        public void i8ReadWriteEncoded() => i8ReadWrite<SevenBitEncoding<u32ArrayMemory>, SevenBitDecoding>();
 
         private void i8ReadWrite<TEncoder, TDecoder>() 
-             where TEncoder:unmanaged, ICompression<BitBufferWriter<TEncoder>> 
+             where TEncoder:struct, ICompression<BitBufferWriterBase<u32ArrayMemory>> 
              where TDecoder:unmanaged, IDecompression<BitBufferReader<TDecoder>> 
         {
             var writer = new BitBufferWriter<TEncoder>();
@@ -44,7 +44,7 @@ namespace NetStack.Serialization
         [Test]
         public void i8ReadWriteLimits()
         {
-            var writer = new BitBufferWriter<SevenBitEncoding>();
+            var writer = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>();
             writer.i8(13, 0, 14);
             writer.i8(2, 4);
             var bitsWritten = writer.BitsWritten;
@@ -59,7 +59,7 @@ namespace NetStack.Serialization
        [Test]
         public void i8ReadWriteSmallLimits()
         {
-            var writer = new BitBufferWriter<SevenBitEncoding>();
+            var writer = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>();
             writer.i32(500);
             writer.i16(1);
             writer.i32(0);

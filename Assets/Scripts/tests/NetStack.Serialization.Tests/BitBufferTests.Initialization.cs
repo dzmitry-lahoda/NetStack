@@ -19,7 +19,7 @@ namespace NetStack.Serialization
         [Test]
         public void RandomManyTimes()
         {
-            var writer = new BitBufferWriter<SevenBitEncoding>();
+            var writer = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>();
             var reader = new BitBufferReader<SevenBitDecoding>();
             var random = new Random(42);
             for (var i = 0; i < i16.MaxValue; i++)
@@ -46,7 +46,7 @@ namespace NetStack.Serialization
         [Test]
         public void ToArrayFromFrom()
         {
-            var writer = new BitBufferWriter<SevenBitEncoding>(100);
+            var writer = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>(100);
             writer.i64(i64.MaxValue);
             writer.i32(i32.MaxValue);
             writer.i16(i16.MaxValue);
@@ -65,7 +65,7 @@ namespace NetStack.Serialization
         [Test]
         public void ToSpanFromFrom()
         {
-            var writer = new BitBufferWriter<SevenBitEncoding>(100);
+            var writer = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>(100);
             writer.i64(i64.MaxValue);
             writer.i32(i32.MaxValue);
             writer.i16(i16.MaxValue);
@@ -86,7 +86,7 @@ namespace NetStack.Serialization
         [Test]
         public void ToFromArrayPosition()
         {
-            var writer = new BitBufferWriter<SevenBitEncoding>();
+            var writer = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>();
             writer.u8(13);
             writer.i64(i64.MaxValue);
             writer.Align();
@@ -101,10 +101,10 @@ namespace NetStack.Serialization
         [Test]
         public void RawToEncoded()
         {
-            var rawWriter = new BitBufferWriter<RawEncoding>();
+            var rawWriter = new BitBufferWriter<RawEncoding<u32ArrayMemory>>();
             rawWriter.i32(i32.MaxValue - 13);
             rawWriter.u32(u32.MaxValue - 666);
-            var writer = new BitBufferWriter<SevenBitEncoding>(rawWriter);
+            var writer = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>(rawWriter);
             writer.i32(i32.MaxValue - 13);
             writer.u32(u32.MaxValue - 666);
             var data = writer.ToArray();

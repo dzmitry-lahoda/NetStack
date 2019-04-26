@@ -9,7 +9,7 @@ namespace NetStack.Serialization
         [Test]
         public void Capacity()
         {
-            var writer = new BitBufferWriter<SevenBitEncoding>(100);
+            var writer = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>(100);
             Assert.AreEqual(0, writer.LengthWritten);
             var received = new byte[2000];
             var reader = new BitBufferReader<SevenBitDecoding>();
@@ -20,7 +20,7 @@ namespace NetStack.Serialization
         [Test]
         public void ResetSet()
         {
-            var writer = new BitBufferWriter<SevenBitEncoding>(8);
+            var writer = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>(8);
         
             writer.i32(666);
             var bitsWritten = writer.BitsWritten;
@@ -51,7 +51,7 @@ namespace NetStack.Serialization
         [Test]
         public void BitsRead()
         {
-            var writer = new BitBufferWriter<SevenBitEncoding>();
+            var writer = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>();
 
             Assert.AreEqual(0, writer.BitsWritten);
             writer.b(true);

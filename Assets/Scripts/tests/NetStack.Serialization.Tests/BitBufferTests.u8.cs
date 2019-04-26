@@ -21,7 +21,7 @@ namespace NetStack.Serialization
         [Test]
         public void u8WriteRead()
         {
-            var writer = new BitBufferWriter<SevenBitEncoding>();
+            var writer = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>();
             writer.u8(u8.MaxValue);
             writer.Align();
             var allocated = new u8[ushort.MaxValue];
@@ -34,7 +34,7 @@ namespace NetStack.Serialization
         [Test]
         public void u8MinMaxRequired()
         {
-            var buffer = new BitBufferWriter<SevenBitEncoding>();
+            var buffer = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>();
             buffer.u8(123, 0, 201);
             buffer.u8(1);
             buffer.u8(42, 1, 43);
@@ -57,7 +57,7 @@ namespace NetStack.Serialization
         [Test]
         public void u8MaxValueWritePeek()
         {
-            var writer = new BitBufferWriter<SevenBitEncoding>();
+            var writer = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>();
             writer.u8(u8.MaxValue);
             var data = writer.ToArray();
             var reader = new BitBufferReader<SevenBitDecoding>();
@@ -68,7 +68,7 @@ namespace NetStack.Serialization
 
         public void u8MaxValueWritePeek1024()
         {
-            var writer = new BitBufferWriter<SevenBitEncoding>();
+            var writer = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>();
             writer.u8(u8.MaxValue);
             var data = writer.ToArray();
             var reader = new BitBufferReader<SevenBitDecoding>();
@@ -82,7 +82,7 @@ namespace NetStack.Serialization
         [Test]
         public void u8WritePeekRead256()
         {
-            var writer = new BitBufferWriter<SevenBitEncoding>(1000);
+            var writer = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>(1000);
             for (int i = 0; i < 513; i++)
             {
                 var val = (u8)(u8.MaxValue / (i % 2 + 1));
@@ -104,7 +104,7 @@ namespace NetStack.Serialization
         [Test]
         public void u8WriteOutOfRange()
         {
-            var writer = new BitBufferWriter<SevenBitEncoding>();
+            var writer = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>();
             Assert.Throws<ArgumentOutOfRangeException>(() => writer.u8(125, 0, 123));
             Assert.Throws<ArgumentOutOfRangeException>(() => writer.u8(1, 2, 123));
             Assert.Throws<ArgumentException>(() => writer.u8(123, 2));

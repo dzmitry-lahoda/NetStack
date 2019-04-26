@@ -20,7 +20,7 @@ namespace NetStack.Serialization
         [Test]
         public void i16Bdiff()
         {
-            var writer = new BitBufferWriter<SevenBitEncoding>();
+            var writer = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>();
             writer.i16BDiff(0, 1);
             writer.i16BDiff(1, 1);
             var data = writer.ToArray();            
@@ -33,7 +33,7 @@ namespace NetStack.Serialization
         [Test]
         public void i16BdiffLimits()
         {
-            var writer = new BitBufferWriter<SevenBitEncoding>();
+            var writer = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>();
             writer.i16BDiff(0, 1, -1, 10);
             writer.i16BDiff(1, 1, 0, 100);
             var data = writer.ToArray();            
@@ -46,7 +46,7 @@ namespace NetStack.Serialization
         [Test]
         public void i32Bdiff()
         {
-            var writer = new BitBufferWriter<SevenBitEncoding>();
+            var writer = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>();
             writer.i32BDiff(0, 1);
             writer.i32BDiff(1, 1);
             var data = writer.ToArray();            
@@ -59,7 +59,7 @@ namespace NetStack.Serialization
         [Test]
         public void i32BdiffLimits()
         {
-            var writer = new BitBufferWriter<SevenBitEncoding>();
+            var writer = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>();
             writer.i32BDiff(0, 1, -1, 10);
             writer.i32BDiff(1, 1, 0, 100);
             var data = writer.ToArray();            
@@ -72,7 +72,7 @@ namespace NetStack.Serialization
         [Test]
         public void i8Bdiff()
         {
-            var writer = new BitBufferWriter<SevenBitEncoding>();
+            var writer = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>();
             writer.i8BDiff(0, 1);
             writer.i8BDiff(1, 1);
             var data = writer.ToArray();            
@@ -85,7 +85,7 @@ namespace NetStack.Serialization
         [Test]
         public void u16Bdiff()
         {
-            var writer = new BitBufferWriter<SevenBitEncoding>();
+            var writer = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>();
             writer.u16BDiff(0, 1);
             writer.u16BDiff(1, 1);
             var data = writer.ToArray();            
@@ -98,7 +98,7 @@ namespace NetStack.Serialization
         [Test]
         public void u32Bdiff()
         {
-            var writer = new BitBufferWriter<SevenBitEncoding>();
+            var writer = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>();
             writer.u32BDiff(0, 1);
             writer.u32BDiff(1, 1);
             var data = writer.ToArray();            
@@ -112,7 +112,7 @@ namespace NetStack.Serialization
         [Test]
         public void u8Bdiff()
         {
-            var writer = new BitBufferWriter<SevenBitEncoding>();
+            var writer = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>();
             writer.u8BDiff(0, 1);
             writer.u8BDiff(1, 1);
             var data = writer.ToArray();            
@@ -125,7 +125,7 @@ namespace NetStack.Serialization
         [Test]
         public void f32Bdiff()
         {
-            var writer = new BitBufferWriter<SevenBitEncoding>();
+            var writer = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>();
             writer.f32BDiff(0f, 1f);
             writer.f32BDiff(1f, 1f);
             var data = writer.ToArray();            

@@ -22,7 +22,7 @@ namespace NetStack.Serialization
     // Unity FPS samples has usage of constrained generic (and IL2CPP does LLVM) indicates these should work there to
     // going container to be struct seems to be more complex and permaturely (will wait C# 8)
     public struct SevenBitEncoding<TMemory> : ICompression<BitBufferWriterBase<TMemory>>
-        where TMemory: struct, IMemory<u32>
+        where TMemory : struct, IMemory<u32>
     {
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public void i32(BitBufferWriterBase<TMemory> b, i32 value)
@@ -41,12 +41,7 @@ namespace NetStack.Serialization
             // TODO: how to use CPU parallelism here ? unrol loop? couple of temporal variables? 
             // TODO: mere 8 and 8 into one 16? write special handling code for 8 and 16 coming from outside?
             // oneliner version to use if need copy paste
-            // for (;value >= 0b10000000; b.raw((u8)(value | 0b10000000), 8), value >>= 7) {} b.u8((u8)value);
-            while (value >= 0b10000000)
-            {
-                b.u8((u8)(value | 0b10000000));
-                value >>= 7;
-            }
+            while (value >= 0b10000000) { b.u8((u8)(value | 0b10000000)); value >>= 7; }
             b.u8((u8)value);
         }
 

@@ -18,7 +18,7 @@ using System.Numerics;
 
 namespace NetStack.Serialization
 {
-    public static class BitBuffer
+     public static partial class BitBuffer
     {
       public static i32 BitsRequired(i32 min, i32 max) =>
             (min == max) ? 1 : BitOperations.Log2((u32)(max - min)) + 1;

@@ -19,7 +19,7 @@ namespace NetStack.Serialization
         [Test]
         public void LongReadWrite()
         {
-            var writer = new BitBufferWriter<SevenBitEncoding>();
+            var writer = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>();
             writer.i64(i64.MaxValue);;
             var data = writer.ToArray();
             var reader = new BitBufferReader<SevenBitDecoding>();

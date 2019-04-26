@@ -19,7 +19,7 @@ namespace NetStack.Serialization
         [Test]
         public void u8ArrayWriteRead()
         {
-            var writer = new BitBufferWriter<SevenBitEncoding>();
+            var writer = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>();
             var input = new byte[] { 1, 2, 3, 4, 5 };
             writer.u8(input);
             writer.Align();
@@ -37,7 +37,7 @@ namespace NetStack.Serialization
         [Test]
         public void u8ArrayMaxWriteRead()
         {
-            var writer = new BitBufferWriter<SevenBitEncoding>();
+            var writer = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>();
             var input = new byte[writer.Options.U8SpanLengthMax];
             writer.u8(input);
             var allocated = new byte[ushort.MaxValue];
@@ -50,7 +50,7 @@ namespace NetStack.Serialization
         [Test]
         public void u8ArrayWriteLimit()
         {
-            var writer = new BitBufferWriter<SevenBitEncoding>();
+            var writer = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>();
             var input = new byte[writer.Options.U8SpanLengthMax + 1];
             Assert.Throws<ArgumentException>(()=> writer.u8(input));
         }
@@ -58,7 +58,7 @@ namespace NetStack.Serialization
         [Test]
         public void u8ArrayReadLimit()
         {
-            var writer = new BitBufferWriter<SevenBitEncoding>();
+            var writer = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>();
             var input = new byte[writer.Options.U8SpanLengthMax];
             writer.u8(input);
             var data = writer.ToArray();

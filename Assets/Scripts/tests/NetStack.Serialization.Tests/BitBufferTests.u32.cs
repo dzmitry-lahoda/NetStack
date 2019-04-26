@@ -17,13 +17,13 @@ namespace NetStack.Serialization
     partial class BitBufferTests
     {
         [Test]
-        public void u32ReadWriteRaw() => u32ReadWrite<RawEncoding, RawDecoding>();
+        public void u32ReadWriteRaw() => u32ReadWrite<RawEncoding<u32ArrayMemory>, RawDecoding>();
 
         [Test]
-        public void u32ReadWriteEncoded() => u32ReadWrite<SevenBitEncoding, SevenBitDecoding>();
+        public void u32ReadWriteEncoded() => u32ReadWrite<SevenBitEncoding<u32ArrayMemory>, SevenBitDecoding>();
 
         private void u32ReadWrite<TEncoder, TDecoder>() 
-             where TEncoder:unmanaged, ICompression<BitBufferWriter<TEncoder>> 
+             where TEncoder:struct, ICompression<BitBufferWriterBase<u32ArrayMemory>> 
              where TDecoder:unmanaged, IDecompression<BitBufferReader<TDecoder>> 
         {
             var writer = new BitBufferWriter<TEncoder>();
@@ -37,13 +37,13 @@ namespace NetStack.Serialization
         }
 
         [Test]
-        public void u32ReadWriteLimitsRaw() => u32ReadWriteLimits<RawEncoding, RawDecoding>();
+        public void u32ReadWriteLimitsRaw() => u32ReadWriteLimits<RawEncoding<u32ArrayMemory>, RawDecoding>();
 
         [Test]
-        public void u32ReadWriteLimitsEncoded() => u32ReadWriteLimits<SevenBitEncoding, SevenBitDecoding>();
+        public void u32ReadWriteLimitsEncoded() => u32ReadWriteLimits<SevenBitEncoding<u32ArrayMemory>, SevenBitDecoding>();
 
         public void u32ReadWriteLimits<TEncoder, TDecoder>() 
-             where TEncoder:unmanaged, ICompression<BitBufferWriter<TEncoder>> 
+             where TEncoder:struct, ICompression<BitBufferWriterBase<u32ArrayMemory>> 
              where TDecoder:unmanaged, IDecompression<BitBufferReader<TDecoder>> 
         {
             var writer = new BitBufferWriter<TEncoder>();

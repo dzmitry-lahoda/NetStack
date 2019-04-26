@@ -47,7 +47,7 @@ namespace System.Numerics
 
         public static class Fibonacci
         {
-            private static ReadOnlySpan<u64> u64Lookup => new u64[]
+            internal static ReadOnlySpan<u64> u64Lookup => new u64[]
             {
                 1, 2, 3, 5, 8, 13, 21, 34, 
                 55, 89, 144, 233, 377, 610, 987, 1597,
@@ -69,7 +69,6 @@ namespace System.Numerics
             public static u64 Encode(u64 value)
             {
 #if !NO_EXCEPTIONS
-                // Check for overflow
                 if (value > MaxValue)
                 {
                     Throw.Overflow("Exceeded FibonacciCodec's maximum supported symbol value of " + MaxValue + ".");

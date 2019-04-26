@@ -34,7 +34,7 @@ namespace NetStack.Serialization
 
             if (length * 17 + 10 > (totalNumberBits - BitsWritten)) // possible overflow
             {
-                if (BitsRequired(value, length) > (totalNumberBits - BitsWritten))
+                if (BitBuffer.BitsRequired(value, length) > (totalNumberBits - BitsWritten))
                     Throw.ArgumentOutOfRange("String would not fit in bitstream.");
             }
 
@@ -57,7 +57,7 @@ namespace NetStack.Serialization
                 }
             }
 
-            u32((u32)codePage, codePageBitsRequired);
+            u32((u32)codePage, BitBuffer.codePageBitsRequired);
             u32((u32)length, config.CharSpanBitsLength);
 
             switch (codePage)
@@ -65,19 +65,19 @@ namespace NetStack.Serialization
                 case CodePage.Ascii:
                     for (var i = 0; i < length; i++)
                     {
-                        u32(value[i], bitsASCII);
+                        u32(value[i], BitBuffer.bitsASCII);
                     }
                     break;
                 case CodePage.Latin1:
                     for (var i = 0; i < length; i++)
                     {
-                        u32(value[i], bitsLATIN1);
+                        u32(value[i], BitBuffer.bitsLATIN1);
                     }
                     break;
                 case CodePage.LatinExtended:
                     for (var i = 0; i < length; i++)
                     {
-                        u32(value[i], bitsLATINEXT);
+                        u32(value[i], BitBuffer.bitsLATINEXT);
                     }
                     break;
                 default:
@@ -86,12 +86,12 @@ namespace NetStack.Serialization
                         if (value[i] > 127)
                         {
                             u32(1, 1);
-                            u32(value[i], bitsUTF16);
+                            u32(value[i], BitBuffer.bitsUTF16);
                         }
                         else
                         {
                             u32(0, 1);
-                            u32(value[i], bitsASCII);
+                            u32(value[i], BitBuffer.bitsASCII);
                         }
                     }
                     break;

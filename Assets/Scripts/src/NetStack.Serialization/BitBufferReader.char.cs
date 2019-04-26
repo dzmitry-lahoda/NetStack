@@ -34,19 +34,19 @@ namespace NetStack.Serialization
                 case 0:
                     for (var i = 0; i < length; i++)
                     {
-                        outputValue[i] = (char)raw(bitsASCII);
+                        outputValue[i] = (char)raw(BitBuffer.bitsASCII);
                     }
                     break;
                 case 1:
                     for (var i = 0; i < length; i++)
                     {
-                        outputValue[i] = (char)raw(bitsLATIN1);
+                        outputValue[i] = (char)raw(BitBuffer.bitsLATIN1);
                     }
                     break;
                 case 2:
                     for (var i = 0; i < length; i++)
                     {
-                        outputValue[i] = (char)raw(bitsLATINEXT);
+                        outputValue[i] = (char)raw(BitBuffer.bitsLATINEXT);
                     }
                     break;
                 default:
@@ -54,9 +54,9 @@ namespace NetStack.Serialization
                     {
                         var needs16 = raw(1);
                         if (needs16 == 1)
-                           outputValue[i] = (char)raw(bitsUTF16);
+                           outputValue[i] = (char)raw(BitBuffer.bitsUTF16);
                         else
-                           outputValue[i] = (char)raw(bitsASCII);
+                           outputValue[i] = (char)raw(BitBuffer.bitsASCII);
                     }
                     break;
             }

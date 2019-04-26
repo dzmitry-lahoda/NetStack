@@ -10,7 +10,7 @@ namespace NetStack.Serialization
         public void CodePagesBitsRequited()
         {
             var bits = BitBuffer.BitsRequired("0".AsSpan(),1);
-            var bitBuffer = new BitBufferWriter<SevenBitEncoding>();
+            var bitBuffer = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>();
             bitBuffer.c("0".AsSpan());
             Assert.AreEqual(bits, bitBuffer.BitsWritten);
             var result = bitBuffer.ToArray();
@@ -20,7 +20,7 @@ namespace NetStack.Serialization
         public void ЁBitsRequited()
         {
             var bits = BitBuffer.BitsRequired("Ё".AsSpan(),1);
-            var bitBuffer = new BitBufferWriter<SevenBitEncoding>();
+            var bitBuffer = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>();
             bitBuffer.c("Ё");
             Assert.AreEqual(bits, bitBuffer.BitsWritten);
             var result = bitBuffer.ToArray();
@@ -29,13 +29,13 @@ namespace NetStack.Serialization
         [Test]
         public void StringNullBitsRequited()
         {
-            BitBuffer.BitsRequired(null,42);
+            BitBuffer.BitsRequired(null, 42);
         }
 
         [Test]
         public void AnsiStringWriteRead()
         {
-            var writer = new BitBufferWriter<SevenBitEncoding>();
+            var writer = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>();
             writer.c("123456789");
             writer.Align();
             var allocated = new byte[ushort.MaxValue];
@@ -48,7 +48,7 @@ namespace NetStack.Serialization
         [Test]
         public void StringWriteRead()
         {
-            var writer = new BitBufferWriter<SevenBitEncoding>();
+            var writer = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>();
             writer.c("lahoda.prо/минск");
             var allocated = new byte[ushort.MaxValue];
             writer.ToSpan(allocated);
