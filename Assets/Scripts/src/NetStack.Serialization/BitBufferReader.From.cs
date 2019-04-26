@@ -32,13 +32,13 @@ namespace NetStack.Serialization
                 Throw.Argument("Should be positive", nameof(data.Length));
 
             var length = data.Length;
-            Reset();
+            state.Reset();
             var step = Unsafe.SizeOf<u32>();
             i32 numChunks = (length / step) + 1;
 
-            if (chunks.Length < numChunks)
+            if (state.chunks.Length < numChunks)
             {
-                Chunks = new u32[numChunks]; // call it once to stay expanded forever
+                state.Chunks = new u32[numChunks]; // call it once to stay expanded forever
             }
 
             // data must be 4 or 8 bytes i64 because 32 and 64 machines https://gafferongames.com/post/reading_and_writing_packets/
@@ -64,7 +64,7 @@ namespace NetStack.Serialization
                 if (dataIdx + 3 < length)
                     chunk = chunk | (u32)data[dataIdx + 3] << 24;
 
-                chunks[i] = chunk;
+                state.chunks[i] = chunk;
             }
 
             // TODO: write sets 1 bit in the end. so we may read all remaining zeroes, minis 1 bit for flag, and make total less

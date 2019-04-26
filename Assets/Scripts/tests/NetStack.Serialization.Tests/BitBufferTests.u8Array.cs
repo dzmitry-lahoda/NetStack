@@ -22,7 +22,6 @@ namespace NetStack.Serialization
             var writer = new BitBufferWriter<SevenBitEncoding>();
             var input = new byte[] { 1, 2, 3, 4, 5 };
             writer.u8(input);
-            writer.Align();
             var allocated = new u8[ushort.MaxValue];
             writer.ToSpan(allocated);
             var reader = new BitBufferReader<SevenBitDecoding>(allocated.Length);

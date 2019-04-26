@@ -32,9 +32,9 @@ namespace NetStack.Serialization
 
             var length = value.Length;
 
-            if (length * 17 + 10 > (totalNumberBits - BitsWritten)) // possible overflow
+            if (length * 17 + 10 > (state.totalNumberBits - BitsWritten)) // possible overflow
             {
-                if (BitsRequired(value, length) > (totalNumberBits - BitsWritten))
+                if (BitsRequired(value, length) > (state.totalNumberBits - BitsWritten))
                     Throw.ArgumentOutOfRange("String would not fit in bitstream.");
             }
 

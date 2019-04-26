@@ -32,7 +32,7 @@ namespace NetStack.Serialization
 
             raw(1, 1); // if we write many zeroes in the end, we for sure can detect buffer end. but of if we use-reuse dirty memory with no clean?
             var bitsPassed = BitsWritten;
-            Align();
+            state.Align();
 
             i32 numChunks = (bitsPassed >> 5) + 1;
             i32 length = data.Length;
@@ -40,7 +40,7 @@ namespace NetStack.Serialization
             for (var i = 0; i < numChunks; i++)
             {
                 i32 dataIdx = i * step;
-                u32 chunk = chunks[i];
+                u32 chunk = state.chunks[i];
                 // TODO: optimize by copying 4 byte in single call via Unsafe
                 if (dataIdx < length)
                     data[dataIdx] = (byte)(chunk);

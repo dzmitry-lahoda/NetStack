@@ -18,30 +18,15 @@ using System.Numerics;
 
 namespace NetStack.Serialization
 {
-
-    // core untyped data specific part of bit buffer
-    public abstract partial class BitBuffer
+    public struct BState
     {
-        public const i32 DefaultU32Capacity = BitBufferLimits.MtuIeee802Dot3 / 4;
-
-        internal BitBuffer()
-        {
-            // dot not allow inheritance outside of assembly to simplify move to struct only code    
-        }
-
-        public static i32 BitsRequired(i32 min, i32 max) =>
-            (min == max) ? 1 : BitOperations.Log2((u32)(max - min)) + 1;
-
-        public static i32 BitsRequired(u32 min, u32 max) =>
-            (min == max) ? 1 : BitOperations.Log2(max - min) + 1;
-
-        #region BState
-        protected internal u32[] chunks;
+        internal u32[] chunks;
         //protected internal System.Memory<u32> chunks;
-        protected i32 totalNumChunks;
-        protected i32 totalNumberBits;
-        protected internal u32[] Chunks
+        internal i32 totalNumChunks;
+        internal i32 totalNumberBits;
+        internal u32[] Chunks
         {
+            [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
             set
             {
                 chunks = value;
@@ -49,18 +34,15 @@ namespace NetStack.Serialization
                 totalNumberBits = totalNumChunks * 8 * Unsafe.SizeOf<u32>();
             }
         }
-        #endregion
-
-        #region SIndex
 
         // bit index onto current head
         // trying to put these 2 or 3 into one struct degrade performance on .NET Core 2.1 x86-64
         // have tried Auto and Explicit with 2 i32
-        protected internal i32 chunkIndex;
-        protected internal i32 scratchUsedBits;
+        internal i32 chunkIndex;
+        internal i32 scratchUsedBits;
 
         // last partially read value
-        protected internal u64 scratch;
+        internal u64 scratch;
 
 
         /// <summary>
@@ -76,7 +58,9 @@ namespace NetStack.Serialization
 
         public (i32 ChunkIndex, i32 ScratchUsedBits, u64 Scratch) SIndex
         {
+            [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
             get => (chunkIndex, scratchUsedBits, scratch);
+            [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
             set
             {
                 chunkIndex = value.ChunkIndex;
@@ -84,15 +68,10 @@ namespace NetStack.Serialization
                 scratch = value.Scratch;
             }
         }
-
-        #endregion
-
-
-
-
         /// <summary>
         /// Call aligns remaining bits to full bytes.
         /// </summary>
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public void Align()
         {
             if (scratchUsedBits != 0)
@@ -128,5 +107,25 @@ namespace NetStack.Serialization
 
             return spaced.ToString();
         }
+    }
+
+    // core untyped data specific part of bit buffer
+    public abstract partial class BitBuffer
+    {
+
+        internal BState state;
+
+        public const i32 DefaultU32Capacity = BitBufferLimits.MtuIeee802Dot3 / 4;
+
+        internal BitBuffer()
+        {
+            // dot not allow inheritance outside of assembly to simplify move to struct only code    
+        }
+
+        public static i32 BitsRequired(i32 min, i32 max) =>
+            (min == max) ? 1 : BitOperations.Log2((u32)(max - min)) + 1;
+
+        public static i32 BitsRequired(u32 min, u32 max) =>
+            (min == max) ? 1 : BitOperations.Log2(max - min) + 1;
     }
 }

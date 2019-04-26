@@ -1,9 +1,0 @@
-﻿{
-    "name": "NetStack.Compression",
-    "excludePlatforms": [],
-    "allowUnsafeCode": false,
-    "overrideReferences": false,
-    "precompiledReferences": [],
-    "autoReferenced": true,
-    "defineConstraints": []
-}

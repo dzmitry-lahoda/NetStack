@@ -49,20 +49,22 @@ namespace NetStack.Serialization
             // not performance critical path so fine to check and throw
             if (buffer == null || buffer.Length == 0)
                 Throw.Argument("Buffer should be non null or empty", nameof(buffer));
-            Chunks = buffer;
-            Reset();
+            state.Chunks = buffer;
+            state.Reset();
         }
+
+        public void Reset() => state.Reset();
 
         /// <summary>
         /// Starts writing into buffer for previous buffer after <see cref="Align"/>
         /// </summary>
         public BitBufferWriter(BitBuffer startFrom)
         {
-            Chunks = startFrom.chunks;
-            scratch = startFrom.scratch;
-            scratchUsedBits = startFrom.scratchUsedBits;
-            chunkIndex = startFrom.chunkIndex;
-            Align();
+            state.Chunks = startFrom.state.chunks;
+            state.scratch = startFrom.state.scratch;
+            state.scratchUsedBits = startFrom.state.scratchUsedBits;
+            state.chunkIndex = startFrom.state.chunkIndex;
+            state.Align();
         }
     }
 }
