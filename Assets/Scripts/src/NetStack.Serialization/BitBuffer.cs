@@ -35,12 +35,14 @@ namespace NetStack.Serialization
         public static i32 BitsRequired(u32 min, u32 max) =>
             (min == max) ? 1 : BitOperations.Log2(max - min) + 1;
 
+    
         #region BState
-        protected internal u32[] chunks;
+        // putting BState in struct degrades performance on 10% on .NET Core 2.2 
+        protected internal u32ArrayMemory chunks;
         //protected internal System.Memory<u32> chunks;
         protected i32 totalNumChunks;
         protected i32 totalNumberBits;
-        protected internal u32[] Chunks
+        protected internal u32ArrayMemory Chunks
         {
             set
             {

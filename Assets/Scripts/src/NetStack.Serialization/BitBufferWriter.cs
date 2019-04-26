@@ -49,7 +49,7 @@ namespace NetStack.Serialization
             // not performance critical path so fine to check and throw
             if (buffer == null || buffer.Length == 0)
                 Throw.Argument("Buffer should be non null or empty", nameof(buffer));
-            Chunks = buffer;
+            Chunks = new u32ArrayMemory(buffer);
             Reset();
         }
 

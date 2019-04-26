@@ -36,9 +36,10 @@ namespace NetStack.Serialization
             var step = Unsafe.SizeOf<u32>();
             i32 numChunks = (length / step) + 1;
 
+            // TODO: move out this expansion from here
             if (chunks.Length < numChunks)
             {
-                Chunks = new u32[numChunks]; // call it once to stay expanded forever
+                Chunks = new u32ArrayMemory(new u32[numChunks]); // call it once to stay expanded forever
             }
 
             // data must be 4 or 8 bytes i64 because 32 and 64 machines https://gafferongames.com/post/reading_and_writing_packets/
