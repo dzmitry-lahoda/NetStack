@@ -22,7 +22,8 @@ namespace NetStack.Serialization
 
         //https://gafferongames.com/post/snapshot_compression/
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public static void quaternion(this BitBufferWriter<SevenBitEncoding> self, Quaternion quaternion, int bitsPerComponent = 12)
+        public static void quaternion<T>(this T self, Quaternion quaternion, int bitsPerComponent = 12)
+        where T:BitBufferWriterBase
         {
             float halfrangeFloat = (1 << bitsPerComponent - 1);
             float packer = SmallestThreePack * halfrangeFloat;
@@ -110,10 +111,10 @@ namespace NetStack.Serialization
                 c = (uint)((cflt * packer) + halfrangeFloat);
             }
 
-            self.raw(m, 2);
-            self.raw(a, bitsPerComponent);
-            self.raw(b, bitsPerComponent);
-            self.raw(c, bitsPerComponent);
+            self.u32(m, 2);
+            self.u32(a, bitsPerComponent);
+            self.u32(b, bitsPerComponent);
+            self.u32(c, bitsPerComponent);
         }
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]

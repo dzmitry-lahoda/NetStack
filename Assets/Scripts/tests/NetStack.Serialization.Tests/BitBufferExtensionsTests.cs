@@ -33,6 +33,7 @@ namespace NetStack.Serialization
             var buffer = new BitBufferWriter<SevenBitEncoding>();
             var expected = new SimpleStruct { a = 1.2f, b = 123, c = byte.MaxValue, d = ushort.MaxValue };
             buffer.block(expected);
+            buffer.Align();
             var allocated = new byte[ushort.MaxValue];
             buffer.ToSpan(allocated);
             var reader = new BitBufferReader<SevenBitDecoding>(allocated.Length);

@@ -26,7 +26,8 @@ namespace NetStack.Serialization
         /// <typeparam name="T">Any struct with no references to managed heap.</typeparam>
         /// <param name="value">The value.</param>
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public static void block<T>(this BitBufferWriter<SevenBitEncoding> self, in T value)
+        public static void block<TWriter, T>(this TWriter self, in T value)
+            where TWriter:IBitBufferWriter
             where T : unmanaged
         {
             var size = Unsafe.SizeOf<T>();
@@ -56,7 +57,8 @@ namespace NetStack.Serialization
             }
         }
 
-        private static void WriteSmallUnmanaged(this BitBufferWriter<SevenBitEncoding> self, ref byte value, int size)
+        private static void WriteSmallUnmanaged<TWriter>(this TWriter self, ref byte value, int size)
+              where TWriter:IBitBufferWriter
         {
             if (size == 1)
             {

@@ -56,6 +56,7 @@ namespace NetStack.Serialization
         {
             var writer = new BitBufferWriter<SevenBitEncoding>();
             writer.b(true);
+            writer.Align();
             var allocated = new byte[ushort.MaxValue];
             writer.ToSpan(allocated);
             var reader = new BitBufferReader<SevenBitDecoding>(allocated.Length);
@@ -70,6 +71,7 @@ namespace NetStack.Serialization
             writer.b(true);
             writer.b(false);
             writer.b(true);
+            writer.Align();
             var allocated = new byte[ushort.MaxValue];
             writer.ToSpan(allocated);
             var reader = new BitBufferReader<SevenBitDecoding>(allocated.Length);

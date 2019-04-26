@@ -23,7 +23,8 @@ namespace NetStack.Serialization
     public static class BDiffBitBufferExtensions
     {
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public static void f32BDiff(this BitBufferWriter<SevenBitEncoding> self, f32 baseline, f32 update)
+        public static void f32BDiff<T>(this T self, f32 baseline, f32 update)
+        where T:IBitBufferWriter
         {
             if (baseline != update)
             {
@@ -35,7 +36,8 @@ namespace NetStack.Serialization
         }   
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public static void f32BDiff(this BitBufferWriter<SevenBitEncoding> self, f32 baseline, f32 update, f32 min, f32 max, f32 precision)
+        public static void f32BDiff<T>(this T self, f32 baseline, f32 update, f32 min, f32 max, f32 precision)
+              where T:IBitBufferWriter
         {
             if (baseline != update)
             {
@@ -55,7 +57,8 @@ namespace NetStack.Serialization
             self.b() ? self.f32(min, max, precision) : baseline;     
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public static void i32BDiff(this BitBufferWriter<SevenBitEncoding> self, i32 baseline, i32 update)
+        public static void i32BDiff<T>(this T self, i32 baseline, i32 update)
+              where T:IBitBufferWriter
         {
             if (baseline != update)
             {
@@ -75,7 +78,8 @@ namespace NetStack.Serialization
             self.b() ? self.i32(min, max) : baseline;      
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public static void i32BDiff(this BitBufferWriter<SevenBitEncoding> self, i32 baseline, i32 update, i32 min, i32 max)
+        public static void i32BDiff<T>(this T self, i32 baseline, i32 update, i32 min, i32 max)
+              where T:IBitBufferWriter
         {
             if (baseline != update)
             {
@@ -87,7 +91,8 @@ namespace NetStack.Serialization
         }     
 
       [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public static void u32BDiff(this BitBufferWriter<SevenBitEncoding> self, u32 baseline, u32 update)
+        public static void u32BDiff<T>(this T self, u32 baseline, u32 update)
+              where T:IBitBufferWriter
         {
             if (baseline != update)
             {
@@ -107,7 +112,8 @@ namespace NetStack.Serialization
             self.b() ? self.u32(min, max) : baseline;      
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public static void u32BDiff(this BitBufferWriter<SevenBitEncoding> self, u32 baseline, u32 update, u32 min, u32 max)
+        public static void u32BDiff<T>(this T self, u32 baseline, u32 update, u32 min, u32 max)
+              where T:IBitBufferWriter
         {
             if (baseline != update)
             {
@@ -119,7 +125,8 @@ namespace NetStack.Serialization
         }             
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public static void u64BDiff(this BitBufferWriter<SevenBitEncoding> self, u64 baseline, u64 update)
+        public static void u64BDiff<T>(this T self, u64 baseline, u64 update)
+              where T:IBitBufferWriter
         {
             if (baseline != update)
             {
@@ -136,7 +143,8 @@ namespace NetStack.Serialization
 
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public static void f64BDiff(this BitBufferWriter<SevenBitEncoding> self, f64 baseline, f64 update)
+        public static void f64BDiff<T>(this T self, f64 baseline, f64 update)
+              where T:IBitBufferWriter
         {
             if (baseline != update)
             {
@@ -152,7 +160,8 @@ namespace NetStack.Serialization
             self.b() ? self.f64() : baseline;  
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public static void i16BDiff(this BitBufferWriter<SevenBitEncoding> self, i16 baseline, i16 update)
+        public static void i16BDiff<T>(this T self, i16 baseline, i16 update)
+              where T:IBitBufferWriter
         {
             if (baseline != update)
             {
@@ -173,7 +182,8 @@ namespace NetStack.Serialization
             self.b() ? self.i16(min, max) : baseline;      
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public static void i16BDiff(this BitBufferWriter<SevenBitEncoding> self, i16 baseline, i16 update, i16 min, i16 max)
+        public static void i16BDiff<T>(this T self, i16 baseline, i16 update, i16 min, i16 max)
+              where T:IBitBufferWriter
         {
             if (baseline != update)
             {
@@ -186,7 +196,8 @@ namespace NetStack.Serialization
 
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public static void i8BDiff(this BitBufferWriter<SevenBitEncoding> self, i8 baseline, i8 update)
+        public static void i8BDiff<T>(this T self, i8 baseline, i8 update)
+              where T:IBitBufferWriter
         {
             if (baseline != update)
             {
@@ -206,7 +217,8 @@ namespace NetStack.Serialization
             self.b() ? self.i8(min, max) : baseline;      
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public static void i8BDiff(this BitBufferWriter<SevenBitEncoding> self, i8 baseline, i8 update, i8 min, i8 max)
+        public static void i8BDiff<T>(this T self, i8 baseline, i8 update, i8 min, i8 max)
+              where T:IBitBufferWriter
         {
             if (baseline != update)
             {
@@ -219,7 +231,8 @@ namespace NetStack.Serialization
 
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public static void u8BDiff(this BitBufferWriter<SevenBitEncoding> self, u8 baseline, u8 update)
+        public static void u8BDiff<T>(this T self, u8 baseline, u8 update)
+              where T:IBitBufferWriter
         {
             if (baseline != update)
             {
@@ -240,7 +253,8 @@ namespace NetStack.Serialization
             self.b() ? self.u8(min, max) : baseline;      
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public static void u8BDiff(this BitBufferWriter<SevenBitEncoding> self, u8 baseline, u8 update, u8 min, u8 max)
+        public static void u8BDiff<T>(this T self, u8 baseline, u8 update, u8 min, u8 max)
+              where T:IBitBufferWriter
         {
             if (baseline != update)
             {
@@ -252,7 +266,8 @@ namespace NetStack.Serialization
         }   
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public static void u16BDiff(this BitBufferWriter<SevenBitEncoding> self, u16 baseline, u16 update)
+        public static void u16BDiff<T>(this T self, u16 baseline, u16 update)
+              where T:IBitBufferWriter
         {
             if (baseline != update)
             {
@@ -272,7 +287,8 @@ namespace NetStack.Serialization
             self.b() ? self.u16(min, max) : baseline;      
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public static void u16BDiff(this BitBufferWriter<SevenBitEncoding> self, u16 baseline, u16 update, u16 min, u16 max)
+        public static void u16BDiff<T>(this T self, u16 baseline, u16 update, u16 min, u16 max)
+              where T:IBitBufferWriter
         {
             if (baseline != update)
             {
@@ -285,7 +301,8 @@ namespace NetStack.Serialization
 
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public static void i64BDiff(this BitBufferWriter<SevenBitEncoding> self, i64 baseline, i64 update)
+        public static void i64BDiff<T>(this T self, i64 baseline, i64 update)
+              where T:IBitBufferWriter
         {
             if (baseline != update)
             {

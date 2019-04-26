@@ -16,18 +16,17 @@ using f64 = System.Double;
 
 namespace NetStack.Serialization
 {
-    public struct RawEncoding : ICompression<BitBufferWriter<RawEncoding>>
+    public struct RawEncoding : ICompression<BitBufferWriterBase>
     {
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public void i32(BitBufferWriter<RawEncoding> b, int value) => b.raw((u32)value, 32);
-
+        public void i32(BitBufferWriterBase b, int value) => b.u32((u32)value, 32);
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public void u32(BitBufferWriter<RawEncoding> b, u32 value) => b.raw(value, 32);
+        public void u32(BitBufferWriterBase b, u32 value) => b.u32(value, 32);
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public u32 encode(i32 value) => (u32)value;
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public void i32(BitBufferWriter<RawEncoding> b, i32 value, i32 numberOfBits) => i32(b, value);
+        public void i32(BitBufferWriterBase b, i32 value, i32 numberOfBits) => i32(b, value);
     }
 }

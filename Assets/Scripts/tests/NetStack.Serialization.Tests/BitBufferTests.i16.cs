@@ -27,6 +27,7 @@ namespace NetStack.Serialization
             i16 half = i16.MaxValue / 2;
             writer.i16(half);
             writer.i16(i16.MaxValue);
+            writer.Align();
             var allocated = new byte[i16.MaxValue];
             writer.ToSpan(allocated);
             var reader = new BitBufferReader<SevenBitDecoding>(allocated.Length);

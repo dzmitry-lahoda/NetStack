@@ -32,7 +32,7 @@ namespace NetStack.Serialization
 #endif
 
             i32 bits = BitsRequired(min, max);
-            raw((u32)(value - min), bits);
+            u32((u32)(value - min), bits);
         }
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
@@ -69,9 +69,6 @@ namespace NetStack.Serialization
         public void u16(u16 value, u16 min, u16 max) => u32(value, min, max);
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public void u32(u32 value, i32 numberOfBits) => raw(value, numberOfBits);
-
-        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public void u32(u32 value, u32 min, u32 max)
         {
 #if !NO_EXCEPTIONS
@@ -79,7 +76,7 @@ namespace NetStack.Serialization
             if (value < min || value > max) Throw.ArgumentOutOfRange(nameof(value), $"Value should be withing provided {min} and {max} range");
 #endif
             i32 bits = BitsRequired(min, max);
-            raw(value - min, bits);
+            u32(value - min, bits);
         }
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
@@ -100,7 +97,7 @@ namespace NetStack.Serialization
         public void f32(f32 value)
         {
             u32 reinterpreted = Unsafe.As<f32, u32>(ref Unsafe.AsRef<f32>(in value));
-            raw(reinterpreted, 32);
+            u32(reinterpreted, 32);
         }
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
@@ -115,7 +112,7 @@ namespace NetStack.Serialization
             float maxVal = range * invPrecision;
             i32 numberOfBits = BitOperations.Log2((u32)(maxVal + 0.5f)) + 1;
             float adjusted = (value - min) * invPrecision;
-            raw((u32)(adjusted + 0.5f), numberOfBits);
+            u32((u32)(adjusted + 0.5f), numberOfBits);
         }
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
@@ -130,7 +127,7 @@ namespace NetStack.Serialization
             var precision = range / maxvalue;
             var invPrecision = 1.0f / precision;
             f32 adjusted = (value - min) * invPrecision;
-            raw((u32)(adjusted + 0.5f), numberOfBits);
+            u32((u32)(adjusted + 0.5f), numberOfBits);
         }
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]

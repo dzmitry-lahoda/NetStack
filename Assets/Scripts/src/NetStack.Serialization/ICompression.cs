@@ -18,7 +18,7 @@ using System.Numerics;
 
 namespace NetStack.Serialization
 {
-    public interface ICompression<T> where T : IRawWriter
+    public interface ICompression<in T> where T : IRawWriter
     {
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         void u32(T b, u32 value);

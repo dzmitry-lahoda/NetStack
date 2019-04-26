@@ -25,8 +25,6 @@ namespace NetStack.Serialization
     {
         private BitBufferOptions config;
 
-
-
         public BitBufferOptions Options => config;
 
         private static BitBufferOptions defaultConfig = new BitBufferOptions();
@@ -53,8 +51,8 @@ namespace NetStack.Serialization
             if (buffer == null || buffer.Length == 0)
                 Throw.Argument("Buffer should be non null or empty", nameof(buffer));
 
-            state.Chunks = buffer;
-            state.Reset();
+            Chunks = buffer;
+            Reset();
         }
 
         /// <summary>
@@ -62,11 +60,11 @@ namespace NetStack.Serialization
         /// </summary>
         public BitBufferReader(BitBuffer startFrom)
         {
-            state.Chunks = startFrom.state.chunks;
-            state.scratch = startFrom.state.scratch;
-            state.scratchUsedBits = startFrom.state.scratchUsedBits;
-            state.chunkIndex = startFrom.state.chunkIndex;
-            state.Align();
+            Chunks = startFrom.chunks;
+            scratch = startFrom.scratch;
+            scratchUsedBits = startFrom.scratchUsedBits;
+            chunkIndex = startFrom.chunkIndex;
+            Align();
         }
     }
 }

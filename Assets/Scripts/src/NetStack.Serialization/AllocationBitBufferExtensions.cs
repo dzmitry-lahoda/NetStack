@@ -19,8 +19,8 @@ namespace NetStack.Serialization
                 return new String((char*)pin.Pointer,0, (int)length);         
         }
 
-        public static void c<T>(this BitBufferWriter<T> self, string value) 
-            where T:unmanaged, ICompression<BitBufferWriter<T>> 
+        public static void c<T>(this T self, string value) 
+               where T: BitBufferWriterBase, IBitBufferWriter
             => 
             self.c(value.AsSpan());
 
@@ -28,7 +28,8 @@ namespace NetStack.Serialization
         /// Dot not use for production. GC allocated array.
         /// </summary>
         /// <returns></returns>
-        public static byte[] ToArray<T>(this BitBufferWriter<T> self) where T:unmanaged, ICompression<BitBufferWriter<T>> 
+        public static byte[] ToArray<T>(this T self) 
+          where T: BitBufferWriterBase, IBitBufferWriter
         {
             var data = new byte[self.LengthWritten];
             self.ToSpan(data);
@@ -38,7 +39,8 @@ namespace NetStack.Serialization
         /// <summary>
         /// Rents array 
         /// </summary>
-        public static byte[] ToArray<T>(this BitBufferWriter<T> self, ArrayPool<byte> pool = null) where T:unmanaged, ICompression<BitBufferWriter<T>> 
+        public static byte[] ToArray<T>(this T self, ArrayPool<byte> pool = null) 
+                  where T: BitBufferWriterBase, IBitBufferWriter
         {
             pool = pool ?? ArrayPool<byte>.Shared;
             var data = pool.Rent(self.LengthWritten);

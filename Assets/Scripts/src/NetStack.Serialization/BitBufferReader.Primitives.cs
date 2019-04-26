@@ -68,7 +68,7 @@ namespace NetStack.Serialization
             i32 bits = BitsRequired(min, max);
 
 #if !NO_EXCEPTIONS
-            if (BitsRead + bits > state.totalNumberBits) Throw.ArgumentOutOfRange("Reading too many bits for requested range");
+            if (BitsRead + bits > totalNumberBits) Throw.ArgumentOutOfRange("Reading too many bits for requested range");
 #endif      
             return (int)(raw(bits) + min);
         }
@@ -84,7 +84,7 @@ namespace NetStack.Serialization
 #endif
             i32 bits = BitsRequired(min, max);
 #if !NO_EXCEPTIONS
-            if (BitsRead + bits > state.totalNumberBits) Throw.ArgumentOutOfRange("Reading too many bits for requested range");
+            if (BitsRead + bits > totalNumberBits) Throw.ArgumentOutOfRange("Reading too many bits for requested range");
 #endif      
             return (raw(bits) + min);
         }
