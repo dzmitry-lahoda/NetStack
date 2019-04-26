@@ -13,15 +13,15 @@ namespace NetStack.Serialization
     {
         [Params(400_000)]
         public int N;
-        private BitBufferWriter<SevenBitEncoding> buffer1;
-        private BitBufferWriter<RawEncoding> buffer3;
+        private BitBufferWriter<SevenBitEncoding<u32ArrayMemory>> buffer1;
+        private BitBufferWriter<RawEncoding<u32ArrayMemory>> buffer3;
 
         [IterationSetup]
         public void GlobalSetup()
         {
             if (N <= 0) throw new Exception();
-            buffer1 = new BitBufferWriter<SevenBitEncoding>(2 * 64 * N);
-            buffer3 = new BitBufferWriter<RawEncoding>(2 * 64 * N);
+            buffer1 = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>(2 * 64 * N);
+            buffer3 = new BitBufferWriter<RawEncoding<u32ArrayMemory>>(2 * 64 * N);
         }
 
        

@@ -18,7 +18,8 @@ using System.Diagnostics;
 using System.Numerics;
 namespace NetStack.Serialization
 {
-    public class BitBufferWriterBase : BitBuffer<u32ArrayMemory>, IRawWriter
+    public class BitBufferWriterBase<TMemory> : BitBuffer<TMemory>, IRawWriter
+       where  TMemory : struct, IMemory<u32>
     {
         /// <summary>
         /// Count of written bytes.

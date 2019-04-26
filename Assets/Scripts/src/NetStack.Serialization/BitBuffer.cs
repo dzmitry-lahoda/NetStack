@@ -25,24 +25,25 @@ namespace NetStack.Serialization
 
         public static i32 BitsRequired(u32 min, u32 max) =>
             (min == max) ? 1 : BitOperations.Log2(max - min) + 1;
+
+                    public const i32 DefaultU32Capacity = BitBufferLimits.MtuIeee802Dot3 / 4;
     }
 
     // core untyped data specific part of bit buffer
     public abstract partial class BitBuffer<TStorage>
         where TStorage:IMemory<u32>
     {
-        public const i32 DefaultU32Capacity = BitBufferLimits.MtuIeee802Dot3 / 4;
+
 
         internal BitBuffer()
         {
             // dot not allow inheritance outside of assembly to simplify move to struct only code    
         }
 
-  
-
     
         #region BState
-        // putting BState in struct degrades performance on 10% on .NET Core 2.2. How to do struct inheritance?
+        // putting BState in struct degrades performance on 10% on .NET Core 2.2. 
+        // How to do struct inheritance? May be should do Auto layout?
 
         // having this struct inline does not hurt perf
         protected internal TStorage chunks;

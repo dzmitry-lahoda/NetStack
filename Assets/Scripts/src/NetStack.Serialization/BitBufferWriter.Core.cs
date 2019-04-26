@@ -18,8 +18,8 @@ using System.Numerics;
 
 namespace NetStack.Serialization
 {
-    partial class BitBufferWriter<T> : BitBufferWriterBase, IBitBufferWriter
-        where T : unmanaged, ICompression<BitBufferWriter<T>> // https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern
+    partial class BitBufferWriter<T> : BitBufferWriterBase<u32ArrayMemory>, IBitBufferWriter
+        where T : struct, ICompression<BitBufferWriter<T>> // https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern
     {
         // true if has not capacity to write numberOfBits
         public bool CannotAdd(i32 numberOfBits) => BitsWritten + numberOfBits > totalNumberBits;

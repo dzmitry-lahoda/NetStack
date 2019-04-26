@@ -19,7 +19,7 @@ using System.Numerics;
 namespace NetStack.Serialization
 {
     partial class BitBufferReader<T> : IRawReader
-         where T:unmanaged, IDecompression<BitBufferReader<T>> 
+         where T:struct, IDecompression<BitBufferReader<T>> 
     {        
         public bool CanReadMore => totalNumberBits > BitsRead;
     

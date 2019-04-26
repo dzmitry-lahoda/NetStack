@@ -34,7 +34,7 @@ namespace NetStack.Serialization
         /// Call <see cref="CopyFrom"/> to reinitialize with copy of data.
         /// </summary>
         /// <param name="capacity">Count of 4 byte integers used as internal buffer.</param>
-        public BitBufferReader(i32 capacity = DefaultU32Capacity, BitBufferOptions config = default)
+        public BitBufferReader(i32 capacity = BitBuffer.DefaultU32Capacity, BitBufferOptions config = default)
         : this(new u32[capacity], config)
         {
         }
