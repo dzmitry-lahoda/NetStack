@@ -10,7 +10,7 @@ namespace NetStack.Serialization
 {
     public static class AllocationBitBufferExtensions
     {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public unsafe static string String(this BitBufferReader<SevenBitDecoding> self)
         {
             var size = MemoryPool<char>.Shared.Rent(self.Options.CharSpanLengthMax);

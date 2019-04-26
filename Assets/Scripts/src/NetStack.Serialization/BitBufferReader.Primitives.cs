@@ -62,13 +62,13 @@ namespace NetStack.Serialization
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public i32 i32(i32 min, i32 max)
         {
-#if DEBUG || NETSTACK_VALIDATE
-            if (min > max) throw Argument("min should not be not lower than max");
+#if !NO_EXCEPTIONS
+            if (min > max) Throw.Argument("min should not be not lower than max");
 #endif
             i32 bits = BitsRequired(min, max);
 
-#if DEBUG || NETSTACK_VALIDATE
-            if (BitsRead + bits > totalNumberBits) throw ArgumentOutOfRange("Reading too many bits for requested range");
+#if !NO_EXCEPTIONS
+            if (BitsRead + bits > totalNumberBits) Throw.ArgumentOutOfRange("Reading too many bits for requested range");
 #endif      
             return (int)(raw(bits) + min);
         }
@@ -79,12 +79,12 @@ namespace NetStack.Serialization
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public u32 u32(u32 min, u32 max)
         {
-#if DEBUG || NETSTACK_VALIDATE
-            if (min > max) throw Argument("min should not be not lower than max");
+#if !NO_EXCEPTIONS
+            if (min > max) Throw.Argument("min should not be not lower than max");
 #endif
             i32 bits = BitsRequired(min, max);
-#if DEBUG || NETSTACK_VALIDATE
-            if (BitsRead + bits > totalNumberBits) throw ArgumentOutOfRange("Reading too many bits for requested range");
+#if !NO_EXCEPTIONS
+            if (BitsRead + bits > totalNumberBits) Throw.ArgumentOutOfRange("Reading too many bits for requested range");
 #endif      
             return (raw(bits) + min);
         }

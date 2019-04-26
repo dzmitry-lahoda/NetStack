@@ -53,18 +53,18 @@ namespace NetStack.Serialization
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public void raw(u32 value, i32 numberOfBits)
         {
-#if DEBUG || NETSTACK_VALIDATE
+#if !NO_EXCEPTIONS
             if (numberOfBits <= 0)
-                throw ArgumentOutOfRange($"{nameof(numberOfBits)} should be positive", nameof(numberOfBits));
+                Throw.ArgumentOutOfRange($"{nameof(numberOfBits)} should be positive", nameof(numberOfBits));
 
             if (numberOfBits > 32) // Unsafe.Sizeof<uint>() * 8
-                throw ArgumentOutOfRange($"{nameof(numberOfBits)} should be less than or equal to 32", nameof(numberOfBits));
+                Throw.ArgumentOutOfRange($"{nameof(numberOfBits)} should be less than or equal to 32", nameof(numberOfBits));
 
             if (BitsWritten + numberOfBits > totalNumberBits)
-                throw InvalidOperation($"Writing {numberOfBits} bits will exceed maximal capacity of {totalNumberBits}, while {BitsWritten} bits written");
+                Throw.InvalidOperation($"Writing {numberOfBits} bits will exceed maximal capacity of {totalNumberBits}, while {BitsWritten} bits written");
 
             if (value > (u32)((1ul << numberOfBits) - 1))
-                throw Argument(nameof(value), $"{value} is too big, won't fit in requested {numberOfBits} number of bits");
+                Throw.Argument(nameof(value), $"{value} is too big, won't fit in requested {numberOfBits} number of bits");
 #endif
             internalRaw(value, numberOfBits);
         }
@@ -92,8 +92,8 @@ namespace NetStack.Serialization
         {
             if (scratchUsedBits >= 32)
             {
-#if DEBUG || NETSTACK_VALIDATE
-                if (chunkIndex >= totalNumChunks) throw IndexOutOfRange("Pushing failed, buffer is full.");
+#if !NO_EXCEPTIONS
+                if (chunkIndex >= totalNumChunks) Throw.IndexOutOfRange("Pushing failed, buffer is full.");
 #endif
                 // TODO: how much it will cost to cast ref byte into ref uint and set scratch (to allow FromArray with no copy)
                 // TODO: will it be improvement to for chunks to be (u)long?

@@ -43,12 +43,12 @@ namespace NetStack.Serialization
         {
             var length = (int)raw(config.U8SpanBitsLength);
             if (totalNumberBits - BitsRead < length * 8)
-                throw InvalidOperation("The length for this read is bigger than bitbuffer");
+                Throw.InvalidOperation("The length for this read is bigger than bitbuffer");
 
             // 1                    1        0   OK
             // 1                    1        1   FAIL    
             if (length > outputValue.Length - offset)
-                throw Argument(nameof(outputValue), "The supplied byte array is too small for requested read");
+                Throw.Argument(nameof(outputValue), "The supplied byte array is too small for requested read");
 
             for (var index = offset; index < length; index++)
                 outputValue[index] = u8(); // TODO: can read faster if read by 4 bytes?

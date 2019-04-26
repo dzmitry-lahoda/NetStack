@@ -49,10 +49,10 @@ namespace NetStack.Serialization
         public BitBufferOptions(i32 charSpanBitsLength = DefaultCharSpanBitsLength, i32 u8SpanBitsLength = DefaultU8SpanBitsLength)
         {
             if (charSpanBitsLength <= 0)
-                throw Argument("Should be positive", nameof(charSpanBitsLength));
+                Throw.Argument("Should be positive", nameof(charSpanBitsLength));
 
             if (u8SpanBitsLength <= 0)
-                throw Argument("Should be positive", nameof(u8SpanBitsLength));
+                Throw.Argument("Should be positive", nameof(u8SpanBitsLength));
 
             // one time setup
             this.u8SpanBitsLength = u8SpanBitsLength;

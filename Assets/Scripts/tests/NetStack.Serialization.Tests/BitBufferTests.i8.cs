@@ -73,7 +73,7 @@ namespace NetStack.Serialization
             writer.i32(2, 0, 4);
             writer.i32(3, 0, 4);
             writer.i32(4, 0, 4);            
-            #if DEBUG || NETSTACK_VALIDATE
+            #if !NO_EXCEPTIONS
             
             Assert.Throws<System.ArgumentOutOfRangeException>(()=>writer.u8(5, 0, 4));            
             Assert.Throws<System.ArgumentOutOfRangeException>(()=>writer.u8(255, 0, 4));

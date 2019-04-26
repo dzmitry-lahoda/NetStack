@@ -38,7 +38,7 @@ namespace tests
 
             foreach (var item in bytes)
             {
-                s = Convert.ToString(item, 2).PadLeft(8, '0') + s;  //可以把2改成8或者16，那么基数就是8和16了。
+                s = Convert.ToString(item, 2).PadLeft(8, '0') + s;
             }
 
 

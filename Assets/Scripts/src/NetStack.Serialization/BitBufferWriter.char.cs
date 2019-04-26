@@ -28,14 +28,14 @@ namespace NetStack.Serialization
         public void c(ReadOnlySpan<char> value)
         {
             if (value.Length > config.CharSpanLengthMax)
-                throw ArgumentOutOfRange($"String too long, raise the {nameof(config.CharSpanBitsLength)} value or split the string.");
+                Throw.ArgumentOutOfRange($"String too long, raise the {nameof(config.CharSpanBitsLength)} value or split the string.");
 
             var length = value.Length;
 
             if (length * 17 + 10 > (totalNumberBits - BitsWritten)) // possible overflow
             {
                 if (BitsRequired(value, length) > (totalNumberBits - BitsWritten))
-                    throw ArgumentOutOfRange("String would not fit in bitstream.");
+                    Throw.ArgumentOutOfRange("String would not fit in bitstream.");
             }
 
             var codePage = CodePage.Ascii;

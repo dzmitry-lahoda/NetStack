@@ -25,11 +25,11 @@ namespace NetStack.Serialization
         /// </summary>
         public void CopyFrom(ReadOnlySpan<u8> data)
         {
-            // may throw here as not hot path
+            // may Throw.here as not hot path
             if (data.Length == 0)
-                throw Argument("Should be positive", nameof(data.Length));
+                Throw.Argument("Should be positive", nameof(data.Length));
             if (data.Length <= 0)
-                throw Argument("Should be positive", nameof(data.Length));
+                Throw.Argument("Should be positive", nameof(data.Length));
 
             var length = data.Length;
             Reset();

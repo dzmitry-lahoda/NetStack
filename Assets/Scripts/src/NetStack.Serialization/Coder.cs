@@ -68,11 +68,11 @@ namespace System.Numerics
 
             public static u64 Encode(u64 value)
             {
-#if DEBUG || SYSTEM_NUMERICS_CODECS_VALIDATION
+#if !NO_EXCEPTIONS
                 // Check for overflow
                 if (value > MaxValue)
                 {
-                    throw new OverflowException("Exceeded FibonacciCodec's maximum supported symbol value of " + MaxValue + ".");
+                    Throw.Overflow("Exceeded FibonacciCodec's maximum supported symbol value of " + MaxValue + ".");
                 }
 #endif
                 value++;

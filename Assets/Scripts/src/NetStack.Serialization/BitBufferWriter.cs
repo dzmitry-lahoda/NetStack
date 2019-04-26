@@ -48,7 +48,7 @@ namespace NetStack.Serialization
             this.config = config.Equals(default) ? BitBufferOptions.Default : config;
             // not performance critical path so fine to check and throw
             if (buffer == null || buffer.Length == 0)
-                throw Argument("Buffer should be non null or empty", nameof(buffer));
+                Throw.Argument("Buffer should be non null or empty", nameof(buffer));
             Chunks = buffer;
             Reset();
         }

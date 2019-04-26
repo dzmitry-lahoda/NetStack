@@ -24,10 +24,10 @@ namespace NetStack.Serialization
         public void u8(ReadOnlySpan<u8> value)
         {
             if (value.Length > config.U8SpanLengthMax)
-                throw Argument($"Byte array too big, raise the {nameof(config.U8SpanBitsLength)} value or split the array.");
+                Throw.Argument($"Byte array too big, raise the {nameof(config.U8SpanBitsLength)} value or split the array.");
 
             if (value.Length + 9 > (totalNumberBits - BitsWritten))
-                throw InvalidOperation("Byte array too big for buffer.");
+                Throw.InvalidOperation("Byte array too big for buffer.");
 
             raw((u32)value.Length, config.U8SpanBitsLength);
             for (var index = 0; index < value.Length; index++)

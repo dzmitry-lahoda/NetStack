@@ -9,7 +9,7 @@ Does NOT have code to control threads and sockets.
 
 # Exceptions, validation.
 
-All validation and exception are behind `#if DEBUG || NETSTACK_VALIDATE`. 
+All validation and exception are behind `#if !NO_EXCEPTIONS`.  Inlining is behind `#if !NO_INLINING`. 
 
 # Modules
 
@@ -26,14 +26,13 @@ All validation and exception are behind `#if DEBUG || NETSTACK_VALIDATE`.
     - [ZigZag](https://developers.google.com/protocol-buffers/docs/encoding#signed-integers) encoding
     - [Variable-length](https://rosettacode.org/wiki/Variable-length_quantity) encoding
 	- TODO: allow huffman Unity FPSSample in learning and ready alphabet encodings, learng big vs small values in delta
-    - TODO: optimize write of 2,3,4 bits values
-    - TODO: add delta methods with small vs big delimeter
-    - Debugging write and read with no packing 
+  - TODO: optimize write of 2,3,4 bits values
+  - TODO: add delta methods with small vs big delimeter
+  - Debugging write and read with no packing 
   - Start write or read from where previous bit buffer finished.
   - TODO: allow zero copy read write by init from byte array, cast head into ref as uint
   - TODO: add custom visualizer or custom to string (to 01 to to hex)
   - TODO: Given possibility do delta of prediction. Should prediction API be part of serializer?
-  - 
   - No fluent interface as it adds performance overhead.
 
 ### Optimization priorities

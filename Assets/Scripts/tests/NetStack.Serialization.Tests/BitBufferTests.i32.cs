@@ -56,7 +56,7 @@ namespace NetStack.Serialization
             Assert.AreEqual(0, reader.i32());
             Assert.AreEqual(bitsWritten, reader.BitsRead);
         }
-#if DEBUG || NETSTACK_VALIDATE
+#if !NO_EXCEPTIONS
         [Test]
         public void i32WriteOutOfRange()
         {

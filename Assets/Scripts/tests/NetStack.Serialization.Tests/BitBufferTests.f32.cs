@@ -53,7 +53,7 @@ namespace NetStack.Serialization
             Assert.AreEqual(1, reader.f32(0f, 1f, 1));
         }        
 
-#if DEBUG || NETSTACK_VALIDATE
+#if !NO_EXCEPTIONS
         [Test]
         public void f32WriteOutOfRange()
         {

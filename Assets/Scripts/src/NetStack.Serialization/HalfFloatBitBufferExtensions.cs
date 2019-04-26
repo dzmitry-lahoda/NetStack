@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Diagnostics;
 using System.Numerics;
-using NetStack.Compression;
+
 using i8 = System.SByte;
 using i16 = System.Int16;
 using i32 = System.Int32;
@@ -23,15 +23,15 @@ namespace NetStack.Serialization
     /// </summary>
     public static class HalfFloatBitBufferExtensions
     {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public static void f32Half(this BitBufferWriter<SevenBitEncoding> self, f32 value) =>
             self.raw(HalfPrecision.Compress(value), 16);
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public static f32 f32Half(this BitBufferReader<SevenBitDecoding> self) =>
             HalfPrecision.Decompress((u16)self.raw(16));
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public static f32 f32HalfPeek(this BitBufferReader<SevenBitDecoding> self) =>
             HalfPrecision.Decompress((u16)self.raw(16));
     }

@@ -28,7 +28,7 @@ namespace NetStack.Serialization
         /// <returns>Count of bytes written.</returns>
         public i32 ToSpan(Span<u8> data)
         {
-            // may throw here as not hot path, check span length
+            // may Throw.here as not hot path, check span length
 
             raw(1, 1); // if we write many zeroes in the end, we for sure can detect buffer end. but of if we use-reuse dirty memory with no clean?
             var bitsPassed = BitsWritten;

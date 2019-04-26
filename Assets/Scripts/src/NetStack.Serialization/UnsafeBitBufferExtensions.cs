@@ -25,7 +25,7 @@ namespace NetStack.Serialization
         /// </summary>
         /// <typeparam name="T">Any struct with no references to managed heap.</typeparam>
         /// <param name="value">The value.</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public static void block<T>(this BitBufferWriter<SevenBitEncoding> self, in T value)
             where T : unmanaged
         {

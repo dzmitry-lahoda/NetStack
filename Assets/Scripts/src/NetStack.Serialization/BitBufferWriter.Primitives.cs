@@ -26,9 +26,9 @@ namespace NetStack.Serialization
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public void i32(i32 value, i32 min, i32 max)
         {
-#if DEBUG || NETSTACK_VALIDATE
-            if (min >= max) throw Argument("min should be lower than max");
-            if (value < min || value > max) throw ArgumentOutOfRange(nameof(value), $"Value should be withing provided {min} and {max} range");
+#if !NO_EXCEPTIONS
+            if (min >= max) Throw.Argument("min should be lower than max");
+            if (value < min || value > max) Throw.ArgumentOutOfRange(nameof(value), $"Value should be withing provided {min} and {max} range");
 #endif
 
             i32 bits = BitsRequired(min, max);
@@ -74,9 +74,9 @@ namespace NetStack.Serialization
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public void u32(u32 value, u32 min, u32 max)
         {
-#if DEBUG || NETSTACK_VALIDATE
-            if (min >= max) throw Argument("min should be lower than max");
-            if (value < min || value > max) throw ArgumentOutOfRange(nameof(value), $"Value should be withing provided {min} and {max} range");
+#if !NO_EXCEPTIONS
+            if (min >= max) Throw.Argument("min should be lower than max");
+            if (value < min || value > max) Throw.ArgumentOutOfRange(nameof(value), $"Value should be withing provided {min} and {max} range");
 #endif
             i32 bits = BitsRequired(min, max);
             raw(value - min, bits);
@@ -106,9 +106,9 @@ namespace NetStack.Serialization
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public void f32(f32 value, f32 min, f32 max, f32 precision)
         {
-#if DEBUG || NETSTACK_VALIDATE
-            if (min >= max) throw Argument("min should be lower than max");
-            if (value < min || value > max) throw ArgumentOutOfRange(nameof(value), $"Value should be withing provided {min} and {max} range");
+#if !NO_EXCEPTIONS
+            if (min >= max) Throw.Argument("min should be lower than max");
+            if (value < min || value > max) Throw.ArgumentOutOfRange(nameof(value), $"Value should be withing provided {min} and {max} range");
 #endif            
             float range = max - min;
             float invPrecision = 1.0f / precision;
@@ -121,9 +121,9 @@ namespace NetStack.Serialization
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public void f32(f32 value, f32 min, f32 max, i32 numberOfBits)
         {
-#if DEBUG || NETSTACK_VALIDATE
-            if (min >= max) throw Argument("min should be lower than max");
-            if (value < min || value > max) throw ArgumentOutOfRange(nameof(value), $"Value should be withing provided {min} and {max} range");
+#if !NO_EXCEPTIONS
+            if (min >= max) Throw.Argument("min should be lower than max");
+            if (value < min || value > max) Throw.ArgumentOutOfRange(nameof(value), $"Value should be withing provided {min} and {max} range");
 #endif                    
             var maxvalue = (1 << numberOfBits) - 1;
             float range = max - min;

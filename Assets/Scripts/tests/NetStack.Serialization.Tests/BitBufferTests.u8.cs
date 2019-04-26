@@ -100,7 +100,7 @@ namespace NetStack.Serialization
             }
         }
 
-#if DEBUG || NETSTACK_VALIDATE
+#if !NO_EXCEPTIONS
         [Test]
         public void u8WriteOutOfRange()
         {

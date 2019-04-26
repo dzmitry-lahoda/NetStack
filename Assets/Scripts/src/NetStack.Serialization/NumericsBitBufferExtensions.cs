@@ -3,7 +3,6 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Diagnostics;
-using NetStack.Compression;
 
 #if !(ENABLE_MONO || ENABLE_IL2CPP)
 using System.Numerics;
@@ -22,7 +21,7 @@ namespace NetStack.Serialization
         private const float SmallestThreePack = 1f / SmallestThreeUnpack;
 
         //https://gafferongames.com/post/snapshot_compression/
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public static void quaternion(this BitBufferWriter<SevenBitEncoding> self, Quaternion quaternion, int bitsPerComponent = 12)
         {
             float halfrangeFloat = (1 << bitsPerComponent - 1);
@@ -117,7 +116,7 @@ namespace NetStack.Serialization
             self.raw(c, bitsPerComponent);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public static Quaternion quaternion(this BitBufferReader<SevenBitDecoding> self, int bitsPerValue = 12)
         {
             int halfrange = (1 << bitsPerValue - 1); //  - 1
@@ -151,7 +150,7 @@ namespace NetStack.Serialization
             }
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public static Quaternion quaternionPeek(this BitBufferReader<SevenBitDecoding> self, int bitsPerValue = 12)
         {
             var curReadpos = self.BitsRead;

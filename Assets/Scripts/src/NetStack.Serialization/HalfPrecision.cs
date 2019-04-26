@@ -2,7 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace NetStack.Compression
+namespace NetStack.Serialization
 {
     /// <summary>
     /// Lossless compression for float.
@@ -23,7 +23,7 @@ namespace NetStack.Compression
         }
 
 #if NETSTACK_INLINING
-			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			[MethodImpl(Optimization.AggressiveInliningAndOptimization)]
 #endif
         public static ushort Compress(float value)
         {

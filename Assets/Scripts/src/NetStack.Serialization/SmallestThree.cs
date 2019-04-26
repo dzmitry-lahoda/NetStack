@@ -6,7 +6,7 @@
 	using UnityEngine;
 #endif
 
-namespace NetStack.Compression {
+namespace NetStack.Serialization {
 	public struct CompressedQuaternion {
 		public byte m;
 		public short a;

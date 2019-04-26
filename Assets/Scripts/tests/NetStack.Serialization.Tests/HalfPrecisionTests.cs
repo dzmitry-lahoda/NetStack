@@ -1,7 +1,7 @@
 using System;
 using NUnit.Framework;
 
-namespace NetStack.Compression
+namespace NetStack.Serialization
 {
     public class HalfPrecisionTests
     {

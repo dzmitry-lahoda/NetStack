@@ -7,7 +7,7 @@ using System.Numerics;
 using UnityEngine;
 #endif
 
-namespace NetStack.Compression
+namespace NetStack.Serialization
 {
     public struct CompressedVector3
     {

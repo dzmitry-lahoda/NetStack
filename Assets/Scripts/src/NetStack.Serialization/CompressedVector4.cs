@@ -8,7 +8,7 @@ using UnityEngine;
 #endif
 
 
-namespace NetStack.Compression
+namespace NetStack.Serialization
 {
     public struct CompressedVector4
     {

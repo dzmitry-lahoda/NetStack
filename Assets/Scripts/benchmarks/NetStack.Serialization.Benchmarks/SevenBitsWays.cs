@@ -120,26 +120,26 @@ namespace NetStack.Serialization
         }
 
 
-        [MethodImpl(MyMethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         private void raw1(byte buffer)
         {
             buffer1[buffer1I] = buffer;
             buffer1I++;
         }
 
-        [MethodImpl(MyMethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         private void raw2(byte buffer)
         {
             buffer2[buffer2I] = buffer;
             buffer2I++;
         }
-        [MethodImpl(MyMethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         private void raw3(byte buffer)
         {
             buffer3[buffer3I] = buffer;
             buffer3I++;
         }
-        [MethodImpl(MyMethodImplOptions.AggressiveInlining)]
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         private void raw4(byte buffer)
         {
             buffer4[buffer4I] = buffer;
