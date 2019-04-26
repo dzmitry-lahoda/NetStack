@@ -21,7 +21,7 @@ namespace NetStack.Serialization
     /// <summary>
     /// Bit level compression by ranged values.
     /// </summary>
-    public partial class BitBufferReader<T> : BitBuffer
+    public partial class BitBufferReader<T> : BitBuffer<u32ArrayMemory>
     {
         private BitBufferOptions config;
 
@@ -58,7 +58,7 @@ namespace NetStack.Serialization
         /// <summary>
         /// Continue read from previous buffer cursor.
         /// </summary>
-        public BitBufferReader(BitBuffer startFrom)
+        public BitBufferReader(BitBuffer<u32ArrayMemory> startFrom)
         {
             Chunks = startFrom.chunks;
             scratch = startFrom.scratch;

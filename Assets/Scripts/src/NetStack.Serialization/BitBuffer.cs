@@ -18,9 +18,18 @@ using System.Numerics;
 
 namespace NetStack.Serialization
 {
+    public static class BitBuffer
+    {
+      public static i32 BitsRequired(i32 min, i32 max) =>
+            (min == max) ? 1 : BitOperations.Log2((u32)(max - min)) + 1;
+
+        public static i32 BitsRequired(u32 min, u32 max) =>
+            (min == max) ? 1 : BitOperations.Log2(max - min) + 1;
+    }
 
     // core untyped data specific part of bit buffer
-    public abstract partial class BitBuffer
+    public abstract partial class BitBuffer<TStorage>
+        where TStorage:IMemory<u32>
     {
         public const i32 DefaultU32Capacity = BitBufferLimits.MtuIeee802Dot3 / 4;
 
@@ -29,20 +38,18 @@ namespace NetStack.Serialization
             // dot not allow inheritance outside of assembly to simplify move to struct only code    
         }
 
-        public static i32 BitsRequired(i32 min, i32 max) =>
-            (min == max) ? 1 : BitOperations.Log2((u32)(max - min)) + 1;
-
-        public static i32 BitsRequired(u32 min, u32 max) =>
-            (min == max) ? 1 : BitOperations.Log2(max - min) + 1;
+  
 
     
         #region BState
-        // putting BState in struct degrades performance on 10% on .NET Core 2.2 
-        protected internal u32ArrayMemory chunks;
-        //protected internal System.Memory<u32> chunks;
+        // putting BState in struct degrades performance on 10% on .NET Core 2.2. How to do struct inheritance?
+
+        // having this struct inline does not hurt perf
+        protected internal TStorage chunks;
+        
         protected i32 totalNumChunks;
         protected i32 totalNumberBits;
-        protected internal u32ArrayMemory Chunks
+        protected internal TStorage Chunks
         {
             set
             {

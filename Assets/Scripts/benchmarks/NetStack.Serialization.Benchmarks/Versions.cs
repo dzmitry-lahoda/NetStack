@@ -20,7 +20,7 @@ namespace NetStack.Serialization
         public void GlobalSetup()
         {
             if (N <= 0) throw new Exception();
-            buffer1 = new BitBufferWriter<SevenBitEncoding<BitBufferWriterBase>>(2 * 64 * N);
+            buffer1 = new BitBufferWriter<SevenBitEncoding>(2 * 64 * N);
             buffer3 = new BitBufferWriter<RawEncoding>(2 * 64 * N);
         }
 

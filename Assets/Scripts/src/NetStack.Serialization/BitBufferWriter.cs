@@ -56,7 +56,7 @@ namespace NetStack.Serialization
         /// <summary>
         /// Starts writing into buffer for previous buffer after <see cref="Align"/>
         /// </summary>
-        public BitBufferWriter(BitBuffer startFrom)
+        public BitBufferWriter(BitBuffer<u32ArrayMemory> startFrom)
         {
             Chunks = startFrom.chunks;
             scratch = startFrom.scratch;

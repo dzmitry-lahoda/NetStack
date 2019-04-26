@@ -65,7 +65,7 @@ namespace NetStack.Serialization
 #if !NO_EXCEPTIONS
             if (min > max) Throw.Argument("min should not be not lower than max");
 #endif
-            i32 bits = BitsRequired(min, max);
+            i32 bits = BitBuffer.BitsRequired(min, max);
 
 #if !NO_EXCEPTIONS
             if (BitsRead + bits > totalNumberBits) Throw.ArgumentOutOfRange("Reading too many bits for requested range");
@@ -82,7 +82,7 @@ namespace NetStack.Serialization
 #if !NO_EXCEPTIONS
             if (min > max) Throw.Argument("min should not be not lower than max");
 #endif
-            i32 bits = BitsRequired(min, max);
+            i32 bits = BitBuffer.BitsRequired(min, max);
 #if !NO_EXCEPTIONS
             if (BitsRead + bits > totalNumberBits) Throw.ArgumentOutOfRange("Reading too many bits for requested range");
 #endif      

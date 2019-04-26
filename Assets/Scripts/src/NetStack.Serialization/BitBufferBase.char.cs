@@ -18,7 +18,7 @@ using System.Numerics;
 
 namespace NetStack.Serialization
 {
-    abstract partial class BitBuffer
+    abstract partial class BitBuffer<TStorage>
     {
         protected const int bitsASCII = 7;
         protected const int bitsLATIN1 = 8;

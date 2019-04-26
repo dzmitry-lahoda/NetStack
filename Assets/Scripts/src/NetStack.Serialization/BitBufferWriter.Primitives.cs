@@ -31,7 +31,7 @@ namespace NetStack.Serialization
             if (value < min || value > max) Throw.ArgumentOutOfRange(nameof(value), $"Value should be withing provided {min} and {max} range");
 #endif
 
-            i32 bits = BitsRequired(min, max);
+            i32 bits = BitBuffer.BitsRequired(min, max);
             u32((u32)(value - min), bits);
         }
 
@@ -75,7 +75,7 @@ namespace NetStack.Serialization
             if (min >= max) Throw.Argument("min should be lower than max");
             if (value < min || value > max) Throw.ArgumentOutOfRange(nameof(value), $"Value should be withing provided {min} and {max} range");
 #endif
-            i32 bits = BitsRequired(min, max);
+            i32 bits = BitBuffer.BitsRequired(min, max);
             u32(value - min, bits);
         }
 
