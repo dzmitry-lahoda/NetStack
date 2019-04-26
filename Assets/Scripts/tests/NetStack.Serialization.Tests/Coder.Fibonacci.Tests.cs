@@ -12,24 +12,47 @@ using System;
 using System.Linq;
 using System.Diagnostics;
 using System.ComponentModel;
+using NetStack.Serialization;
 
 namespace tests
 {
     public partial class CoderTests
     {
-        [Test]
-        public void FibonacciLookup()
+       [Test]
+        public void Fibonacci9()
         {
-           
-            var value = 0b1000_0001u;
-            //var x2 = BitOperations.WriteBit(x, 7, false);
-            var coded = Coder.Fibonacci.Encode(value);
-            var valueBinary = ToBinary(value);
-            Assert.AreEqual("0000000000000000000000000000000000000000000000000000011010001010", ToBinary(coded));
-            Assert.True(coded > value);
-            var decoded = Coder.Fibonacci.Decode(coded);
-            //Assert.AreEqual(123u, decoded);
+               var rawWriter = new BitBufferWriter<RawEncoding<u32ArrayMemory>>();
+            var value = 0b1001u;
+            Coder.Fibonacci.Encode(rawWriter, value);
+            var reader = new BitBufferReader<RawDecoding>();
+            reader.CopyFrom(rawWriter.ToArray());
+            var decoded = Coder.Fibonacci.Decode(reader);
+            Assert.AreEqual(value, decoded);
         }
+
+        [Test]
+        public void Fibonacci129()
+        {
+            var rawWriter = new BitBufferWriter<RawEncoding<u32ArrayMemory>>();
+            var value = 0b1000_0001u;
+            Coder.Fibonacci.Encode(rawWriter, value);
+            var reader = new BitBufferReader<RawDecoding>();
+            reader.CopyFrom(rawWriter.ToArray());
+            var decoded = Coder.Fibonacci.Decode(reader);
+            Assert.AreEqual(value, decoded);
+        }
+
+        [Test]
+        public void FibonacciX()
+        {
+            var rawWriter = new BitBufferWriter<RawEncoding<u32ArrayMemory>>();
+            var value = 0b1111_1111_1111_1111u;
+            Coder.Fibonacci.Encode(rawWriter, value);
+            var reader = new BitBufferReader<RawDecoding>();
+            reader.CopyFrom(rawWriter.ToArray());
+            var decoded = Coder.Fibonacci.Decode(reader);
+            Assert.AreEqual(value, decoded);
+        }        
 
         public string ToBinary(u64 value)
         {

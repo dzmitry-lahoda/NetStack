@@ -8,6 +8,7 @@ using u16 = System.UInt16;
 using u32 = System.UInt32;
 using u64 = System.UInt64;
 using System.Numerics;
+using NetStack.Serialization;
 
 namespace tests
 {
