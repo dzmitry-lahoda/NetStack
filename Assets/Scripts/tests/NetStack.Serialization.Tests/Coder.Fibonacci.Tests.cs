@@ -18,11 +18,11 @@ namespace tests
 {
     public partial class CoderTests
     {
-       [Test]
+        [Test]
         public void Fibonacci9()
         {
-               var rawWriter = new BitBufferWriter<RawEncoding<u32ArrayMemory>>();
-            var value = 0b1001u;
+            var rawWriter = new BitBufferWriter<RawEncoding<u32ArrayMemory>>();
+            u64 value = 0b1001u;
             Coder.Fibonacci.Encode(rawWriter, value);
             var reader = new BitBufferReader<RawDecoding>();
             reader.CopyFrom(rawWriter.ToArray());
@@ -34,7 +34,7 @@ namespace tests
         public void Fibonacci129()
         {
             var rawWriter = new BitBufferWriter<RawEncoding<u32ArrayMemory>>();
-            var value = 0b1000_0001u;
+            u64 value = 0b1000_0001u;
             Coder.Fibonacci.Encode(rawWriter, value);
             var reader = new BitBufferReader<RawDecoding>();
             reader.CopyFrom(rawWriter.ToArray());
@@ -43,15 +43,53 @@ namespace tests
         }
 
         [Test]
-        public void FibonacciX()
+        public void Fibonacciu32_129()
         {
             var rawWriter = new BitBufferWriter<RawEncoding<u32ArrayMemory>>();
-            var value = 0b1111_1111_1111_1111u;
+            u32 value = 0b1000_0001u;
             Coder.Fibonacci.Encode(rawWriter, value);
             var reader = new BitBufferReader<RawDecoding>();
             reader.CopyFrom(rawWriter.ToArray());
             var decoded = Coder.Fibonacci.Decode(reader);
             Assert.AreEqual(value, decoded);
+        }
+
+        [Test]
+        public void Fibonacciu16_129()
+        {
+            var rawWriter = new BitBufferWriter<RawEncoding<u32ArrayMemory>>();
+            u16 value = 0b1000_0001;
+            Coder.Fibonacci.Encode(rawWriter, value);
+            var reader = new BitBufferReader<RawDecoding>();
+            reader.CopyFrom(rawWriter.ToArray());
+            var decoded = Coder.Fibonacci.Decode(reader);
+            Assert.AreEqual(value, decoded);
+        }
+
+
+        [Test]
+        public void FibonacciX()
+        {
+            var rawWriter = new BitBufferWriter<RawEncoding<u32ArrayMemory>>();
+            u64 value = 0b1111_1111_1111_1111u;
+            Coder.Fibonacci.Encode(rawWriter, value);
+            var reader = new BitBufferReader<RawDecoding>();
+            reader.CopyFrom(rawWriter.ToArray());
+            var decoded = Coder.Fibonacci.Decode(reader);
+            Assert.AreEqual(value, decoded);
+        }
+
+        [Test]
+        public void FibonacciVsSeventBit()
+        {
+            var fib = new BitBufferWriter<RawEncoding<u32ArrayMemory>>();
+            u16 value = 250;
+            Coder.Fibonacci.Encode(fib, value);
+            var sb = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>();
+            sb.u16(value);
+
+            Assert.AreEqual(16, sb.BitsWritten);
+            Assert.AreEqual(13, fib.BitsWritten);
         }        
 
         public string ToBinary(u64 value)

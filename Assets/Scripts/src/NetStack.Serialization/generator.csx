@@ -27,9 +27,6 @@ public void FibonacciLookup64()
             lookup[i] = value;
         }
     }
-
-    Debug.WriteLine(lookup.Aggregate("", (acc, el) => acc + ", " + el));
-    Console.WriteLine(lookup.Aggregate("", (acc, el) => acc + ", " + el));
 }
 
 
@@ -60,6 +57,9 @@ public void FibonacciLookup16()
             lookup[i] = (u16)(lookup[i - 1] + lookup[i - 2]);
         }
     }
+
+    Debug.WriteLine(lookup.Aggregate("", (acc, el) => acc + ", " + el));
+    Console.WriteLine(lookup.Aggregate("", (acc, el) => acc + ", " + el));        
 }
 
 public void FibonacciLookup8()
@@ -76,4 +76,4 @@ public void FibonacciLookup8()
     }
 }
 
-FibonacciLookup64();
+FibonacciLookup16();
