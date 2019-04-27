@@ -18,51 +18,65 @@ namespace tests
 {
     public partial class CoderTests
     {
-        [Test]
-        public void Fibonacci9()
+      [Test]
+        public void u64FibnacciMaxMinus1()
         {
             var rawWriter = new BitBufferWriter<RawEncoding<u32ArrayMemory>>();
-            u64 value = 0b1001u;
-            Coder.Fibonacci.Encode(rawWriter, value);
             var reader = new BitBufferReader<RawDecoding>();
+            Coder.Fibonacci.Encode(rawWriter, u64.MaxValue - 1);
             reader.CopyFrom(rawWriter.ToArray());
             var decoded = Coder.Fibonacci.Decode(reader);
-            Assert.AreEqual(value, decoded);
+            Assert.AreEqual(u64.MaxValue -1 , decoded);
+            rawWriter.Reset();
         }
 
         [Test]
-        public void Fibonacci129()
+        public void u64FibnacciMax()
         {
             var rawWriter = new BitBufferWriter<RawEncoding<u32ArrayMemory>>();
-            u64 value = 0b1000_0001u;
-            Coder.Fibonacci.Encode(rawWriter, value);
             var reader = new BitBufferReader<RawDecoding>();
+            Coder.Fibonacci.Encode(rawWriter, u64.MaxValue);
             reader.CopyFrom(rawWriter.ToArray());
             var decoded = Coder.Fibonacci.Decode(reader);
-            Assert.AreEqual(value, decoded);
+            Assert.AreEqual(u64.MaxValue, decoded);
+            rawWriter.Reset();
         }
 
         [Test]
-        public void Fibonacciu32_129()
+        public void u64Fibnacci()
         {
             var rawWriter = new BitBufferWriter<RawEncoding<u32ArrayMemory>>();
-            u32 value = 0b1000_0001u;
-            Coder.Fibonacci.Encode(rawWriter, value);
+            var reader = new BitBufferReader<RawDecoding>();
+            for (u64 i = u64.MinValue; i < u16.MaxValue; i++)
+            {
+                Coder.Fibonacci.Encode(rawWriter, i);
+                reader.CopyFrom(rawWriter.ToArray());
+                var decoded = Coder.Fibonacci.Decode(reader);
+                Assert.AreEqual(i, decoded);
+                rawWriter.Reset();
+            }
+        }
+
+         [Test]
+        public void u32FibonacciMaxMinus1()
+        {
+            var rawWriter = new BitBufferWriter<RawEncoding<u32ArrayMemory>>();
+           Coder.Fibonacci.u32Encode(rawWriter, u32.MaxValue - 1);
             var reader = new BitBufferReader<RawDecoding>();
             reader.CopyFrom(rawWriter.ToArray());
-            var decoded = Coder.Fibonacci.Decode(reader);
-            Assert.AreEqual(value, decoded);
+            var decoded = Coder.Fibonacci.u32Decode(reader);
+            Assert.AreEqual(u32.MaxValue - 1, decoded);
         }
 
         [Test]
-        public void Fibonacciu16_129()
+        public void u16Fibonacci()
         {
             var rawWriter = new BitBufferWriter<RawEncoding<u32ArrayMemory>>();
             u16 value = 0b1000_0001;
-            Coder.Fibonacci.Encode(rawWriter, value);
+            Coder.Fibonacci.u16Encode(rawWriter, value);
             var reader = new BitBufferReader<RawDecoding>();
             reader.CopyFrom(rawWriter.ToArray());
-            var decoded = Coder.Fibonacci.Decode(reader);
+            var decoded = Coder.Fibonacci.u16Decode(reader);
             Assert.AreEqual(value, decoded);
         }
 
@@ -90,7 +104,7 @@ namespace tests
 
             Assert.AreEqual(16, sb.BitsWritten);
             Assert.AreEqual(13, fib.BitsWritten);
-        }        
+        }
 
         public string ToBinary(u64 value)
         {
