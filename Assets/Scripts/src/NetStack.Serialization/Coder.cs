@@ -7,7 +7,7 @@ using u8 = System.Byte;
 using u16 = System.UInt16;
 using u32 = System.UInt32;
 using u64 = System.UInt64;
-using u128 = Dirichlet.Numerics.UInt128;
+using u128 = System.UInt128;
 
 using System.Runtime.CompilerServices;
 using System;
@@ -159,8 +159,8 @@ namespace NetStack.Serialization
                     {
                         if (index == -1)
                         {
-                               // last 1 leads to unique double 11 which is first and only one
-                               
+                            // last 1 leads to unique double 11 which is first and only one
+
                             index = i + 1;
                             map = WriteBit(map, index, true);
                         }

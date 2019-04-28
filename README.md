@@ -25,22 +25,31 @@ All validation and exception are behind `#if !NO_EXCEPTIONS`.  Inlining is behin
   - Compact bit-packing
     - [ZigZag](https://developers.google.com/protocol-buffers/docs/encoding#signed-integers) encoding
     - [Variable-length](https://rosettacode.org/wiki/Variable-length_quantity) encoding
-	- TODO: allow huffman Unity FPSSample in learning and ready alphabet encodings, learng big vs small values in delta
+	- TODO: allow huffman Unity FPSSample in learning and ready alphabet encodings, learning big vs small values in delta
+	- TODO: given i have stats via huffman, build in prameter to allow skip one of X sends (e.g. send only 5 frame - no each frame) - write zero bits on wire
+	- TODO: fast huffman and faster than huffman https://github.com/Cyan4973/FiniteStateEntropy
   - TODO: optimize write of 2,3,4 bits values
-  - TODO: add delta methods with small vs big delimeter
+  - TODO: add delta methods with small vs big delimeter (Gaffer on games)
   - Debugging write and read with no packing 
   - Start write or read from where previous bit buffer finished.
-  - TODO: allow zero copy read write by init from byte array, cast head into ref as uint
+  - TODO: allow zero copy read write by init from byte array
   - TODO: add custom visualizer or custom to string (to 01 to to hex)
-  - TODO: Given possibility do delta of prediction. Should prediction API be part of serializer?
-  - No fluent interface as it adds performance overhead.
+  - TODO: Given possibility do delta of prediction (allow to pass predictors - provide linear, simple non linear, and simple learning regression and plug for custom predictors)
 
 ### Optimization priorities
 
-1. Size of data
+1. Size of data on the wire
 2. Memory allocation and copy 
 3. Raw operations performance
-4. Code readability and maintainability
+4. Customizeablity and partial code reuse
+5. Code readability and maintainability
+
+Optimized for heterogenous data in one packet, not stream of same data in each packet. 
+Optimized for games, may be usable in robotics and iot. Not optimized for big data or large data compression-storage. 
+
+## Not
+  - No fluent interface as it adds performance overhead.
+  - Game only and game specific optimizations (like Possible Visible Set compression)
 
 ## Collections.Concurrent
   - ArrayQueue is Single-producer single-consumer first-in-first-out non-blocking queue
@@ -51,9 +60,11 @@ All validation and exception are behind `#if !NO_EXCEPTIONS`.  Inlining is behin
   - CyclicSequenceBuffer (from Gaffer on Games)
   - CyclicIdPool (from Gaffer on Games)
 
-Original NetStack was utilized [1](https://vimeo.com/292969981) and [2](https://forum.unity.com/threads/showcase-enet-unity-ecs-5000-real-time-player-simulation.605656/) 
 
 # Usage
+
+Original NetStack was utilized [1](https://vimeo.com/292969981) and [2](https://forum.unity.com/threads/showcase-enet-unity-ecs-5000-real-time-player-simulation.605656/) 
+
 
 ##### Concurrent objects pool:
 ```csharp

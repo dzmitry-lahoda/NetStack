@@ -1,10 +1,11 @@
-﻿using System;
+﻿// https://github.com/ricksladkey/dirichlet-numerics
+using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
 
-namespace Dirichlet.Numerics
+namespace System
 {
     internal struct UInt128 : IFormattable, IComparable, IComparable<UInt128>, IEquatable<UInt128>
     {
