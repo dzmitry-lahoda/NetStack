@@ -48,17 +48,15 @@ namespace NetStack.Serialization
             }
         }
 
-        /// <summary>
-        /// Store value in specified number of bits.
-        /// </summary>
+        /// <inheritdoc/>
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public void u32(u32 value, i32 numberOfBits)
+        public void u32(u32 value, u8 numberOfBits)
         {
 #if !NO_EXCEPTIONS
             if (numberOfBits <= 0)
                 Throw.ArgumentOutOfRange($"{nameof(numberOfBits)} should be positive", nameof(numberOfBits));
 
-            if (numberOfBits > 32) // Unsafe.Sizeof<uint>() * 8
+            if (numberOfBits > 32) // Unsafe.Sizeof<u32>() * 8
                 Throw.ArgumentOutOfRange($"{nameof(numberOfBits)} should be less than or equal to 32", nameof(numberOfBits));
 
             if (BitsWritten + numberOfBits > totalNumberBits)
@@ -74,6 +72,19 @@ namespace NetStack.Serialization
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public void u16(u16 value, u8 numberOfBits) 
         {
+#if !NO_EXCEPTIONS
+            if (numberOfBits <= 0)
+                Throw.ArgumentOutOfRange($"{nameof(numberOfBits)} should be positive", nameof(numberOfBits));
+
+            if (numberOfBits > 16) // Unsafe.Sizeof<u16>() * 8
+                Throw.ArgumentOutOfRange($"{nameof(numberOfBits)} should be less than or equal to 16", nameof(numberOfBits));
+
+            if (BitsWritten + numberOfBits > totalNumberBits)
+                Throw.InvalidOperation($"Writing {numberOfBits} bits will exceed maximal capacity of {totalNumberBits}, while {BitsWritten} bits written");
+
+            if (value > (u16)((1ul << numberOfBits) - 1))
+                Throw.Argument(nameof(value), $"{value} is too big, won't fit in requested {numberOfBits} number of bits");
+#endif            
             var part = value & (u32)((1ul << numberOfBits) - 1);
             scratch |= ((u64)part) << scratchUsedBits;
             scratchUsedBits += numberOfBits;

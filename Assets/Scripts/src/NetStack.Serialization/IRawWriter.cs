@@ -19,9 +19,11 @@ namespace NetStack.Serialization
 {
     public interface IRawWriter
     {
+        /// <summary>
+        /// Store value in specified number of bits.
+        /// </summary>
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        void u32(u32 value, i32 numberOfBits);
-
+        void u32(u32 value, u8 numberOfBits);
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         void u16(u16 value, u8 numberOfBits);        

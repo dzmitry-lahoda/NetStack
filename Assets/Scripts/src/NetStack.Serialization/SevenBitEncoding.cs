@@ -49,7 +49,7 @@ namespace NetStack.Serialization
         public u32 encode(i32 value) => Coder.ZigZag.Encode(value);
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public void i32(RawBitWriter<TMemory> b, i32 value, i32 numberOfBits) =>
+        public void i32(RawBitWriter<TMemory> b, i32 value, u8 numberOfBits) =>
             b.u32(encode(value), numberOfBits);
     }
 }

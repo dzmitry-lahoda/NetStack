@@ -22,12 +22,12 @@ namespace NetStack.Serialization
         where T : struct, ICompression<BitBufferWriter<T>> // https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern
     {
         // true if has not capacity to write numberOfBits
-        public bool CannotAdd(i32 numberOfBits) => BitsWritten + numberOfBits > totalNumberBits;
+        public bool CannotAdd(u32 numberOfBits) => BitsWritten + numberOfBits > totalNumberBits;
 
         /// <summary>
         /// Hom much bits can be yet written into buffer before it cannot add bits more.
         /// </summary>
-        public i32 BitsAvailable => totalNumberBits - BitsWritten;
+        public u32 BitsAvailable => (u32)(totalNumberBits - BitsWritten);
 
  
         /// <summary>
@@ -55,7 +55,7 @@ namespace NetStack.Serialization
         /// Store value ZigZag encoded in number of bits.
         /// </summary>
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public void i32(i32 value, i32 numberOfBits)
+        public void i32(i32 value, u8 numberOfBits)
         {
             T encoder = default;
             encoder.i32(this, value, numberOfBits);

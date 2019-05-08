@@ -30,6 +30,6 @@ namespace NetStack.Serialization
         u32 encode(i32 value);
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        void i32(T b, i32 value, i32 numberOfBits);
+        void i32(T b, i32 value, u8 numberOfBits);
     }
 }

@@ -31,12 +31,12 @@ namespace NetStack.Serialization
             if (value < min || value > max) Throw.ArgumentOutOfRange(nameof(value), $"Value should be withing provided {min} and {max} range");
 #endif
 
-            i32 bits = BitBuffer.BitsRequired(min, max);
+            var bits = BitBuffer.BitsRequired(min, max);
             u32((u32)(value - min), bits);
         }
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public void u8(u8 value, i32 numberOfBits) => u32(value, numberOfBits);
+        public void u8(u8 value, u8 numberOfBits) => u16(value, numberOfBits);
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public void u8(u8 value, u8 min, u8 max) => u32(value, min, max);
@@ -45,7 +45,7 @@ namespace NetStack.Serialization
         public void i8(i8 value) => i32(value, 8);
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public void i8(i8 value, i32 numberOfBits) => i32(value, numberOfBits);
+        public void i8(i8 value, u8 numberOfBits) => i32(value, numberOfBits);
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public void i8(i8 value, i8 min, i8 max) => i32(value, min, max);
@@ -54,7 +54,7 @@ namespace NetStack.Serialization
         public void i16(i16 value) => i32(value);
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public void i16(i16 value, i32 numberOfBits) => i32(value, numberOfBits);
+        public void i16(i16 value, u8 numberOfBits) => i32(value, numberOfBits);
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public void i16(i16 value, i16 min, i16 max) => i32(value, min, max);
@@ -72,7 +72,7 @@ namespace NetStack.Serialization
             if (min >= max) Throw.Argument("min should be lower than max");
             if (value < min || value > max) Throw.ArgumentOutOfRange(nameof(value), $"Value should be withing provided {min} and {max} range");
 #endif
-            i32 bits = BitBuffer.BitsRequired(min, max);
+            var bits = BitBuffer.BitsRequired(min, max);
             u32(value - min, bits);
         }
 
@@ -107,13 +107,13 @@ namespace NetStack.Serialization
             float range = max - min;
             float invPrecision = 1.0f / precision;
             float maxVal = range * invPrecision;
-            i32 numberOfBits = BitOperations.Log2((u32)(maxVal + 0.5f)) + 1;
+            var numberOfBits = (u8)(BitOperations.Log2((u32)(maxVal + 0.5f)) + 1);
             float adjusted = (value - min) * invPrecision;
             u32((u32)(adjusted + 0.5f), numberOfBits);
         }
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public void f32(f32 value, f32 min, f32 max, i32 numberOfBits)
+        public void f32(f32 value, f32 min, f32 max, u8 numberOfBits)
         {
 #if !NO_EXCEPTIONS
             if (min >= max) Throw.Argument("min should be lower than max");

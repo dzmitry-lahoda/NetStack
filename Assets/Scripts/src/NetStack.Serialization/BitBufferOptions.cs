@@ -28,25 +28,25 @@ namespace NetStack.Serialization
 
 
         private readonly i32 u8SpanLengthMax;
-        private readonly i32 u8SpanBitsLength;
+        private readonly u8 u8SpanBitsLength;
         private readonly i32 charSpanLengthMax;
-        private readonly i32 charSpanBitsLength;
+        private readonly u8 charSpanBitsLength;
 
 
         public i32 U8SpanLengthMax => u8SpanLengthMax;
 
         public i32 CharSpanLengthMax => charSpanLengthMax;
 
-        public i32 U8SpanBitsLength => u8SpanBitsLength;
+        public u8 U8SpanBitsLength => u8SpanBitsLength;
 
-        public i32 CharSpanBitsLength => charSpanBitsLength;
+        public u8 CharSpanBitsLength => charSpanBitsLength;
 
         /// <summary>
         /// Creates new instance with its own buffer. 
         /// </summary>
         /// <param name="charSpanBitsLength">Bits used to store length of strings.</param>
         /// <param name="u8SpanBitsLength">Bits used to store length of byte arrays.</param>
-        public BitBufferOptions(i32 charSpanBitsLength = DefaultCharSpanBitsLength, i32 u8SpanBitsLength = DefaultU8SpanBitsLength)
+        public BitBufferOptions(u8 charSpanBitsLength = DefaultCharSpanBitsLength, u8 u8SpanBitsLength = DefaultU8SpanBitsLength)
         {
             if (charSpanBitsLength <= 0)
                 Throw.Argument("Should be positive", nameof(charSpanBitsLength));
