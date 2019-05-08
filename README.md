@@ -41,11 +41,14 @@ All validation and exception are behind `#if !NO_EXCEPTIONS`.  Inlining is behin
 1. Size of data on the wire
 2. Memory allocation and copy 
 3. Raw operations performance
-4. Customizeablity and partial code reuse
+4. Malleability and partial code reuse
 5. Code readability and maintainability
 
 Optimized for heterogenous data in one packet, not stream of same data in each packet. 
-Optimized for games, may be usable in robotics and iot. Not optimized for big data or large data compression-storage. 
+Optimized for games, may be usable in high end CPU in robotics and iot processors.
+Optimized for 64 bits CPU and vectorized compilers.
+Not optimized for big data or large data compression-storage. 
+Not optimized for very low memory very low end very low bits devices.
 
 ## Not
   - No fluent interface as it adds performance overhead.

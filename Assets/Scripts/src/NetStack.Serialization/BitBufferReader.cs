@@ -21,7 +21,7 @@ namespace NetStack.Serialization
     /// <summary>
     /// Bit level compression by ranged values.
     /// </summary>
-    public partial class BitBufferReader<T> : BitBuffer<u32ArrayMemory>
+    public partial class BitBufferReader<T> : RawBitReader<u32ArrayMemory>
     {
         private BitBufferOptions config;
 
@@ -43,24 +43,19 @@ namespace NetStack.Serialization
         /// Creates new instance with its own buffer. 
         /// </summary>
         /// <param name="buffer">Custom buffer.</param>
-        public BitBufferReader(u32[] buffer, BitBufferOptions config = default)
+        public BitBufferReader(u32[] buffer, BitBufferOptions config = default) : base(new u32ArrayMemory(buffer))
         {
             // TODO: try inline config as struct to improve access performance? Test it via benchmark
             this.config = config.Equals(default) ? BitBufferOptions.Default : config;
-            // not performance critical path so fine to check and throw
-            if (buffer == null || buffer.Length == 0)
-                Throw.Argument("Buffer should be non null or empty", nameof(buffer));
 
-            Chunks = new u32ArrayMemory(buffer);
             Reset();
         }
 
         /// <summary>
         /// Continue read from previous buffer cursor.
         /// </summary>
-        public BitBufferReader(BitBuffer<u32ArrayMemory> startFrom)
+        public BitBufferReader(BitBuffer<u32ArrayMemory> startFrom) : base(startFrom.Chunks)
         {
-            Chunks = startFrom.chunks;
             scratch = startFrom.scratch;
             scratchUsedBits = startFrom.scratchUsedBits;
             chunkIndex = startFrom.chunkIndex;

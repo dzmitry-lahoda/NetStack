@@ -20,7 +20,7 @@ namespace NetStack.Serialization
         }
 
         public static void c<T>(this T self, string value) 
-               where T: BitBufferWriterBase<u32ArrayMemory>, IBitBufferWriter
+               where T: RawBitWriter<u32ArrayMemory>, IBitBufferWriter
             => 
             self.c(value.AsSpan());
 
@@ -29,7 +29,7 @@ namespace NetStack.Serialization
         /// </summary>
         /// <returns></returns>
         public static byte[] ToArray<T>(this T self) 
-          where T: BitBufferWriterBase<u32ArrayMemory>, IBitBufferWriter
+          where T: RawBitWriter<u32ArrayMemory>, IBitBufferWriter
         {
             var data = new byte[self.LengthWritten];
             self.ToSpan(data);
@@ -40,7 +40,7 @@ namespace NetStack.Serialization
         /// Rents array 
         /// </summary>
         public static byte[] ToArray<T>(this T self, ArrayPool<byte> pool = null) 
-                  where T: BitBufferWriterBase<u32ArrayMemory>, IBitBufferWriter
+                  where T: RawBitWriter<u32ArrayMemory>, IBitBufferWriter
         {
             pool = pool ?? ArrayPool<byte>.Shared;
             var data = pool.Rent(self.LengthWritten);

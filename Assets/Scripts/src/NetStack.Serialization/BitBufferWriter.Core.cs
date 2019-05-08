@@ -18,7 +18,7 @@ using System.Numerics;
 
 namespace NetStack.Serialization
 {
-    partial class BitBufferWriter<T> : BitBufferWriterBase<u32ArrayMemory>, IBitBufferWriter
+    partial class BitBufferWriter<T> : RawBitWriter<u32ArrayMemory>, IBitBufferWriter
         where T : struct, ICompression<BitBufferWriter<T>> // https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern
     {
         // true if has not capacity to write numberOfBits

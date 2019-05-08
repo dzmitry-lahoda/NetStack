@@ -24,7 +24,7 @@ namespace NetStack.Serialization
         public void i8ReadWriteEncoded() => i8ReadWrite<SevenBitEncoding<u32ArrayMemory>, SevenBitDecoding>();
 
         private void i8ReadWrite<TEncoder, TDecoder>() 
-             where TEncoder:struct, ICompression<BitBufferWriterBase<u32ArrayMemory>> 
+             where TEncoder:struct, ICompression<RawBitWriter<u32ArrayMemory>> 
              where TDecoder:unmanaged, IDecompression<BitBufferReader<TDecoder>> 
         {
             var writer = new BitBufferWriter<TEncoder>();

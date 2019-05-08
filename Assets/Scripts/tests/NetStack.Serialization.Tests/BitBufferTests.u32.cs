@@ -23,7 +23,7 @@ namespace NetStack.Serialization
         public void u32ReadWriteEncoded() => u32ReadWrite<SevenBitEncoding<u32ArrayMemory>, SevenBitDecoding>();
 
         private void u32ReadWrite<TEncoder, TDecoder>() 
-             where TEncoder:struct, ICompression<BitBufferWriterBase<u32ArrayMemory>> 
+             where TEncoder:struct, ICompression<RawBitWriter<u32ArrayMemory>> 
              where TDecoder:unmanaged, IDecompression<BitBufferReader<TDecoder>> 
         {
             var writer = new BitBufferWriter<TEncoder>();
@@ -43,7 +43,7 @@ namespace NetStack.Serialization
         public void u32ReadWriteLimitsEncoded() => u32ReadWriteLimits<SevenBitEncoding<u32ArrayMemory>, SevenBitDecoding>();
 
         public void u32ReadWriteLimits<TEncoder, TDecoder>() 
-             where TEncoder:struct, ICompression<BitBufferWriterBase<u32ArrayMemory>> 
+             where TEncoder:struct, ICompression<RawBitWriter<u32ArrayMemory>> 
              where TDecoder:unmanaged, IDecompression<BitBufferReader<TDecoder>> 
         {
             var writer = new BitBufferWriter<TEncoder>();

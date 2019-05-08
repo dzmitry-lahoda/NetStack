@@ -58,6 +58,8 @@ namespace NetStack.Serialization
                 totalNumChunks = chunks.Length;
                 totalNumberBits = totalNumChunks * 8 * Unsafe.SizeOf<u32>();
             }
+
+            get => chunks;
         }
         #endregion
 
