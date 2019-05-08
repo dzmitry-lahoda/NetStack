@@ -29,7 +29,6 @@ namespace NetStack.Serialization
         /// </summary>
         public u32 BitsAvailable => (u32)(totalNumberBits - BitsWritten);
 
- 
         /// <summary>
         /// Adds value 7 bit encoded value.
         /// Store seven right bits, if more than 8 with 1, then set 1 to continue.
@@ -41,9 +40,20 @@ namespace NetStack.Serialization
             encoder.u32(this, value);
         }
 
-        /// <summary>
-        /// Store value ZigZag and 7 bits encoded.
-        /// </summary>
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
+        public void u16(u16 value)
+        {
+            T encoder = default;
+            encoder.u16(this, value);
+        }
+
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
+        public void u8(u8 value)
+        {
+            T encoder = default;
+            encoder.u8(this, value);
+        }
+        
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public void i32(i32 value)
         {

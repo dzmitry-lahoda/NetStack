@@ -21,9 +21,6 @@ namespace NetStack.Serialization
     partial class BitBufferReader<T>
     {
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public u8 u8(i32 numberOfBits) => (u8)u32(numberOfBits);
-
-        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public u8 u8(u8 min, u8 max) => (u8)u32(min, max);
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]

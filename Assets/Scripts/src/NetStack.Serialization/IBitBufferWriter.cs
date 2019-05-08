@@ -20,44 +20,48 @@ using f64 = System.Double;
 namespace NetStack.Serialization
 {
     public interface IBitBufferWriter : IRawWriter
-
     {
-        i32 LengthWritten {get;}
-        
+        i32 LengthWritten { get; }
+
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         void f32(f32 update);
-        
+
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         void f32(f32 update, f32 min, f32 max, f32 precision);
 
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         void f64(f64 update);
 
-        void u16(u16 value);
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)] void u16(u16 value);
 
-        void u16(u16 value, u16 min, u16 max);
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)] void u16(u16 value, u16 min, u16 max);
 
-        void i16(i16 value);
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)] void i16(i16 value);
 
-        void i16(i16 value, i16 min, i16 max);
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)] void i16(i16 value, i16 min, i16 max);
 
-        void i32(i32 value, i32 min, i32 max);
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)] void i32(i32 value, i32 min, i32 max);
 
-        void i32(i32 value);
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)] void i32(i32 value);
 
-        void u32(u32 value);
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)] void u32(u32 value);
 
-        void u32(u32 value, u32 min, u32 max);
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)] void u32(u32 value, u32 min, u32 max);
 
-        void i64(i64 value);
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)] void i64(i64 value);
 
-        void u64(u64 value);
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)] void u64(u64 value);
 
-        void i8(i8 value);
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)] void i8(i8 value);
 
-        void i8(i8 value, i8 min, i8 max);
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)] void i8(i8 value, i8 min, i8 max);
 
-        void u8(u8 value, u8 min, u8 max);
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)] void u8(u8 value);
 
-        void c(ReadOnlySpan<char> value);
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)] void u8(u8 value, u8 min, u8 max);
 
-        i32 ToSpan(Span<u8> data);
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)] void c(ReadOnlySpan<char> value);
+
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)] i32 ToSpan(Span<u8> data);
     }
 }

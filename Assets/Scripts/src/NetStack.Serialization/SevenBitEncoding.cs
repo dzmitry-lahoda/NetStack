@@ -18,6 +18,10 @@ using System.Numerics;
 
 namespace NetStack.Serialization
 {
+    /// <summary>
+    /// Stores value 7 bits encoded, if could be negative, than ZigZag.
+    /// </summary>
+
     // circular constrained generics work on .NET Core as fast as manual code (even slightly faster on .NET Core 2.2 x86-64 if container is class)
     // Unity FPS samples has usage of constrained generic (and IL2CPP does LLVM) indicates these should work there to
     // going container to be struct seems to be more complex and permaturely (will wait C# 8)
@@ -41,9 +45,19 @@ namespace NetStack.Serialization
             // TODO: how to use CPU parallelism here ? unrol loop? couple of temporal variables? 
             // TODO: mere 8 and 8 into one 16? write special handling code for 8 and 16 coming from outside?
             // oneliner version to use if need copy paste
-            while (value >= 0b10000000) { b.u8((u8)(value | 0b10000000)); value >>= 7; }
-            b.u8((u8)value);
+            while (value >= 0b10000000) { b.u8Raw((u8)(value | 0b10000000)); value >>= 7; }
+            b.u8Raw((u8)value);
         }
+
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
+        public void u16(RawBitWriter<TMemory> b, u16 value)
+        {
+            while (value >= 0b10000000) { b.u8Raw((u8)(value | 0b10000000)); value >>= 7; }
+            b.u8Raw((u8)value);
+        }
+
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
+        public void u8(RawBitWriter<TMemory> b, u8 value) => b.u8Raw((u8)value);
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public u32 encode(i32 value) => Coder.ZigZag.Encode(value);
@@ -51,5 +65,7 @@ namespace NetStack.Serialization
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public void i32(RawBitWriter<TMemory> b, i32 value, u8 numberOfBits) =>
             b.u32(encode(value), numberOfBits);
+
+
     }
 }

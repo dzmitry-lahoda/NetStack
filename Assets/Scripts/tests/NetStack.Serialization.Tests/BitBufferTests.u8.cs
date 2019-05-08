@@ -117,7 +117,7 @@ namespace NetStack.Serialization
             var reader = new BitBufferReader<SevenBitDecoding>();
             reader.CopyFrom(new u8[666]);
             Assert.Throws<ArgumentException>(() => reader.u8(255, 123));
-            Assert.Throws<ArgumentOutOfRangeException>(() => reader.u8(-1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => reader.u8(13));
             Assert.Throws<ArgumentOutOfRangeException>(() => reader.u8(33));
         }
 

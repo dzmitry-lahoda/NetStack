@@ -1,10 +1,21 @@
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using i8 = System.SByte;
+using i16 = System.Int16;
 using i32 = System.Int32;
+using i64 = System.Int64;
+using u8 = System.Byte;
+using u16 = System.UInt16;
 using u32 = System.UInt32;
+using u64 = System.UInt64;
+using f32 = System.Single;
+using f64 = System.Double;
 
 namespace NetStack.Serialization
 {
+    /// <summary>
+    /// Reads 7 bit encoded values.
+    /// </summary>
     public struct SevenBitDecoding : IDecompression<BitBufferReader<SevenBitDecoding>>
     {
         // https://stackoverflow.com/questions/1550560/encoding-an-integer-in-7-bit-format-of-c-sharp-binaryreader-readstring
@@ -20,7 +31,7 @@ namespace NetStack.Serialization
             do
             {
                 // has no guard against corrupted bytes - may read overflow
-                buffer = b.u8();
+                buffer = b.u8Raw();
                 value |= (buffer & 0b0111_1111u) << shift;
                 shift += 7;
             }
@@ -52,5 +63,8 @@ namespace NetStack.Serialization
             u32 value = b.u32(numberOfBits);
             return decode(value);
         }
+
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
+        public u8 u8(BitBufferReader<SevenBitDecoding> b) => b.u8Raw();
     }
 }

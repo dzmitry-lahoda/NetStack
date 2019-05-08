@@ -21,14 +21,19 @@ namespace NetStack.Serialization
     partial class BitBufferReader<T> : IRawReader
          where T:struct, IDecompression<BitBufferReader<T>> 
     {        
-        /// <summary>
-        /// Reads 7 bit encoded uint value.
-        /// </summary>
+
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public u32 u32()
         {
             T decoder = default;
             return decoder.u32(this);
+        }
+
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
+        public u8 u8()
+        {
+            T decoder = default;
+            return decoder.u8(this);
         }
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]

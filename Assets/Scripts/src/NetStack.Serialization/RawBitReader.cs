@@ -87,7 +87,7 @@ namespace NetStack.Serialization
         /// Reads raw data.
         /// </summary>
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public u8 u8()
+        public u8 u8Raw()
         {
 #if !NO_EXCEPTIONS
             if (BitsRead + 8 > totalNumberBits) Throw.InvalidOperation("reading more bits than in buffer");
@@ -140,7 +140,7 @@ namespace NetStack.Serialization
         public u16 u16(u8 numberOfBits)
         {
 #if !NO_EXCEPTIONS
-            if (numberOfBits <= 0 || numberOfBits > 16) Throw.ArgumentOutOfRange(nameof(numberOfBits), $"Should read from 1 to 16. Cannot read {numberOfBits}");
+            if (numberOfBits <= 0 || numberOfBits > 16) Throw.ArgumentOutOfRange(nameof(numberOfBits), $"Should read from 1 to {16}. Cannot read {numberOfBits}");
             if (BitsRead + numberOfBits > totalNumberBits) Throw.InvalidOperation("reading more bits than in buffer");
             if (scratchUsedBits < 0 || scratchUsedBits > 64) Throw.InvalidProgram($"{scratchUsedBits} Too many bits used in scratch, Overflow?");
 #endif            
@@ -153,5 +153,24 @@ namespace NetStack.Serialization
             scratchUsedBits -= numberOfBits;
             return output;
         }
+
+        /// <inheritdoc/>
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
+        public u8 u8(u8 numberOfBits)
+        {
+#if !NO_EXCEPTIONS
+            if (numberOfBits <= 0 || numberOfBits > 8) Throw.ArgumentOutOfRange(nameof(numberOfBits), $"Should read from 1 to {8}. Cannot read {numberOfBits}");
+            if (BitsRead + numberOfBits > totalNumberBits) Throw.InvalidOperation("reading more bits than in buffer");
+            if (scratchUsedBits < 0 || scratchUsedBits > 64) Throw.InvalidProgram($"{scratchUsedBits} Too many bits used in scratch, Overflow?");
+#endif            
+            if (scratchUsedBits < numberOfBits) SIndexInc();
+#if !NO_EXCEPTIONS
+            if (scratchUsedBits < numberOfBits) Throw.InvalidOperation("Too many bits requested from scratch");
+#endif            
+            u8 output = (u8)(scratch & ((((u64)1) << numberOfBits) - 1));
+            scratch >>= numberOfBits;
+            scratchUsedBits -= numberOfBits;
+            return output;
+        }        
     }
 }

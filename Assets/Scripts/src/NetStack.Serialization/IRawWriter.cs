@@ -29,7 +29,10 @@ namespace NetStack.Serialization
         void u16(u16 value, u8 numberOfBits);        
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        void u8(u8 value);
+        void u8Raw(u8 value);
+
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
+        void u8(u8 value, u8 numberOfBits);
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         void b(bool value);

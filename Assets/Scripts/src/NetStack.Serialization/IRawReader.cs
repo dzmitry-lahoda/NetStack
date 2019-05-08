@@ -31,6 +31,7 @@ namespace NetStack.Serialization
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         bool b();
 
-        u8 u8();
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
+        u8 u8Raw();
     }
 }

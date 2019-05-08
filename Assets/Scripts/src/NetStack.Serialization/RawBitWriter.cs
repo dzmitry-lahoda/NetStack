@@ -91,6 +91,28 @@ namespace NetStack.Serialization
             SIndexInc();
         }
 
+        /// <inheritdoc/>
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
+        public void u8(u8 value, u8 numberOfBits) 
+        {
+#if !NO_EXCEPTIONS
+            if (numberOfBits <= 0)
+                Throw.ArgumentOutOfRange($"{nameof(numberOfBits)} should be positive", nameof(numberOfBits));
+
+            if (numberOfBits > 8) // Unsafe.Sizeof<u8>() * 8
+                Throw.ArgumentOutOfRange($"{nameof(numberOfBits)} should be less than or equal to {8}", nameof(numberOfBits));
+
+            if (BitsWritten + numberOfBits > totalNumberBits)
+                Throw.InvalidOperation($"Writing {numberOfBits} bits will exceed maximal capacity of {totalNumberBits}, while {BitsWritten} bits written");
+
+            if (value > (u16)((1ul << numberOfBits) - 1))
+                Throw.Argument(nameof(value), $"{value} is too big, won't fit in requested {numberOfBits} number of bits");
+#endif            
+            var part = value & (u32)((1ul << numberOfBits) - 1);
+            scratch |= ((u64)part) << scratchUsedBits;
+            scratchUsedBits += numberOfBits;
+            SIndexInc();
+        }
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         private void internalRaw(u32 value, i32 numberOfBits)
@@ -103,7 +125,7 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public void u8(u8 value)
+        public void u8Raw(u8 value)
         {
             scratch |= ((u64)value) << scratchUsedBits;
             scratchUsedBits += 8;

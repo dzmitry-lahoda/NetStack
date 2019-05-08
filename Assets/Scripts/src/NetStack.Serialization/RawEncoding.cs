@@ -16,6 +16,7 @@ using f64 = System.Double;
 
 namespace NetStack.Serialization
 {
+    // encoder which stores values as is, for testing and debugging purposes
     public struct RawEncoding<TMemory> : ICompression<RawBitWriter<TMemory>>
         where TMemory: struct, IMemory<u32>
     {
@@ -30,5 +31,11 @@ namespace NetStack.Serialization
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public void i32(RawBitWriter<TMemory> b, i32 value, u8 numberOfBits) => i32(b, value);
+        
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
+        public void u16(RawBitWriter<TMemory> b, u16 value) => b.u16(value, 16); 
+
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
+        public void u8(RawBitWriter<TMemory> b, u8 value) => b.u8Raw(value);
     }
 }
