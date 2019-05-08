@@ -21,9 +21,19 @@ namespace NetStack.Serialization
         [Test]
         public void u8()
         {
-            var writer = new RawBitWriter<u32ArrayMemory>(new u32ArrayMemory(new u32[42]));
+            var storage = new u32ArrayMemory(new u32[42]);
+            var writer = new RawBitWriter<u32ArrayMemory>(storage);
             u16 v1 = 42;
-            writer.u16Raw(v1, 16);
+            u16 v2 = 666;
+            writer.u16(v1, 16);
+            Assert.AreEqual(16, writer.BitsWritten);
+            writer.u16(v2, 10);
+            writer.Align();
+            var reader = new RawBitReader<u32ArrayMemory>(storage);
+            var rv1 = reader.u16(16);
+            var rv2 = reader.u16(10);
+            Assert.AreEqual(v1, rv1);
+            Assert.AreEqual(v2, rv2);
         }      
     }
 }

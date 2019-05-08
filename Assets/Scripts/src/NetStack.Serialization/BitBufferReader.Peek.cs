@@ -142,7 +142,7 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public u16 u16Peek(i32 numberOfBits)
+        public u16 u16Peek(u8 numberOfBits)
         {
             var index = SIndex;
             var value = u16(numberOfBits);

@@ -26,7 +26,7 @@ namespace NetStack.Serialization
 
         // reads raw number of bits, not more than 16
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        u16 u16Raw(u8 numberOfBits);
+        u16 u16(u8 numberOfBits);
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         bool b();

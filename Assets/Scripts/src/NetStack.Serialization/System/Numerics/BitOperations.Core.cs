@@ -155,30 +155,41 @@ namespace System.Numerics
         /// </summary>
         /// <param name="value">The value.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        // public static int Log2(uint value)
+        // {
+        //     // value    lzcnt   actual  expected
+        //     // ..0000   32      0        0 (by convention, guard clause)
+        //     // ..0001   31      31-31    0
+        //     // ..0010   30      31-30    1
+        //     // 0010..    2      31-2    29
+        //     // 0100..    1      31-1    30
+        //     // 1000..    0      31-0    31
+        //     //if (Lzcnt.IsSupported)
+        //     //{
+        //     //    // Enforce conventional contract 0->0 (since Log(0) is undefined)
+        //     //    if (value == 0)
+        //     //    {
+        //     //        return 0;
+        //     //    }
+
+        //     //    // Note that LZCNT contract specifies 0->32
+        //     //    return 31 - (int)Lzcnt.LeadingZeroCount(value);
+        //     //}
+
+        //     // Already has contract 0->0, without branching
+        //     return Log2SoftwareFallback(value);
+        // }
+        // Unity has bug https://gitlab.com/dzmitry-lahoda/unity-net-core3-log2-unsafe-marshal
         public static int Log2(uint value)
         {
-            // value    lzcnt   actual  expected
-            // ..0000   32      0        0 (by convention, guard clause)
-            // ..0001   31      31-31    0
-            // ..0010   30      31-30    1
-            // 0010..    2      31-2    29
-            // 0100..    1      31-1    30
-            // 1000..    0      31-0    31
-            //if (Lzcnt.IsSupported)
-            //{
-            //    // Enforce conventional contract 0->0 (since Log(0) is undefined)
-            //    if (value == 0)
-            //    {
-            //        return 0;
-            //    }
-
-            //    // Note that LZCNT contract specifies 0->32
-            //    return 31 - (int)Lzcnt.LeadingZeroCount(value);
-            //}
-
-            // Already has contract 0->0, without branching
-            return Log2SoftwareFallback(value);
-        }
+            uint a = value | (value >> 1);
+            uint b = a | (a >> 2);
+            uint c = b | (b >> 4);
+            uint d = c | (c >> 8);
+            uint e = d | (d >> 16);
+            uint f = e >> 1;
+            return PopCount(f);
+        }        
 
 #else
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

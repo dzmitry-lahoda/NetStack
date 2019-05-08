@@ -72,7 +72,7 @@ namespace NetStack.Serialization
 
         /// <inheritdoc/>
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public void u16Raw(u16 value, u8 numberOfBits) 
+        public void u16(u16 value, u8 numberOfBits) 
         {
             var part = value & (u32)((1ul << numberOfBits) - 1);
             scratch |= ((u64)part) << scratchUsedBits;

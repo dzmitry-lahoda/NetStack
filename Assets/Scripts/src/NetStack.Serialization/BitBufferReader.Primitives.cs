@@ -45,10 +45,7 @@ namespace NetStack.Serialization
         public i16 i16(i16 min, i16 max) => (i16)i32(min, max);
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public u16 u16() => (u16)u32();
-
-        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public u16 u16(i32 numberOfBits) => (u16)u32(numberOfBits);
+        public u16 u16() => (u16)u32();        
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public u16 u16(u16 min, u16 max) => (u16)u32(min, max);
