@@ -65,7 +65,5 @@ namespace NetStack.Serialization
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public void i32(RawBitWriter<TMemory> b, i32 value, u8 numberOfBits) =>
             b.u32(encode(value), numberOfBits);
-
-
     }
 }

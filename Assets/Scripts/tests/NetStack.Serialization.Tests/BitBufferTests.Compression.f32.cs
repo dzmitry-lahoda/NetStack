@@ -14,7 +14,7 @@ namespace NetStack.Serialization
             buffer.f32Half(angle);
             Assert.AreEqual(16, buffer.BitsWritten);
             var data = buffer.ToArray();
-            var reader = new BitBufferReader<SevenBitDecoding>();
+            var reader = new BitBufferReader<SevenBitDecoding<u32ArrayMemory>>();
             reader.CopyFrom(data);
             var result = reader.f32Half();
             Assert.AreEqual(359, result);
@@ -28,7 +28,7 @@ namespace NetStack.Serialization
             buffer.f32(angle, 0f, 360f, 0.01f);
             Assert.AreEqual(16, buffer.BitsWritten);
             var data = buffer.ToArray();
-            var reader = new BitBufferReader<SevenBitDecoding>();
+            var reader = new BitBufferReader<SevenBitDecoding<u32ArrayMemory>>();
             reader.CopyFrom(data);
             var result = reader.f32(0f, 360f, 0.01f);
             Assert.AreEqual(359.01f, result, 2);
@@ -42,7 +42,7 @@ namespace NetStack.Serialization
             buffer.f32(angle);
             Assert.AreEqual(32, buffer.BitsWritten);
             var data = buffer.ToArray();
-            var reader = new BitBufferReader<SevenBitDecoding>();
+            var reader = new BitBufferReader<SevenBitDecoding<u32ArrayMemory>>();
             reader.CopyFrom(data);
             var result = reader.f32();
             Assert.AreEqual(0f, result, 1);
@@ -56,7 +56,7 @@ namespace NetStack.Serialization
             buffer.u32(angle, 0, 36000);
             Assert.AreEqual(16, buffer.BitsWritten);
             var data = buffer.ToArray();
-            var reader = new BitBufferReader<SevenBitDecoding>();
+            var reader = new BitBufferReader<SevenBitDecoding<u32ArrayMemory>>();
             reader.CopyFrom(data);
             var result = reader.f32(0f, 360f, 0.01f);
             Assert.AreEqual(359.01f, result, 2);

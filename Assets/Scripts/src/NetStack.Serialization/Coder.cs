@@ -51,11 +51,17 @@ namespace NetStack.Serialization
 
         public static class Fibonacci
         {
+            public static ReadOnlySpan<u8> u8 => new u8[]
+            {
+                   1, 2, 3, 5, 8, 13, 21,
+                   34, 55, 89, 144, 233//, 377
+            };
+
             public static ReadOnlySpan<u16> u16Lookup => new u16[]
             {
                    1, 2, 3, 5, 8, 13, 21,
                    34, 55, 89, 144, 233, 377, 610, 987, 1597,
-                   2584, 4181, 6765, 10946, 17711, 28657, 46368
+                   2584, 4181, 6765, 10946, 17711, 28657, 46368 //, 75025
             };
 
             public static ReadOnlySpan<u32> u32Lookup => new u32[]
@@ -65,7 +71,7 @@ namespace NetStack.Serialization
                 2584, 4181, 6765, 10946, 17711, 28657, 46368, 75025,
                 121393, 196418, 317811, 514229, 832040, 1346269, 2178309, 3524578,
                 5702887, 9227465, 14930352, 24157817, 39088169, 63245986, 102334155, 165580141,
-                267914296, 433494437, 701408733, 1134903170, 1836311903, 2971215073
+                267914296, 433494437, 701408733, 1134903170, 1836311903, 2971215073//, 4807526976
               };
 
 
@@ -90,7 +96,7 @@ namespace NetStack.Serialization
             // but because of this does not supports MaxValue
             // but in order not to surprise need to support
 
-            private static void inc(ref u64 value, ref bool one)
+            private static void increment(ref u64 value, ref bool one)
             {
                 if (value != u64.MaxValue)
                     value++;
@@ -100,7 +106,7 @@ namespace NetStack.Serialization
                 }
             }
 
-            private static bool goe(u64 value, bool one, u64 comparand)
+            private static bool greaterOrEquals(u64 value, bool one, u64 comparand)
             {
                 if (one)
                 {
@@ -134,15 +140,15 @@ namespace NetStack.Serialization
             private static bool ExtractBit(u128 value, int bitOffset)
         => (value & (u128.One << bitOffset)) != 0;
 
-            public static void Encode(IBitBufferWriter self, u64 value)
+            public static void u64Encode(IBitBufferWriter self, u64 value)
             {
                 bool one = false;
-                inc(ref value, ref one);
+                increment(ref value, ref one);
                 u128 map = 0;
                 i32 index = -1;
                 for (var i = u64Lookup.Length - 1; i >= 0; i--)
                 {
-                    if (goe(value, one, u64Lookup[i]))
+                    if (greaterOrEquals(value, one, u64Lookup[i]))
                     {
                         if (index == -1)
                         {
@@ -165,129 +171,7 @@ namespace NetStack.Serialization
                 }
             }
 
-
-            public static void u32Encode(IBitBufferWriter self, u32 value)
-            {
-                value++;
-                u64 map = 0;
-                i32 index = -1;
-                for (var i = u32Lookup.Length - 1; i >= 0; i--)
-                {
-                    if (value >= u32Lookup[i])
-                    {
-                        if (index == -1)
-                        {
-                            index = i + 1;
-                            map = BitOperations.WriteBit(map, index, true);
-                        }
-
-                        map = BitOperations.WriteBit(map, i, true);
-                        value -= u32Lookup[i];
-                    }
-                }
-
-                for (var i = 0; i <= index; i++)
-                {
-                    // TODO: optimize
-                    var bit = BitOperations.ExtractBit(map, i);
-                    self.b(bit);
-                }
-            }
-
-            public static void u16Encode(IBitBufferWriter self, u16 value)
-            {
-                value++;
-                u32 map = 0;
-                i32 index = -1;
-                for (var i = u16Lookup.Length - 1; i >= 0; i--)
-                {
-                    if (value >= u16Lookup[i])
-                    {
-                        if (index == -1)
-                        {
-                            index = i + 1;
-                            map = BitOperations.WriteBit(map, index, true);
-                        }
-
-                        map = BitOperations.WriteBit(map, i, true);
-                        value -= u16Lookup[i];
-                    }
-                }
-
-                for (var i = 0; i <= index; i++)
-                {
-                    // TODO: optimize
-                    var bit = BitOperations.ExtractBit(map, i);
-                    self.b(bit);
-                }
-            }
-
-            public static u32 u32Decode(BitBufferReader<RawDecoding> self)
-            {
-                bool lastbit = false;
-                u8 fib = 0;
-                u32 result = 0;
-                bool sub = false;
-                while (true) // TODO: prevent loop with sane check
-                {
-                    // TODO: optimize
-                    if (self.b())
-                    {
-                        if (lastbit)
-                        {
-                            break;
-                        }
-
-                        result += u32Lookup[fib];
-                        // if (!sub)
-                        // {
-                        //     result -= 1;
-                        //     sub = false;
-                        // }
-
-                        lastbit = true;
-                    }
-                    else
-                    {
-                        lastbit = false;
-                    }
-
-                    fib++;
-                }
-
-                return result - 1;
-            }
-
-            public static u16 u16Decode(BitBufferReader<RawDecoding> self)
-            {
-                bool lastbit = false;
-                u8 fib = 0;
-                u16 result = 0;
-                while (true) // TODO: prevent loop with sane check
-                {
-                    // TODO: optimize
-                    if (self.b())
-                    {
-                        if (lastbit)
-                        {
-                            break;
-                        }
-
-                        result += u16Lookup[fib];
-                        lastbit = true;
-                    }
-                    else
-                    {
-                        lastbit = false;
-                    }
-
-                    fib++;
-                }
-
-                return (u16)(result - 1);
-            }
-
-            public static u64 Decode(BitBufferReader<RawDecoding> self)
+            public static u64 u64Decode(IBitBufferReader self)
             {
                 bool lastbit = false;
                 u8 fib = 0;

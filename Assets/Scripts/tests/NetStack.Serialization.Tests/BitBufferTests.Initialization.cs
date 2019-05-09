@@ -20,7 +20,7 @@ namespace NetStack.Serialization
         public void RandomManyTimes()
         {
             var writer = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>();
-            var reader = new BitBufferReader<SevenBitDecoding>();
+            var reader = new BitBufferReader<SevenBitDecoding<u32ArrayMemory>>();
             var random = new Random(42);
             for (var i = 0; i < i16.MaxValue; i++)
             {
@@ -51,7 +51,7 @@ namespace NetStack.Serialization
             writer.i32(i32.MaxValue);
             writer.i16(i16.MaxValue);
             var result = writer.ToArray();
-            var reader = new BitBufferReader<SevenBitDecoding>();
+            var reader = new BitBufferReader<SevenBitDecoding<u32ArrayMemory>>();
             reader.CopyFrom(result);
             Assert.AreEqual(i64.MaxValue, reader.i64());
             Assert.AreEqual(i32.MaxValue, reader.i32());
@@ -72,7 +72,7 @@ namespace NetStack.Serialization
             Span<byte> span = new byte[writer.LengthWritten];
             ReadOnlySpan<byte> read = span;
             writer.ToSpan(span);
-            var reader = new BitBufferReader<SevenBitDecoding>();            
+            var reader = new BitBufferReader<SevenBitDecoding<u32ArrayMemory>>();            
             reader.CopyFrom(read);
             Assert.AreEqual(i64.MaxValue, reader.i64());
             Assert.AreEqual(i32.MaxValue, reader.i32());
@@ -92,7 +92,7 @@ namespace NetStack.Serialization
             writer.Align();
             var allocated = new byte[ushort.MaxValue];
             writer.ToSpan(new Span<u8>(allocated, 10, 100));
-            var reader = new BitBufferReader<SevenBitDecoding>(allocated.Length);
+            var reader = new BitBufferReader<SevenBitDecoding<u32ArrayMemory>>(allocated.Length);
             reader.CopyFrom(new ReadOnlySpan<u8>(allocated, 10, 100));
             Assert.AreEqual(13, reader.u8());
             Assert.AreEqual(long.MaxValue, reader.i64());
@@ -108,11 +108,11 @@ namespace NetStack.Serialization
             writer.i32(i32.MaxValue - 13);
             writer.u32(u32.MaxValue - 666);
             var data = writer.ToArray();
-            var rawReader = new BitBufferReader<RawDecoding>();
+            var rawReader = new BitBufferReader<RawDecoding<u32ArrayMemory>>();
             rawReader.CopyFrom(data);
             Assert.AreEqual(i32.MaxValue - 13, rawReader.i32());
             Assert.AreEqual(u32.MaxValue - 666, rawReader.u32());
-            var reader = new BitBufferReader<SevenBitDecoding>(rawReader);
+            var reader = new BitBufferReader<SevenBitDecoding<u32ArrayMemory>>(rawReader);
             Assert.AreEqual(i32.MaxValue - 13, reader.i32());
             Assert.AreEqual(u32.MaxValue - 666, reader.u32());            
         }                 

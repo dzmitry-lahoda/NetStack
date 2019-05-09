@@ -18,8 +18,8 @@ using System.Numerics;
 
 namespace NetStack.Serialization
 {
-    partial class BitBufferReader<T> : IRawReader
-         where T:struct, IDecompression<BitBufferReader<T>> 
+    partial class BitBufferReader<T> : RawBitReader<u32ArrayMemory>, IBitBufferReader
+        where T : struct, IDecompression<BitBufferReader<T>> 
     {        
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]

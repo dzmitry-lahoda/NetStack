@@ -24,7 +24,7 @@ namespace NetStack.Serialization
             writer.i16BDiff(0, 1);
             writer.i16BDiff(1, 1);
             var data = writer.ToArray();            
-            var reader = new BitBufferReader<SevenBitDecoding>();
+            var reader = new BitBufferReader<SevenBitDecoding<u32ArrayMemory>>();
             reader.CopyFrom(data);
             Assert.AreEqual(1, reader.i16BDiff(0));
             Assert.AreEqual(1, reader.i16BDiff(1));
@@ -37,7 +37,7 @@ namespace NetStack.Serialization
             writer.i16BDiff(0, 1, -1, 10);
             writer.i16BDiff(1, 1, 0, 100);
             var data = writer.ToArray();            
-            var reader = new BitBufferReader<SevenBitDecoding>();
+            var reader = new BitBufferReader<SevenBitDecoding<u32ArrayMemory>>();
             reader.CopyFrom(data);
             Assert.AreEqual(1, reader.i16BDiff(0, -1, 10));
             Assert.AreEqual(1, reader.i16BDiff(1, 0, 100));
@@ -50,7 +50,7 @@ namespace NetStack.Serialization
             writer.i32BDiff(0, 1);
             writer.i32BDiff(1, 1);
             var data = writer.ToArray();            
-            var reader = new BitBufferReader<SevenBitDecoding>();
+            var reader = new BitBufferReader<SevenBitDecoding<u32ArrayMemory>>();
             reader.CopyFrom(data);
             Assert.AreEqual(1, reader.i32BDiff(0));
             Assert.AreEqual(1, reader.i32BDiff(1));
@@ -63,7 +63,7 @@ namespace NetStack.Serialization
             writer.i32BDiff(0, 1, -1, 10);
             writer.i32BDiff(1, 1, 0, 100);
             var data = writer.ToArray();            
-            var reader = new BitBufferReader<SevenBitDecoding>();
+            var reader = new BitBufferReader<SevenBitDecoding<u32ArrayMemory>>();
             reader.CopyFrom(data);
             Assert.AreEqual(1, reader.i32BDiff(0, -1, 10));
             Assert.AreEqual(1, reader.i32BDiff(1, 0, 100));
@@ -76,7 +76,7 @@ namespace NetStack.Serialization
             writer.i8BDiff(0, 1);
             writer.i8BDiff(1, 1);
             var data = writer.ToArray();            
-            var reader = new BitBufferReader<SevenBitDecoding>();
+            var reader = new BitBufferReader<SevenBitDecoding<u32ArrayMemory>>();
             reader.CopyFrom(data);
             Assert.AreEqual(1, reader.i8BDiff(0));
             Assert.AreEqual(1, reader.i8BDiff(1));
@@ -89,7 +89,7 @@ namespace NetStack.Serialization
             writer.u16BDiff(0, 1);
             writer.u16BDiff(1, 1);
             var data = writer.ToArray();            
-            var reader = new BitBufferReader<SevenBitDecoding>();
+            var reader = new BitBufferReader<SevenBitDecoding<u32ArrayMemory>>();
             reader.CopyFrom(data);
             Assert.AreEqual(1, reader.u16BDiff(0));
             Assert.AreEqual(1, reader.u16BDiff(1));
@@ -102,7 +102,7 @@ namespace NetStack.Serialization
             writer.u32BDiff(0, 1);
             writer.u32BDiff(1, 1);
             var data = writer.ToArray();            
-            var reader = new BitBufferReader<SevenBitDecoding>();
+            var reader = new BitBufferReader<SevenBitDecoding<u32ArrayMemory>>();
             reader.CopyFrom(data);
             Assert.AreEqual(1, reader.u32BDiff(0));
             Assert.AreEqual(1, reader.u32BDiff(1));
@@ -116,7 +116,7 @@ namespace NetStack.Serialization
             writer.u8BDiff(0, 1);
             writer.u8BDiff(1, 1);
             var data = writer.ToArray();            
-            var reader = new BitBufferReader<SevenBitDecoding>();
+            var reader = new BitBufferReader<SevenBitDecoding<u32ArrayMemory>>();
             reader.CopyFrom(data);
             Assert.AreEqual(1, reader.u8BDiff(0));
             Assert.AreEqual(1, reader.u8BDiff(1));
@@ -129,7 +129,7 @@ namespace NetStack.Serialization
             writer.f32BDiff(0f, 1f);
             writer.f32BDiff(1f, 1f);
             var data = writer.ToArray();            
-            var reader = new BitBufferReader<SevenBitDecoding>();
+            var reader = new BitBufferReader<SevenBitDecoding<u32ArrayMemory>>();
             reader.CopyFrom(data);
             Assert.AreEqual(1f, reader.f32BDiff(0f));
             Assert.AreEqual(1f, reader.f32BDiff(1f));

@@ -13,13 +13,16 @@ using f64 = System.Double;
 
 namespace NetStack.Serialization
 {
-    public interface IDecompression<T> where T : IRawReader
+    public interface IDecompression<in T> where T : IRawReader
     {
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         u32 u32(T b);
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         i32 i32(T b);
+
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
+        u16 u16(T b);   
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         u8 u8(T b);        

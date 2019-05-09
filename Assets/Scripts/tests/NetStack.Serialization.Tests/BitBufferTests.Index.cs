@@ -12,7 +12,7 @@ namespace NetStack.Serialization
             var writer = new BitBufferWriter<SevenBitEncoding<u32ArrayMemory>>(100);
             Assert.AreEqual(0, writer.LengthWritten);
             var received = new byte[2000];
-            var reader = new BitBufferReader<SevenBitDecoding>();
+            var reader = new BitBufferReader<SevenBitDecoding<u32ArrayMemory>>();
             reader.CopyFrom(received);
             Assert.AreEqual(0, writer.LengthWritten);
         }
@@ -34,7 +34,7 @@ namespace NetStack.Serialization
             writer.i32(-273);
             writer.b(true);
             writer.i64(1234567890);
-            var reader = new BitBufferReader<SevenBitDecoding>();
+            var reader = new BitBufferReader<SevenBitDecoding<u32ArrayMemory>>();
             reader.CopyFrom(writer.ToArray());
             Assert.AreEqual(666, reader.i32());
             var bitsRead = reader.BitsRead;
@@ -63,7 +63,7 @@ namespace NetStack.Serialization
             writer.i32(1234567890);
             Assert.AreEqual(73, writer.BitsWritten);
             var data = writer.ToArray();
-            var reader = new BitBufferReader<SevenBitDecoding>();
+            var reader = new BitBufferReader<SevenBitDecoding<u32ArrayMemory>>();
             reader.CopyFrom(data);
 
             Assert.AreEqual(0, reader.BitsRead);

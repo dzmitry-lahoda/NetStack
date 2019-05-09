@@ -38,7 +38,7 @@ namespace NetStack.Serialization
         //https://gafferongames.com/post/snapshot_compression/
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public static void quaternion<T>(this T self, Quaternion quaternion, u8 bitsPerComponent = 12)
-        where T:RawBitWriter<u32ArrayMemory>
+            where T:RawBitWriter<u32ArrayMemory>
         {
             float halfrangeFloat = (1 << bitsPerComponent - 1);
             float packer = SmallestThreePack * halfrangeFloat;
@@ -133,7 +133,8 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public static Quaternion quaternion(this BitBufferReader<SevenBitDecoding> self, int bitsPerValue = 12)
+        public static Quaternion quaternion<TReader>(this TReader self, u8 bitsPerValue = 12)
+            where TReader: IBitBufferReader
         {
             int halfrange = (1 << bitsPerValue - 1); //  - 1
             float unpacker = SmallestThreeUnpack * (1f / halfrange);
@@ -167,7 +168,8 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public static Quaternion quaternionPeek(this BitBufferReader<SevenBitDecoding> self, int bitsPerValue = 12)
+        public static Quaternion quaternionPeek<TReader>(this TReader self, u8 bitsPerValue = 12)
+        where TReader : IBitBufferReader
         {
             var curReadpos = self.BitsRead;
             var value = self.quaternion(bitsPerValue);

@@ -18,7 +18,7 @@ using System.Numerics;
 
 namespace NetStack.Serialization
 {
-    public struct BitBufferOptions : IEquatable<BitBufferOptions>
+    public readonly struct BitBufferOptions : IEquatable<BitBufferOptions>
     {
         public static readonly BitBufferOptions Default = new BitBufferOptions(charSpanBitsLength: DefaultCharSpanBitsLength, u8SpanBitsLength: DefaultU8SpanBitsLength);
 

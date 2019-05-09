@@ -71,7 +71,6 @@ namespace NetStack.Serialization
         // last partially read value
         protected internal u64 scratch;
 
-
         /// <summary>
         /// Sets buffer cursor to zero. Can start writing again.
         /// </summary>

@@ -43,7 +43,7 @@ namespace NetStack.Serialization
             var rawWriter = new BitBufferWriter<RawEncoding<u32ArrayMemory>>();
             rawWriter.i32(i32.MaxValue - 13);
             rawWriter.u32(u32.MaxValue - 666);
-            var rawReader = new BitBufferReader<RawDecoding>();
+            var rawReader = new BitBufferReader<RawDecoding<u32ArrayMemory>>();
             var data = rawWriter.ToArray();
             rawReader.CopyFrom(data);
             Assert.AreEqual(i32.MaxValue - 13, rawReader.i32());

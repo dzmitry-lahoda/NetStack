@@ -12,21 +12,25 @@ using f64 = System.Double;
 
 namespace NetStack.Serialization
 {
-    public struct RawDecoding : IDecompression<BitBufferReader<RawDecoding>>
+    public struct RawDecoding<TMemory> : IDecompression<RawBitReader<TMemory>>
+        where TMemory : struct, IMemory<u32>   
     {
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public u32 u32(BitBufferReader<RawDecoding> b) => b.u32(32);
+        public u32 u32(RawBitReader<TMemory> b) => b.u32(32);
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public i32 decode(u32 value) => (i32)value;
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public i32 i32(BitBufferReader<RawDecoding> b) => decode(u32(b));
+        public i32 i32(RawBitReader<TMemory> b) => decode(u32(b));
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public i32 i32(BitBufferReader<RawDecoding> b, i32 numberOfBits) => i32(b);
+        public i32 i32(RawBitReader<TMemory> b, i32 numberOfBits) => i32(b);
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public u8 u8(BitBufferReader<RawDecoding> b) => b.u8Raw();
+        public u8 u8(RawBitReader<TMemory> b) => b.u8Raw();
+
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
+        public u16 u16(RawBitReader<TMemory> b) => b.u16(16);
     }
 }

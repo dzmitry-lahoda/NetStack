@@ -11,7 +11,8 @@ namespace NetStack.Serialization
     public static class AllocationBitBufferExtensions
     {
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public unsafe static string String(this BitBufferReader<SevenBitDecoding> self)
+        public unsafe static string String<TReader>(this TReader self)
+            where TReader : IBitBufferReader
         {
             var size = MemoryPool<char>.Shared.Rent(self.Options.CharSpanLengthMax);
             var length = self.c(size.Memory.Span);
@@ -19,8 +20,8 @@ namespace NetStack.Serialization
                 return new String((char*)pin.Pointer,0, (int)length);         
         }
 
-        public static void c<T>(this T self, string value) 
-               where T: RawBitWriter<u32ArrayMemory>, IBitBufferWriter
+        public static void c<TReader>(this TReader self, string value) 
+               where TReader: IBitBufferWriter
             => 
             self.c(value.AsSpan());
 

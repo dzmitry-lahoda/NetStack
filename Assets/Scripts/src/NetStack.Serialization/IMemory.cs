@@ -15,7 +15,6 @@ using System.Numerics;
 
 namespace NetStack.Serialization
 {
-
     /// <summary>
     /// Access to memory to read and write. 
     /// Looses several percents of performance against raw zero index array, but allows:

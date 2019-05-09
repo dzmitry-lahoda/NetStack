@@ -24,17 +24,19 @@ namespace NetStack.Serialization
     public static class HalfFloatBitBufferExtensions
     {
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public static void f32Half<T>(this T self, f32 value) 
-            where T: RawBitWriter<u32ArrayMemory>
+        public static void f32Half<T>(this T self, f32 value)
+            where T : RawBitWriter<u32ArrayMemory>
             =>
             self.u32(HalfPrecision.Compress(value), 16);
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public static f32 f32Half(this BitBufferReader<SevenBitDecoding> self) =>
+        public static f32 f32Half(this IBitBufferReader self)
+            =>
             HalfPrecision.Decompress((u16)self.u32(16));
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public static f32 f32HalfPeek(this BitBufferReader<SevenBitDecoding> self) =>
+        public static f32 f32HalfPeek<TReader>(this TReader self) where TReader : IBitBufferReader
+            =>
             HalfPrecision.Decompress((u16)self.u32(16));
     }
 }

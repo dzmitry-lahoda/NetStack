@@ -30,13 +30,13 @@ namespace NetStack.Serialization
         public bool CanReadMore => totalNumberBits > BitsRead;
 
         // total count of used bits since buffer start
-        public i32 BitsRead
+        public u32 BitsRead
         {
             get
             {
                 var indexInBits = chunkIndex * 32;
                 var over = scratchUsedBits != 0 ? 1 : 0; // TODO: speed up with bit hacking
-                return indexInBits - over * scratchUsedBits;
+                return (u32)(indexInBits - over * scratchUsedBits);
             }
         }
 
@@ -116,14 +116,14 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public void SetPosition(i32 bitsRead)
+        public void SetPosition(u32 bitsRead)
         {
 #if !NO_EXCEPTIONS
             if (bitsRead < 0) Throw.Argument("Pushing negative bits", nameof(bitsRead));
             if (bitsRead > totalNumberBits) Throw.Argument("Pushing too many bits", nameof(bitsRead));
 #endif
-            chunkIndex = bitsRead / 32;
-            scratchUsedBits = bitsRead % 32;
+            chunkIndex =  (i32) (bitsRead / 32u);
+            scratchUsedBits = (i32) (bitsRead % 32u);
             if (scratchUsedBits != 0)
             {
                 scratch = ((u64)(chunks[chunkIndex])) >> scratchUsedBits;

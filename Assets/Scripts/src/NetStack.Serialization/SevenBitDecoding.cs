@@ -16,13 +16,14 @@ namespace NetStack.Serialization
     /// <summary>
     /// Reads 7 bit encoded values.
     /// </summary>
-    public struct SevenBitDecoding : IDecompression<BitBufferReader<SevenBitDecoding>>
+    public struct SevenBitDecoding<TMemory> : IDecompression<RawBitReader<TMemory>>
+        where TMemory : struct, IMemory<u32>    
     {
         // https://stackoverflow.com/questions/1550560/encoding-an-integer-in-7-bit-format-of-c-sharp-binaryreader-readstring
         // https://gitlab.com/Syroot/BinaryData/blob/master/src/Syroot.BinaryData.Memory/SpanReader.cs#L262
         // https://github.com/dotnet/corefx/blob/master/src/Common/src/CoreLib/System/IO/BinaryReader.cs#L619
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public u32 u32(BitBufferReader<SevenBitDecoding> b)
+        public u32 u32(RawBitReader<TMemory> b)
         {
             u32 buffer = 0;
             u32 value = 0;
@@ -55,16 +56,19 @@ namespace NetStack.Serialization
         public i32 decode(u32 value) => Coder.ZigZag.Decode(value);
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public i32 i32(BitBufferReader<SevenBitDecoding> b) => decode(u32(b));
+        public i32 i32(RawBitReader<TMemory> b) => decode(u32(b));
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public i32 i32(BitBufferReader<SevenBitDecoding> b, i32 numberOfBits)
+        public i32 i32(RawBitReader<TMemory> b, i32 numberOfBits)
         {
             u32 value = b.u32(numberOfBits);
             return decode(value);
         }
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public u8 u8(BitBufferReader<SevenBitDecoding> b) => b.u8Raw();
+        public u8 u8(RawBitReader<TMemory> b) => b.u8Raw();
+
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
+        public u16 u16(RawBitReader<TMemory> b) => (u16)u32(b);
     }
 }

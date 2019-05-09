@@ -18,14 +18,14 @@ namespace NetStack.Serialization
     partial class BitBufferTests
     {        
         [Test]
-        public void i8ReadWriteRaw() => i8ReadWrite<RawEncoding<u32ArrayMemory>, RawDecoding>();
+        public void i8ReadWriteRaw() => i8ReadWrite<RawEncoding<u32ArrayMemory>, RawDecoding<u32ArrayMemory>>();
 
         [Test]
-        public void i8ReadWriteEncoded() => i8ReadWrite<SevenBitEncoding<u32ArrayMemory>, SevenBitDecoding>();
+        public void i8ReadWriteEncoded() => i8ReadWrite<SevenBitEncoding<u32ArrayMemory>, SevenBitDecoding<u32ArrayMemory>>();
 
         private void i8ReadWrite<TEncoder, TDecoder>() 
              where TEncoder:struct, ICompression<RawBitWriter<u32ArrayMemory>> 
-             where TDecoder:unmanaged, IDecompression<BitBufferReader<TDecoder>> 
+             where TDecoder:struct, IDecompression<RawBitReader<u32ArrayMemory>> 
         {
             var writer = new BitBufferWriter<TEncoder>();
             writer.i8(i8.MinValue);
@@ -49,7 +49,7 @@ namespace NetStack.Serialization
             writer.i8(2, 4);
             var bitsWritten = writer.BitsWritten;
             var data = writer.ToArray();
-            var reader = new BitBufferReader<SevenBitDecoding>();
+            var reader = new BitBufferReader<SevenBitDecoding<u32ArrayMemory>>();
             reader.CopyFrom(data);
             Assert.AreEqual(13, reader.i8(0, 14));
             Assert.AreEqual(2, reader.i8(4));

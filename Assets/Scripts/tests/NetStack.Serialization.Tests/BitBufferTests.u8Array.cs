@@ -25,7 +25,7 @@ namespace NetStack.Serialization
             writer.Align();
             var allocated = new u8[ushort.MaxValue];
             writer.ToSpan(allocated);
-            var reader = new BitBufferReader<SevenBitDecoding>(allocated.Length);
+            var reader = new BitBufferReader<SevenBitDecoding<u32ArrayMemory>>(allocated.Length);
             reader.CopyFrom(allocated);
             var output = new byte[5];
             var lengthPeek = reader.u8SpanLengthPeek();
@@ -42,7 +42,7 @@ namespace NetStack.Serialization
             writer.u8(input);
             var allocated = new byte[ushort.MaxValue];
             writer.ToSpan(allocated);
-            var reader = new BitBufferReader<SevenBitDecoding>(allocated.Length);
+            var reader = new BitBufferReader<SevenBitDecoding<u32ArrayMemory>>(allocated.Length);
             reader.CopyFrom(allocated);
             Assert.AreEqual(writer.Options.U8SpanLengthMax, reader.u8SpanLengthPeek());
         }
@@ -62,7 +62,7 @@ namespace NetStack.Serialization
             var input = new byte[writer.Options.U8SpanLengthMax];
             writer.u8(input);
             var data = writer.ToArray();
-            var reader = new BitBufferReader<SevenBitDecoding>();
+            var reader = new BitBufferReader<SevenBitDecoding<u32ArrayMemory>>();
             reader.CopyFrom(data);
             
             Assert.Throws<ArgumentException>(()=> reader.u8(new byte[1]));

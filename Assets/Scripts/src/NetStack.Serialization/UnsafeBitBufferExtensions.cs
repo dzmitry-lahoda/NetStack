@@ -88,7 +88,9 @@ namespace NetStack.Serialization
         /// </summary>
         /// <typeparam name="T">Element with predefined size.</typeparam>
         /// <returns>The value.</returns>
-        public static T block<T>(this BitBufferReader<SevenBitDecoding> self)
+        // public static T block<TReader, T>(this TReader self)
+        //     where TReader: IBitBufferReader
+        public static T block<T>(this IBitBufferReader self)    
            where T : unmanaged
         {
             var size = Unsafe.SizeOf<T>();
@@ -121,11 +123,12 @@ namespace NetStack.Serialization
             return value;
         }
 
-        private static void ReadSmallUnmanaged(this BitBufferReader<SevenBitDecoding> self, ref byte value, int size)
+        private static void ReadSmallUnmanaged<TReader>(this TReader self, ref byte value, int size)
+            where TReader: IBitBufferReader
         {
             if (size == 1)
             {
-                value = self.u8();
+                value = self.u8Raw();
             }
             else if (size == 2)
             {
