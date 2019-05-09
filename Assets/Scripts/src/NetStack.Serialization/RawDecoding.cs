@@ -25,7 +25,7 @@ namespace NetStack.Serialization
         public i32 i32(RawBitReader<TMemory> b) => decode(u32(b));
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public i32 i32(RawBitReader<TMemory> b, i32 numberOfBits) => i32(b);
+        public i32 i32(RawBitReader<TMemory> b, u8 numberOfBits) => i32(b);
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public u8 u8(RawBitReader<TMemory> b) => b.u8Raw();

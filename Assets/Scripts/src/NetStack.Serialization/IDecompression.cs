@@ -31,6 +31,6 @@ namespace NetStack.Serialization
         i32 decode(u32 value);
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        i32 i32(T b, i32 numberOfBits);
+        i32 i32(T b, u8 numberOfBits);
     }
 }

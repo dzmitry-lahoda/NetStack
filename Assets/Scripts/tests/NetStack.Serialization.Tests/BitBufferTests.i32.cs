@@ -73,7 +73,7 @@ namespace NetStack.Serialization
             var reader = new BitBufferReader<SevenBitDecoding<u32ArrayMemory>>();
             reader.CopyFrom(new u8[666]);
             Assert.Throws<ArgumentException>(()=> reader.i32(666, 123));
-            Assert.Throws<ArgumentOutOfRangeException>(()=> reader.i32(-1));
+            Assert.Throws<ArgumentOutOfRangeException>(()=> reader.i32(255));
             Assert.Throws<ArgumentOutOfRangeException>(()=> reader.i32(33));
         }               
 

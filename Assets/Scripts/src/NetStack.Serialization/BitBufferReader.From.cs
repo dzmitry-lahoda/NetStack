@@ -26,15 +26,16 @@ namespace NetStack.Serialization
         public void CopyFrom(ReadOnlySpan<u8> data)
         {
             // may Throw.here as not hot path
-            if (data.Length == 0)
-                Throw.Argument("Should be positive", nameof(data.Length));
             if (data.Length <= 0)
                 Throw.Argument("Should be positive", nameof(data.Length));
+            if (data.Length > System.UInt16.MaxValue * 4)
+                Throw.Argument($"Should be less or equal to {System.UInt16.MaxValue * 4}", nameof(data.Length));
+
 
             var length = data.Length;
             Reset();
             var step = Unsafe.SizeOf<u32>();
-            i32 numChunks = (length / step) + 1;
+            var numChunks = (u16)((length / step) + 1);
 
             // TODO: move out this expansion from here
             if (chunks.Length < numChunks)
@@ -46,9 +47,9 @@ namespace NetStack.Serialization
             // TODO: possible to optimize to avoid copy? some kind of unsafe cast?
             // TODO: try u64 for performance as most of devices will be 64 bit?
             // https://github.com/nxrighthere/NetStack/issues/1#issuecomment-475212246
-            for (var i = 0; i < numChunks; i++)
+            for (u16 i = 0; i < numChunks; i++)
             {
-                i32 dataIdx = i * step;
+                i32 dataIdx = (i32)i * step;
                 u32 chunk = 0;
                 // TODO: ref into data and do block copy of all 4bytes, copy only last 3 bytes by hand
                 // may optimize by calculating variable her and doing zero init of remaining blocks

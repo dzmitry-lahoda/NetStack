@@ -26,7 +26,7 @@ namespace NetStack.Serialization
         public static u8 BitsRequired(u32 min, u32 max) =>
             (u8)((min == max) ? 1 : BitOperations.Log2(max - min) + 1);
 
-        public const i32 DefaultU32Capacity = BitBufferLimits.MtuIeee802Dot3 / 4;
+        public const u16 DefaultU32Capacity = BitBufferLimits.MtuIeee802Dot3 / 4;
     }
 
     // core untyped data specific part of bit buffer
@@ -45,15 +45,15 @@ namespace NetStack.Serialization
         // having this struct inline does not hurt perf
         protected internal TStorage chunks;
 
-        protected i32 totalNumChunks;
-        protected i32 totalNumberBits;
+        protected u16 totalNumChunks;
+        protected u32 totalNumberBits;
         protected internal TStorage Chunks
         {
             set
             {
                 chunks = value;
                 totalNumChunks = chunks.Length;
-                totalNumberBits = totalNumChunks * 8 * Unsafe.SizeOf<u32>();
+                totalNumberBits = (u32)(totalNumChunks * 8 * Unsafe.SizeOf<u32>());
             }
 
             get => chunks;
@@ -65,7 +65,7 @@ namespace NetStack.Serialization
         // bit index onto current head
         // trying to put these 2 or 3 into one struct degrade performance on .NET Core 2.1 x86-64
         // have tried Auto and Explicit with 2 i32
-        protected internal i32 chunkIndex;
+        protected internal u16 chunkIndex;
         protected internal i32 scratchUsedBits;
 
         // last partially read value
@@ -82,7 +82,7 @@ namespace NetStack.Serialization
             scratchUsedBits = 0;
         }
 
-        public (i32 ChunkIndex, i32 ScratchUsedBits, u64 Scratch) SIndex
+        public (u16 ChunkIndex, i32 ScratchUsedBits, u64 Scratch) SIndex
         {
             get => (chunkIndex, scratchUsedBits, scratch);
             set
@@ -94,9 +94,6 @@ namespace NetStack.Serialization
         }
 
         #endregion
-
-
-
 
         /// <summary>
         /// Call aligns remaining bits to full bytes.
@@ -117,16 +114,13 @@ namespace NetStack.Serialization
 
         public override string ToString()
         {
-            var toStringBuilder = new StringBuilder(chunks.Length * 8);
+            var toStringBuilder = new StringBuilder((i32)chunks.Length * 8);
 
-            for (i32 i = chunks.Length - 1; i >= 0; i--)
-            {
-                toStringBuilder.Append(Convert.ToString(chunks[i], 2).PadLeft(32, '0'));
-            }
+            for (var i = chunks.Length - 1; i >= 0; i--)
+                toStringBuilder.Append(Convert.ToString(chunks[(u16)i], 2).PadLeft(32, '0'));
 
             var spaced = new StringBuilder();
-
-            for (i32 i = 0; i < toStringBuilder.Length; i++)
+            for (var i = 0; i < toStringBuilder.Length; i++)
             {
                 spaced.Append(toStringBuilder[i]);
 

@@ -18,13 +18,15 @@ All validation and exception are behind `#if !NO_EXCEPTIONS`.  Inlining is behin
   - [Bounded range](https://gafferongames.com/post/snapshot_compression/#optimizing-position) algorithm
   - [Smallest three](https://gafferongames.com/post/snapshot_compression/#optimizing-orientation) algorithm
 ## Serialization ([Nuget](https://www.nuget.org/packages/NetStack.Serialization))
-  - Lightweight and straightforward
-  - Fast processing
+  - Typed limit and composition.
+  - Still fast processing
   - [Span](https://docs.microsoft.com/en-us/dotnet/api/system.span) support
   - Uses modern shortcuts for naming primitives like `i32` for `int`, etc. 
   - Compact bit-packing
     - [ZigZag](https://developers.google.com/protocol-buffers/docs/encoding#signed-integers) encoding
     - [Variable-length](https://rosettacode.org/wiki/Variable-length_quantity) encoding
+		- [Fibonacci](https://en.wikipedia.org/wiki/Fibonacci_coding)
+		- [TODO] Hybrid - depending on possible range, use Variable-length or Fibonacci
 	- TODO: allow huffman Unity FPSSample in learning and ready alphabet encodings, learning big vs small values in delta
 	- TODO: given i have stats via huffman, build in prameter to allow skip one of X sends (e.g. send only 5 frame - no each frame) - write zero bits on wire
 	- TODO: fast huffman and faster than huffman https://github.com/Cyan4973/FiniteStateEntropy

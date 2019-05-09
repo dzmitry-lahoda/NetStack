@@ -27,7 +27,7 @@ namespace NetStack.Serialization
         public i8 i8() => (i8)i32(8);
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public i8 i8(i32 numberOfBits) => (i8)i32(numberOfBits);
+        public i8 i8(u8 numberOfBits) => (i8)i32(numberOfBits);
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public i8 i8(i8 min, i8 max) => (i8)i32(min, max);
@@ -36,7 +36,7 @@ namespace NetStack.Serialization
         public i16 i16() => (i16)i32();
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public i16 i16(i32 numberOfBits) => (i16)i32(numberOfBits);
+        public i16 i16(u8 numberOfBits) => (i16)i32(numberOfBits);
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public i16 i16(i16 min, i16 max) => (i16)i32(min, max);
@@ -56,7 +56,7 @@ namespace NetStack.Serialization
 #if !NO_EXCEPTIONS
             if (min > max) Throw.Argument("min should not be not lower than max");
 #endif
-            i32 bits = BitBuffer.BitsRequired(min, max);
+            var bits = (u8)BitBuffer.BitsRequired(min, max);
 
 #if !NO_EXCEPTIONS
             if (BitsRead + bits > totalNumberBits) Throw.ArgumentOutOfRange("Reading too many bits for requested range");
@@ -70,7 +70,7 @@ namespace NetStack.Serialization
 #if !NO_EXCEPTIONS
             if (min > max) Throw.Argument("min should not be not lower than max");
 #endif
-            i32 bits = BitBuffer.BitsRequired(min, max);
+            var bits = (u8)BitBuffer.BitsRequired(min, max);
 #if !NO_EXCEPTIONS
             if (BitsRead + bits > totalNumberBits) Throw.ArgumentOutOfRange("Reading too many bits for requested range");
 #endif      
@@ -107,13 +107,13 @@ namespace NetStack.Serialization
             f32 range = max - min;
             f32 invPrecision = 1.0f / precision;
             f32 maxVal = range * invPrecision;
-            i32 numberOfBits = BitOperations.Log2((u32)(maxVal + 0.5f)) + 1;
+            var numberOfBits = (u8)(BitOperations.Log2((u32)(maxVal + 0.5f)) + 1);
 
             return u32(numberOfBits) * precision + min;
         }
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public f32 f32(f32 min, f32 max, i32 numberOfBits)
+        public f32 f32(f32 min, f32 max, u8 numberOfBits)
         {
             var maxvalue = (1 << numberOfBits) - 1;
             f32 range = max - min;

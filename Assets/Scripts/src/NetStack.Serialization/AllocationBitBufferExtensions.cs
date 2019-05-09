@@ -5,6 +5,16 @@ using System.Text;
 using System.Buffers;
 using System.Diagnostics;
 using System.Numerics;
+using i8 = System.SByte;
+using i16 = System.Int16;
+using i32 = System.Int32;
+using i64 = System.Int64;
+using u8 = System.Byte;
+using u16 = System.UInt16;
+using u32 = System.UInt32;
+using u64 = System.UInt64;
+using f32 = System.Single;
+using f64 = System.Double;
 
 namespace NetStack.Serialization
 {
@@ -44,7 +54,7 @@ namespace NetStack.Serialization
                   where T: RawBitWriter<u32ArrayMemory>, IBitBufferWriter
         {
             pool = pool ?? ArrayPool<byte>.Shared;
-            var data = pool.Rent(self.LengthWritten);
+            var data = pool.Rent((i32)self.LengthWritten);
             self.ToSpan(data);
             return data;
         }               

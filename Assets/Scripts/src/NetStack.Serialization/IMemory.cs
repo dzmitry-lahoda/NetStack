@@ -5,7 +5,9 @@ using i8 = System.SByte;
 using i16 = System.Int16;
 using i32 = System.Int32;
 using i64 = System.Int64;
+using u8 = System.Byte;
 using u16 = System.UInt16;
+using u32 = System.UInt32;
 using u64 = System.UInt64;
 using f32 = System.Single;
 using f64 = System.Double;
@@ -24,7 +26,7 @@ namespace NetStack.Serialization
     /// </summary>
     public interface IMemory<T> where T: unmanaged
     {
-        T this[i32 index]
+        T this[u16 index]
         {
             [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
             get;
@@ -32,7 +34,7 @@ namespace NetStack.Serialization
             set;
         }
 
-        i32 Length
+        u16 Length
         {
             [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
             get;

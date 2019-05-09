@@ -45,7 +45,7 @@ namespace NetStack.Serialization
         /// Reads i32 value without progressing bits position.
         /// </summary>
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public i32 i32Peek(i32 numberOfBits)
+        public i32 i32Peek(u8 numberOfBits)
         {
             T encoder = default;
             u32 value = u32(numberOfBits);
@@ -62,7 +62,7 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public u8 u8Peek(i32 numberOfBits)
+        public u8 u8Peek(u8 numberOfBits)
         {
             var index = SIndex;
             var value = (u8)u32Peek(numberOfBits);
@@ -88,7 +88,7 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public i8 i8Peek(i32 numberOfBits)
+        public i8 i8Peek(u8 numberOfBits)
         {
             var index = SIndex;
             var value = i8(numberOfBits);
@@ -115,7 +115,7 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public i16 i16Peek(i32 numberOfBits)
+        public i16 i16Peek(u8 numberOfBits)
         {
             var index = SIndex;
             var value = i16(numberOfBits);
@@ -179,7 +179,7 @@ namespace NetStack.Serialization
 
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public u32 u32Peek(i32 numberOfBits)
+        public u32 u32Peek(u8 numberOfBits)
         {
             var index = SIndex;
             var value = u32(numberOfBits);
@@ -224,7 +224,7 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public f32 f32Peek(f32 min, f32 max, i32 numberOfBits)
+        public f32 f32Peek(f32 min, f32 max, u8 numberOfBits)
         {
             var index = SIndex;
             var value = f32(min, max, numberOfBits);

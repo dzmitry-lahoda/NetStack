@@ -89,7 +89,7 @@ namespace NetStack.Serialization
         public i32 i32(BitBufferReader<FibonacciDecoding> b) => decode(u32(b));
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public i32 i32(BitBufferReader<FibonacciDecoding> b, i32 numberOfBits)
+        public i32 i32(BitBufferReader<FibonacciDecoding> b, u8 numberOfBits)
         {
             u32 value = b.u32(numberOfBits);
             return decode(value);

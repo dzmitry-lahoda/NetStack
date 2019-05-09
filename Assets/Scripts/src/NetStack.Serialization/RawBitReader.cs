@@ -21,7 +21,6 @@ namespace NetStack.Serialization
     public class RawBitReader<TStorage> : BitBuffer<TStorage>, IRawReader
         where TStorage : IMemory<u32>
     {
-
         public RawBitReader(TStorage storage)
         {
             Chunks = storage;
@@ -65,10 +64,10 @@ namespace NetStack.Serialization
         /// Reads raw data.
         /// </summary>
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public u32 u32(i32 numberOfBits)
+        public u32 u32(u8 numberOfBits)
         {
 #if !NO_EXCEPTIONS
-            if (numberOfBits <= 0 || numberOfBits > 32) Throw.ArgumentOutOfRange(nameof(numberOfBits), $"Should read from 1 to 32. Cannot read {numberOfBits}");
+            if (numberOfBits <= 0 || numberOfBits > 32) Throw.ArgumentOutOfRange(nameof(numberOfBits), $"Should read from 1 to {32}. Cannot read {numberOfBits}");
             if (BitsRead + numberOfBits > totalNumberBits) Throw.InvalidOperation("reading more bits than in buffer");
             if (scratchUsedBits < 0 || scratchUsedBits > 64) Throw.InvalidProgram($"{scratchUsedBits} Too many bits used in scratch, Overflow?");
 #endif
@@ -122,7 +121,7 @@ namespace NetStack.Serialization
             if (bitsRead < 0) Throw.Argument("Pushing negative bits", nameof(bitsRead));
             if (bitsRead > totalNumberBits) Throw.Argument("Pushing too many bits", nameof(bitsRead));
 #endif
-            chunkIndex =  (i32) (bitsRead / 32u);
+            chunkIndex =  (u16)(bitsRead / (4 * 8));
             scratchUsedBits = (i32) (bitsRead % 32u);
             if (scratchUsedBits != 0)
             {

@@ -22,20 +22,20 @@ namespace NetStack.Serialization
     {
         public static readonly BitBufferOptions Default = new BitBufferOptions(charSpanBitsLength: DefaultCharSpanBitsLength, u8SpanBitsLength: DefaultU8SpanBitsLength);
 
-        public const i32 DefaultU8SpanBitsLength = 9;
+        public const u8 DefaultU8SpanBitsLength = 9;
 
-        public const i32 DefaultCharSpanBitsLength = 8;
+        public const u8 DefaultCharSpanBitsLength = 8;
 
 
-        private readonly i32 u8SpanLengthMax;
+        private readonly u16 u8SpanLengthMax;
         private readonly u8 u8SpanBitsLength;
-        private readonly i32 charSpanLengthMax;
+        private readonly u16 charSpanLengthMax;
         private readonly u8 charSpanBitsLength;
 
 
-        public i32 U8SpanLengthMax => u8SpanLengthMax;
+        public u16 U8SpanLengthMax => u8SpanLengthMax;
 
-        public i32 CharSpanLengthMax => charSpanLengthMax;
+        public u16 CharSpanLengthMax => charSpanLengthMax;
 
         public u8 U8SpanBitsLength => u8SpanBitsLength;
 
@@ -56,9 +56,9 @@ namespace NetStack.Serialization
 
             // one time setup
             this.u8SpanBitsLength = u8SpanBitsLength;
-            u8SpanLengthMax = (1 << u8SpanBitsLength) - 1;
+            u8SpanLengthMax = (u16)((1 << u8SpanBitsLength) - 1);
             this.charSpanBitsLength = charSpanBitsLength;
-            charSpanLengthMax = (1 << charSpanBitsLength) - 1;
+            charSpanLengthMax = (u16)((1 << charSpanBitsLength) - 1);
         }
 
         public bool Equals(BitBufferOptions other) => 

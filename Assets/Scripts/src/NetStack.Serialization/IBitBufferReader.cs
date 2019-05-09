@@ -35,7 +35,7 @@ namespace NetStack.Serialization
         i8 i8();
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        i8 i8(i32 numberOfBits);
+        i8 i8(u8 numberOfBits);
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         i8 i8(i8 min, i8 max);
@@ -44,7 +44,7 @@ namespace NetStack.Serialization
         i16 i16();
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        i16 i16(i32 numberOfBits);
+        i16 i16(u8 numberOfBits);
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         i16 i16(i16 min, i16 max);
@@ -83,7 +83,7 @@ namespace NetStack.Serialization
         f32 f32(f32 min, f32 max, f32 precision);
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        f32 f32(f32 min, f32 max, i32 numberOfBits);
+        f32 f32(f32 min, f32 max, u8 numberOfBits);
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         f64 f64();

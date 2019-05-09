@@ -21,7 +21,7 @@ namespace NetStack.Serialization
 {
     public interface IBitBufferWriter : IRawWriter
     {
-        i32 LengthWritten { get; }
+        u32 LengthWritten { get; }
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         void f32(f32 update);
@@ -62,6 +62,6 @@ namespace NetStack.Serialization
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)] void c(ReadOnlySpan<char> value);
 
-        [MethodImpl(Optimization.AggressiveInliningAndOptimization)] i32 ToSpan(Span<u8> data);
+        [MethodImpl(Optimization.AggressiveInliningAndOptimization)] u32 ToSpan(Span<u8> data);
     }
 }

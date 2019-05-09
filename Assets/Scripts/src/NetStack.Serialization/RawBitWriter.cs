@@ -31,20 +31,20 @@ namespace NetStack.Serialization
         }
 
         /// <summary>
-        /// Count of written bytes.
+        /// Count of written 8 bit unsigned integers.
         /// </summary>
-        public i32 LengthWritten => ((BitsWritten - 1) >> 3) + 1;
+        public u32 LengthWritten => (u32)(((i64)BitsWritten - 1) >> 3) + 1;
 
         /// <summary>
-        /// Gets total count of used bits since buffer start.
+        /// Gets total count of used bits since buffer start.       
         /// </summary>
-        public i32 BitsWritten
+        public u32 BitsWritten
         {
             get
             {
                 var indexInBits = chunkIndex * 32;
                 var over = scratchUsedBits != 0 ? 1 : 0; // TODO: speed up with bit hacking
-                return indexInBits + over * Math.Abs(scratchUsedBits);
+                return (u32)(indexInBits + over * Math.Abs(scratchUsedBits));
             }
         }
 
@@ -115,7 +115,7 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        private void internalRaw(u32 value, i32 numberOfBits)
+        private void internalRaw(u32 value, u8 numberOfBits)
         {
             value &= (u32)((1ul << numberOfBits) - 1);
             scratch |= ((u64)value) << scratchUsedBits;

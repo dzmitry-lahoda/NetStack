@@ -26,7 +26,7 @@ namespace NetStack.Serialization
         /// </summary>
         /// <param name="data">The output buffer.</param>
         /// <returns>Count of bytes written.</returns>
-        public i32 ToSpan(Span<u8> data)
+        public u32 ToSpan(Span<u8> data)
         {
             // may Throw.here as not hot path, check span length
 
@@ -34,12 +34,12 @@ namespace NetStack.Serialization
             var bitsPassed = BitsWritten;
             Align();
 
-            i32 numChunks = (bitsPassed >> 5) + 1;
+            var numChunks = (bitsPassed >> 5) + 1;
             i32 length = data.Length;
             var step = Unsafe.SizeOf<u32>();
-            for (var i = 0; i < numChunks; i++)
+            for (u16 i = 0; i < numChunks; i++)
             {
-                i32 dataIdx = i * step;
+                var dataIdx = (i32)(i * step);
                 u32 chunk = chunks[i];
                 // TODO: optimize by copying 4 byte in single call via Unsafe
                 if (dataIdx < length)

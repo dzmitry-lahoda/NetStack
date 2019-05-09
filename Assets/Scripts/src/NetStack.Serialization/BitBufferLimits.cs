@@ -26,8 +26,8 @@ namespace NetStack.Serialization
     /// <seealso href="https://tools.ietf.org/html/rfc1191"/>
     public static class BitBufferLimits
     {
-        public const i32 MtuIeee802Dot3 = 1492;
+        public const u16 MtuIeee802Dot3 = 1492;
 
-        public const i32 MtuIeee802 = 508;
+        public const u16 MtuIeee802 = 508;
     }
 }

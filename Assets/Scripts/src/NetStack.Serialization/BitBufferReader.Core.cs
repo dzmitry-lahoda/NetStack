@@ -19,9 +19,8 @@ using System.Numerics;
 namespace NetStack.Serialization
 {
     partial class BitBufferReader<T> : RawBitReader<u32ArrayMemory>, IBitBufferReader
-        where T : struct, IDecompression<BitBufferReader<T>> 
-    {        
-
+        where T : struct, IDecompression<BitBufferReader<T>>
+    {
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
         public u32 u32()
         {
@@ -44,7 +43,7 @@ namespace NetStack.Serialization
         }
 
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        public i32 i32(i32 numberOfBits)
+        public i32 i32(u8 numberOfBits)
         {
             T encoder = default;
             return encoder.i32(this, numberOfBits);

@@ -21,7 +21,7 @@ namespace NetStack.Serialization
     public interface IRawReader
     {
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
-        u32 u32(i32 numberOfBits);
+        u32 u32(u8 numberOfBits);
 
         // reads raw number of bits, not more than 16
         [MethodImpl(Optimization.AggressiveInliningAndOptimization)]
