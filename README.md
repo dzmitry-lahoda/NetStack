@@ -26,15 +26,14 @@ All validation and exception are behind `#if !NO_EXCEPTIONS`.  Inlining is behin
     - [ZigZag](https://developers.google.com/protocol-buffers/docs/encoding#signed-integers) encoding
     - [Variable-length](https://rosettacode.org/wiki/Variable-length_quantity) encoding
 		- [Fibonacci](https://en.wikipedia.org/wiki/Fibonacci_coding)
-		- [TODO] Hybrid - depending on possible range, use Variable-length or Fibonacci
+		- [TODO] Hybrid - depending on possible range, use Variable-length or Fibonacci, than hybrid with Huffman
 	- TODO: allow huffman Unity FPSSample in learning and ready alphabet encodings, learning big vs small values in delta
-	- TODO: given i have stats via huffman, build in prameter to allow skip one of X sends (e.g. send only 5 frame - no each frame) - write zero bits on wire
 	- TODO: fast huffman and faster than huffman https://github.com/Cyan4973/FiniteStateEntropy
   - TODO: optimize write of 2,3,4 bits values
   - TODO: add delta methods with small vs big delimeter (Gaffer on games)
   - Debugging write and read with no packing 
   - Start write or read from where previous bit buffer finished.
-  - TODO: allow zero copy read write by init from byte array
+  - Zero copy read write by init from byte array or memory.
   - TODO: add custom visualizer or custom to string (to 01 to to hex)
   - TODO: Given possibility do delta of prediction (allow to pass predictors - provide linear, simple non linear, and simple learning regression and plug for custom predictors)
 
@@ -46,15 +45,16 @@ All validation and exception are behind `#if !NO_EXCEPTIONS`.  Inlining is behin
 4. Malleability and partial code reuse
 5. Code readability and maintainability
 
-Optimized for heterogenous data in one packet, not stream of same data in each packet. 
-Optimized for games, may be usable in high end CPU in robotics and iot processors.
-Optimized for 64 bits CPU and vectorized compilers.
-Not optimized for big data or large data compression-storage. 
-Not optimized for very low memory very low end very low bits devices.
+#### Domains
+
+- Optimized for heterogenous data in one packet, not stream of same data in each packet. 
+- Optimized for games, may be usable in high end CPU in robotics and iot processors.
+- Optimized for 64 bits CPU and vectorized compilers.
+- Not optimized for big data or large data compression-storage. 
 
 ## Not
   - No fluent interface as it adds performance overhead.
-  - Game only and game specific optimizations (like Possible Visible Set compression)
+  - No domain specific optimizations (like Possible Visible Set compression or Skip Send or Send only to Specific device or other semantics)
 
 ## Collections.Concurrent
   - ArrayQueue is Single-producer single-consumer first-in-first-out non-blocking queue
